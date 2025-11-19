@@ -1,0 +1,13 @@
+.git/**
+.gitignore
+tests/**
+examples/**
+bun.lock
+generate-lang.bun.ts
+**.tool-versions
+**.editorconfig
+**.gitattributes
+.github/**
+.vscode/**
+.vscode-test/**
+.cursor/**

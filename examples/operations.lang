@@ -1,0 +1,167 @@
+# Операции с матрицами
+
+## Служебные операции
+
+### - Создать пустую матрицу по координатам ✅
+
+new_empty(coordinates) = new_matrix
+    where
+        coordinates = (c1, ... cn)
+            where
+                c1: Coordinate
+                ...
+                cn: Coordinate
+        new_matrix: Matrix
+
+### - Создать без оси
+
+new_empty_without_axis(matrix_source, axis) = new_matrix
+    where
+        matrix_source: Matrix
+        axis: Axis
+        new_matrix: Matrix
+
+#### 1. Создать пустую матрицу по координатам ✅
+
+### - Копировать значения
+
+copy_values(matrix_source, matrix_target) = matrix_target*
+    where
+        matrix_source: Matrix
+        matrix_target: Matrix
+
+### - ????
+
+## Основные операции
+
+### - Суммировать по оси
+
+sum_by_axis(matrix_source, axis) = new_matrix
+    where
+        matrix_source: Matrix
+        axis: Axis
+        new_matrix: Matrix
+
+#### 1. Создать без оси
+#### 2. Копировать значения
+#### 3. ????
+
+### - Для каждого элемента
+
+for_each_element(matrix_source, operation, value) = new_matrix
+    where
+        matrix_source: Matrix
+        operation: Operation
+        value: number
+        new_matrix: Matrix
+
+### - Фильтровать по значению
+
+filter_by_value(matrix_source, condition, value) = matrix_target
+    where
+        matrix_source: Matrix
+        condition: Condition
+        value: number
+        matrix_target: Matrix
+
+### - Фильтровать по матрице
+
+filter_by_matrix(matrix_source, condition, matrix_condition) = matrix_target
+    where
+        matrix_source: Matrix
+        condition: Condition
+        matrix_condition: Matrix
+        matrix_target: Matrix
+
+### - Для каждой пары
+
+for_each_pair(matrix_source_1, matrix_source_2, operation) = new_matrix
+    where
+        matrix_source_1: Matrix(...TAxis)
+        matrix_source_2: Matrix
+        operation: Operation
+        new_matrix: Matrix(...TAxis)
+
+## Шаги алгоритма
+
+### 0. Вычисляем суммарные объемы проливов по всем категориям НП в каждом регионе деятельности
+
+volumes_by_district = sum_by_axis(volumes, district)
+    where
+        volumes_by_district: Matrix(Region, Product_category, Product, Market_participant)
+        volumes: Matrix(Region, District, Product_category, Product, Market_participant)
+            where
+                Region, District, Product_category, Product, Market_participant: Axis
+        district: Axis
+
+volumes_by_product_category_region = sum_by_axis(volumes_by_district, product_category)
+    where
+        volumes_by_product_category_region: Matrix(Region, Product, Market_participant)
+        volumes_by_district: Matrix(Region, Product_category, Product, Market_participant)
+            where
+                Region, Product_category, Product, Market_participant: Axis
+        product_category: Axis
+
+### 1. Вычисляем суммарные запрашиваемые объемы по всем НПЗ и регионам поставки
+
+requests_by_market_participant = sum_by_axis(requests, market_participant)
+    where
+        requests_by_market_participant: Matrix(Product, Refinery, Region)
+        requests: Matrix(Product, Refinery, Region, Market_participant)
+            where
+                Product, Refinery, Region, Market_participant: Axis
+        market_participant: Axis
+
+requests_by_market_participant_region = sum_by_axis(requests_by_market_participant, region)
+    where
+        requests_by_market_participant_region: Matrix(Product, Refinery)
+        requests_by_market_participant: Matrix(Product, Refinery, Region)
+            where
+                Product, Refinery, Region: Axis
+        region: Axis
+
+### 2. Умножаем суммарные объемы проливов на переменную «Превышение Доступных объемов по Запросам»
+
+volumes_scaled = for_each_element(requests_by_market_participant_region, multiply, OVERALL_REQUEST_CAPACITY)
+    where
+        volumes_scaled: Matrix(Product, Refinery)
+        requests_by_market_participant_region: Matrix(Product, Refinery)
+            where
+                Product, Region: Axis
+        multiply: Operation
+        OVERALL_REQUEST_CAPACITY: number = 120/100
+```
+
+### 3. Период дефицита
+
+period_of_deficit = filter_by_matrix(requests_by_market_participant_region, less_than, volumes_scaled)
+    where
+        period_of_deficit: Matrix(Product, Refinery)
+        requests_by_market_participant_region: Matrix(Product, Refinery)
+        less_than: Condition
+        volumes_scaled: Matrix(Product, Refinery)
+            where
+                Product, Region: Axis
+```
+
+### 3.1. Скользящее среднее
+
+moving_average = for_each_pair(volumes_by_product_category_region, matrix_of_activity, divide)
+    where
+        moving_average: Matrix(Region, Market_participant)
+        volumes_by_product: Matrix(Region, Market_participant)
+        divide: Operation
+        matrix_of_activity: Matrix(Market_participant)
+            where
+                Region, Market_participant: Axis
+
+### 4. Период профицита
+
+period_of_surplus = filter_by_matrix(requests_by_market_participant_region, greater_or_equal_to, volumes_scaled)
+    where
+        period_of_surplus: Matrix(Product, Refinery)
+        requests_by_market_participant_region: Matrix(Product, Refinery)
+        greater_or_equal_to: Condition
+        volumes_scaled: Matrix(Product, Refinery)
+            where
+                Product, Region: Axis

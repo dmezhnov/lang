@@ -1,0 +1,21 @@
+---
+description: Rules for the Lang VS Code extension project
+globs: []
+alwaysApply: true
+---
+
+- Always reply to the human user in **Russian**, but think in English and write all code comments in **English**.
+- This repository is a VS Code extension that provides syntax highlighting for a small DSL called `lang`.
+- The main generated artifacts are `syntaxes/lang.tmLanguage.json` (TextMate grammar) and `language-configuration.json` (VS Code language configuration).
+- **Never** edit `syntaxes/lang.tmLanguage.json` or `language-configuration.json` directly; always treat them as build artifacts.
+- To change the grammar or language configuration, edit `generate-lang.bun.ts` and then run `bun generate` from the project root.
+- After any non-trivial change to the grammar or language configuration, run `bun test` to ensure all scope tests and coverage tests still pass.
+- When adding new language constructs, update both the generator (`generate-lang.bun.ts`) and the tests in the `tests` directory. Follow the existing pattern: one test file per TextMate scope plus a coverage test.
+- Tests are written using Bun's test runner. Use `bun test` without extra flags unless the user explicitly asks for something different.
+- Example `.lang` files live in the `examples` directory. They are for demonstration and tests only; do not assume the DSL is tied to matrices or any other specific domain.
+- Keep `README.md` and `CHANGELOG.md` in English. It is acceptable for example `.lang` files under `examples/` to contain Russian text.
+- Before suggesting changes to packaging or publishing, prefer using the existing scripts in `package.json`: `generate`, `pretest`, `test`, `vscode:package`, `vscode:publish`, instead of raw `vsce` or `bun` commands.
+- Do not remove or bypass the meta-test `tests/coverage-scopes.test.ts`; keep it updated if the set of grammar scopes changes.
+- When changing what gets shipped in the `.vsix`, respect the current `.vscodeignore` configuration unless the user explicitly asks to adjust it.
+- When in doubt about project conventions (naming, structure, test layout), mirror the existing patterns in this repository rather than introducing new ones.
+
