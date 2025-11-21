@@ -7,7 +7,7 @@
             "name": "string.quoted.double.lang"
         },
         {
-            "match": "#+\\s.*",
+            "match": "#+(\\s.*)|\\s*^",
             "name": "comment.line.number-sign.lang"
         },
         {
@@ -38,10 +38,6 @@
             }
         },
         {
-            "match": "[A-Z][A-Za-z0-9_]*",
-            "name": "entity.name.type.lang"
-        },
-        {
             "match": "\\(",
             "name": "punctuation.parenthesis.open.lang"
         },
@@ -56,6 +52,10 @@
         {
             "match": "\\.{3}",
             "name": "keyword.operator.ellipsis.lang"
+        },
+        {
+            "match": "[A-Z][A-Za-z0-9_]*",
+            "name": "entity.name.type.lang"
         },
         {
             "match": "([a-z_][A-Za-z0-9_]*)\\s*\\(",

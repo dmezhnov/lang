@@ -26,4 +26,5 @@ alwaysApply: true
 - When in doubt about project conventions (naming, structure, test layout), mirror the existing patterns in this repository rather than introducing new ones.
 - When the user asks to "add rules" (or similar wording about adding rules), interpret this as a request to edit the rule files under `.cursor/rules/`, unless they explicitly refer to some other config.
 - Treat command execution output conservatively: if there is any indication of an error, non-zero exit code, or failure notice, do not report that everything is OK or fully successful; instead, describe precisely what ran and what failed.
+ - All linters and formatters should run through Trunk; when invoking Trunk, prefer using the `mise` tasks (for example, `mise run lint`) instead of calling `trunk` directly.
 

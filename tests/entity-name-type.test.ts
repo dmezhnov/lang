@@ -7,7 +7,8 @@ describe("entity.name.type.lang", () => {
         const typePattern = getPatternByName(grammar, "entity.name.type.lang");
         const re = new RegExp(typePattern.match, "g");
 
-        const line = "matrix_source: Matrix(Region, Product_category, Product, Market_participant)";
+        const line =
+            "matrix_source: Matrix(Region, Product_category, Product, Market_participant)";
         const matches = Array.from(line.matchAll(re)).map((m) => m[0]);
 
         expect(matches).toEqual(
@@ -21,5 +22,4 @@ describe("entity.name.type.lang", () => {
         );
     });
 });
-
 
