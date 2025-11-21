@@ -1,53 +1,63 @@
 {
-  "name": "lang",
-  "displayName": "Lang",
-  "publisher": "undefined_publisher",
-  "description": "Syntax highlighting for the Lang DSL.",
-  "version": "0.0.1",
-  "license": "UNLICENSED",
-  "engines": {
-    "vscode": "^1.106.0"
-  },
-  "categories": [
-    "Programming Languages"
-  ],
-  "keywords": [
-    "language",
-    "syntax",
-    "highlighting",
-    "dsl"
-  ],
-  "contributes": {
-    "languages": [
-      {
-        "id": "lang",
-        "aliases": [
-          "Lang",
-          "lang"
-        ],
-        "extensions": [
-          ".lang"
-        ],
-        "configuration": "./language-configuration.json"
-      }
+    "name": "lang-language",
+    "displayName": "Lang language",
+    "publisher": "dmezhnov",
+    "description": "Syntax highlighting for the Lang language.",
+    "version": "0.0.2",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dmezhnov/lang"
+    },
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "categories": [
+        "Programming Languages"
     ],
-    "grammars": [
-      {
-        "language": "lang",
-        "scopeName": "lang.lang",
-        "path": "./syntaxes/lang.tmLanguage.json"
-      }
+    "keywords": [
+        "language",
+        "syntax",
+        "highlighting",
+        "lang"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "lang",
+                "aliases": [
+                    "Lang",
+                    "lang"
+                ],
+                "extensions": [
+                    ".lang"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "lang",
+                "scopeName": "lang.lang",
+                "path": "./syntaxes/lang.tmLanguage.json"
+            }
+        ]
+    },
+    "devDependencies": {
+        "@trunkio/launcher": "^1.3.4",
+        "@types/bun": "^1.3.2",
+        "@vscode/vsce": "^3.0.0",
+        "tmlanguage-generator": "^0.6.5",
+        "eslint": "9.39.1",
+        "@eslint/js": "9.39.1",
+        "typescript": "^5.7.0",
+        "@typescript-eslint/parser": "^8.0.0",
+        "@typescript-eslint/eslint-plugin": "^8.0.0",
+        "@stylistic/eslint-plugin": "^2.12.1",
+        "eslint-plugin-putout": "latest"
+    },
+    "packageManager": "bun@1.3.2",
+    "trustedDependencies": [
+        "@vscode/vsce-sign"
     ]
-  },
-  "devDependencies": {
-    "@vscode/vsce": "^3.0.0",
-    "tmlanguage-generator": "^0.6.5"
-  },
-  "scripts": {
-    "generate": "bun generate-lang.bun.ts",
-    "pretest": "bun generate",
-    "vscode:package": "bun generate && bunx vsce package",
-    "vscode:publish": "bun generate && bunx vsce publish"
-  },
-  "packageManager": "bun@1.3.2"
 }

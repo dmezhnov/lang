@@ -1,13 +1,15 @@
-.git/**
-.gitignore
-tests/**
-examples/**
-bun.lock
-generate-lang.bun.ts
-**.tool-versions
-**.editorconfig
-**.gitattributes
-.github/**
-.vscode/**
-.vscode-test/**
-.cursor/**
+##
+## Whitelist-style ignore: by default exclude everything, then explicitly include required files.
+## This makes the .vsix contents more predictable.
+##
+
+# First exclude everything
+**
+
+# Explicitly include extension artifacts required at install time
+!package.json
+!README.md
+!CHANGELOG.md
+!LICENSE
+!language-configuration.json
+!syntaxes/**

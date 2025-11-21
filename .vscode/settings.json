@@ -1,0 +1,80 @@
+{
+    "trunk.autoInit": false,
+    "trunk.inlineDecoratorsForAllExtensions": true,
+    "editor.defaultFormatter": "trunk.io",
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+        "files.associations": {
+        "**.env*": "dotenv",
+        "**.gs": "javascript",
+        "**.stylintrc": "jsonc",
+        "**.user.css": "postcss",
+        "**/.github/workflows/*.yml": "github-actions-workflow",
+        "**/LICENSE": "plaintext",
+        ".*ignore": "ignore"
+    },
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+        "material-icon-theme.files.associations": {
+        "**.clasp.json": "Apps-script",
+        "**.claspignore": "Apps-script",
+        "**.user.css": "postcss",
+        ".vscode/settings.json": "settings",
+        "appsscript.json": "Apps-script",
+        "**.bun.ts": "bun"
+    },
+    "material-icon-theme.folders.associations": {
+        ".github/instructions": "rules"
+    },
+    "shellformat.useEditorConfig": true,
+        "todo-tree.filtering.excludeGlobs": [
+        "**/node_modules/**",
+        "./build/**",
+        "**.user.css",
+        "./src/**.css",
+        "./src/**.{js,mjs,cjs}",
+        "./src/**.class",
+        "./build/**",
+        "./.history/**"
+    ],
+    "todo-tree.filtering.includeHiddenFiles": true,
+    "todo-tree.general.exportPath": "./todos.md",
+    "todo-tree.general.tags": ["!!", "BUG", "TODO", "- [ ]"],
+    "todo-tree.highlights.backgroundColourScheme": [],
+    "todo-tree.highlights.customHighlight": {
+        "!!": {
+            "background": "#ff0000",
+            "icon": "alert",
+            "iconColour": "#ff0000"
+        },
+        "BUG": {
+            "background": "#ff0000",
+            "icon": "alert",
+            "iconColour": "#ff0000"
+        },
+        "TODO": {
+            "background": "#00ff00",
+            "icon": "check",
+            "iconColour": "#00ff00"
+        },
+        "- [ ]": {
+            "background": "#00ff00",
+            "icon": "check",
+            "iconColour": "#00ff00"
+        }
+    },
+    "todo-tree.highlights.enabled": true,
+    "todo-tree.highlights.foregroundColourScheme": [],
+    "todo-tree.regex.enableMultiLine": true,
+    "todo-tree.ripgrep.usePatternFile": true,
+    "todo-tree.tree.buttons.export": true,
+    "todo-tree.tree.hideTreeWhenEmpty": true,
+    "todo-tree.tree.labelFormat": "${tag} ${after}",
+    "todo-tree.tree.scanMode": "workspace",
+    "todo-tree.tree.showBadges": true,
+    "todo-tree.tree.showCountsInTree": true,
+    "todo-tree.tree.sortTagsOnlyViewAlphabetically": false,
+    "todo-tree.tree.tooltipFormat": "${filepath}, line ${line}"
+}

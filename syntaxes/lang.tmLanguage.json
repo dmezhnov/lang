@@ -27,8 +27,15 @@
             "name": "keyword.operator.type.annotation.lang"
         },
         {
-            "match": "[A-Z][A-Z0-9_]*",
-            "name": "constant.other.lang"
+            "match": "([A-Za-z_][A-Za-z0-9_]*)\\s*(:)",
+            "captures": {
+                "1": {
+                    "name": "variable.name.lang"
+                },
+                "2": {
+                    "name": "keyword.operator.type.annotation.lang"
+                }
+            }
         },
         {
             "match": "[A-Z][A-Za-z0-9_]*",
@@ -49,17 +56,6 @@
         {
             "match": "\\.{3}",
             "name": "keyword.operator.ellipsis.lang"
-        },
-        {
-            "match": "([a-z_][A-Za-z0-9_]*)\\s*(:)",
-            "captures": {
-                "1": {
-                    "name": "variable.name.lang"
-                },
-                "2": {
-                    "name": "keyword.operator.type.annotation.lang"
-                }
-            }
         },
         {
             "match": "([a-z_][A-Za-z0-9_]*)\\s*\\(",

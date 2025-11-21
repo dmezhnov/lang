@@ -8,14 +8,22 @@ alwaysApply: true
 - This repository is a VS Code extension that provides syntax highlighting for a small DSL called `lang`.
 - The main generated artifacts are `syntaxes/lang.tmLanguage.json` (TextMate grammar) and `language-configuration.json` (VS Code language configuration).
 - **Never** edit `syntaxes/lang.tmLanguage.json` or `language-configuration.json` directly; always treat them as build artifacts.
-- To change the grammar or language configuration, edit `generate-lang.bun.ts` and then run `bun generate` from the project root.
-- After any non-trivial change to the grammar or language configuration, run `bun test` to ensure all scope tests and coverage tests still pass.
+- To change the grammar or language configuration, edit `generate-lang.bun.ts` and then run `mise run build` from the project root (which regenerates artifacts and packages the extension).
+- After any non-trivial change to the grammar or language configuration, run `mise run test` to ensure all scope tests and coverage tests still pass.
 - When adding new language constructs, update both the generator (`generate-lang.bun.ts`) and the tests in the `tests` directory. Follow the existing pattern: one test file per TextMate scope plus a coverage test.
-- Tests are written using Bun's test runner. Use `bun test` without extra flags unless the user explicitly asks for something different.
+- Tests are written using Bun's test runner, but should normally be invoked via `mise run test` (which also ensures the build is up to date).
 - Example `.lang` files live in the `examples` directory. They are for demonstration and tests only; do not assume the DSL is tied to matrices or any other specific domain.
 - Keep `README.md` and `CHANGELOG.md` in English. It is acceptable for example `.lang` files under `examples/` to contain Russian text.
-- Before suggesting changes to packaging or publishing, prefer using the existing scripts in `package.json`: `generate`, `pretest`, `test`, `vscode:package`, `vscode:publish`, instead of raw `vsce` or `bun` commands.
+- Before suggesting changes to packaging or publishing, prefer using the existing `mise` tasks defined in `mise.toml`:
+  - `mise run build` for regenerating artifacts and packaging,
+  - `mise run test` for running the full test suite (including build),
+  - `mise run publish` for publishing to the VS Code Marketplace;
+  avoid calling raw `vsce` or `bun` commands unless the user explicitly asks for that.
+- After making code changes, run both `mise run test` and `mise run lint` (or the narrowest relevant variants) before finishing your response, and surface any failures clearly to the user.
+- When you need to install or update tools and dependencies, use `mise run install` (which is defined in `mise.toml` to install everything that is needed); if at some point it stops installing something important, update the `[tasks.install]` command in `mise.toml` instead of calling `bun install` or other raw package-manager commands directly, unless the user explicitly instructs otherwise.
 - Do not remove or bypass the meta-test `tests/coverage-scopes.test.ts`; keep it updated if the set of grammar scopes changes.
 - When changing what gets shipped in the `.vsix`, respect the current `.vscodeignore` configuration unless the user explicitly asks to adjust it.
 - When in doubt about project conventions (naming, structure, test layout), mirror the existing patterns in this repository rather than introducing new ones.
+- When the user asks to "add rules" (or similar wording about adding rules), interpret this as a request to edit the rule files under `.cursor/rules/`, unless they explicitly refer to some other config.
+- Treat command execution output conservatively: if there is any indication of an error, non-zero exit code, or failure notice, do not report that everything is OK or fully successful; instead, describe precisely what ran and what failed.
 

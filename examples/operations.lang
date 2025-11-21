@@ -1,34 +1,75 @@
+Market_participant_type = Gas_station_owner
+
+Operation = multiply, divide
+Condition = less_than, greater_or_equal_to
+Axis = Region, District, Product_category, Product, Market_participant, Market_participant_type, Month_and_year
+
+MatrixEl = {
+    coords: c1, ... cn
+        where
+            c1: Coordinate
+            ...
+            cn: Coordinate
+    value
+}
+
+CoordinateEl = {
+    axis: Axis
+    value
+}
+
+Coordinate = c1, ... cn
+    where
+        c1: CoordinateEl
+        ...
+        cn: CoordinateEl
+
+Matrix = m1, ... mn
+    where
+        m1: MatrixEl
+        ...
+        mn: MatrixEl
+
 # Операции с матрицами
 
 ## Служебные операции
 
 ### - Создать пустую матрицу по координатам ✅
 
-new_empty(coordinates) = new_matrix
+new_empty(coordinates) = new_empty_matrix
     where
-        coordinates = (c1, ... cn)
+        new_empty_matrix: Matrix(a1, ... an)
+        coordinates = c1, ... cn
             where
-                c1: Coordinate
-                ...
-                cn: Coordinate
-        new_matrix: Matrix
+                c1, ... cn: Coordinate
+                    where
+                        c1.axis = a1
+                        ...
+                        cn.axis = an
+                            where
+                                a1, ... an: Axis
 
 ### - Создать без оси
 
-new_empty_without_axis(matrix_source, axis) = new_matrix
+new_empty_without_axis(matrix_source, axis_to_remove) = new_empty_matrix_without_axis
     where
-        matrix_source: Matrix
-        axis: Axis
-        new_matrix: Matrix
+        matrix_source: Matrix(axis_to_remove, ...TAxis)
+        axis_to_remove: Axis
+        new_empty_matrix_without_axis: Matrix(...TAxis)
+            where
+                TAxis: a1, ... an
+                    where
+                        a1, ... an: Axis
 
 #### 1. Создать пустую матрицу по координатам ✅
 
 ### - Копировать значения
 
-copy_values(matrix_source, matrix_target) = matrix_target*
+copy_values(matrix_source, copied_matrix) = copied_matrix*
     where
         matrix_source: Matrix
-        matrix_target: Matrix
+        copied_matrix: Matrix
+        copied_matrix*: Matrix
 
 ### - ????
 
@@ -36,11 +77,17 @@ copy_values(matrix_source, matrix_target) = matrix_target*
 
 ### - Суммировать по оси
 
-sum_by_axis(matrix_source, axis) = new_matrix
+sum_by_axis(matrix_source, axis_to_sum) = summed_matrix
     where
-        matrix_source: Matrix
-        axis: Axis
-        new_matrix: Matrix
+        matrix_source: Matrix(axis_to_sum, ...TAxis)
+        summed_matrix: Matrix(...TAxis)
+            where
+                axis_to_sum: Axis
+                TAxis: a1, ... an
+                    where
+                        a1: Axis
+                        ...
+                        an: Axis
 
 #### 1. Создать без оси
 #### 2. Копировать значения
@@ -48,120 +95,146 @@ sum_by_axis(matrix_source, axis) = new_matrix
 
 ### - Для каждого элемента
 
-for_each_element(matrix_source, operation, value) = new_matrix
+for_each_element(matrix_source, operation, value) = scaled_matrix
     where
         matrix_source: Matrix
         operation: Operation
         value: number
-        new_matrix: Matrix
+        scaled_matrix: Matrix
 
 ### - Фильтровать по значению
 
-filter_by_value(matrix_source, condition, value) = matrix_target
+filter_by_value(matrix_source, condition, value) = filtered_matrix_by_value
     where
         matrix_source: Matrix
         condition: Condition
         value: number
-        matrix_target: Matrix
+        filtered_matrix_by_value: Matrix
 
 ### - Фильтровать по матрице
 
-filter_by_matrix(matrix_source, condition, matrix_condition) = matrix_target
+filter_by_pair(matrix_source, condition, matrix_condition) = filtered_matrix_by_pair
     where
         matrix_source: Matrix
         condition: Condition
         matrix_condition: Matrix
-        matrix_target: Matrix
+        filtered_matrix_by_pair: Matrix
 
 ### - Для каждой пары
 
-for_each_pair(matrix_source_1, matrix_source_2, operation) = new_matrix
+for_each_pair(matrix_source_1, operation, matrix_source_2) = new_matrix
     where
         matrix_source_1: Matrix(...TAxis)
         matrix_source_2: Matrix
         operation: Operation
         new_matrix: Matrix(...TAxis)
+            where
+                TAxis: a1, ... an
+                    where
+                        a1: Axis
+                        ...
+                        an: Axis
+
+### - Количество координат по оси
+
+count_coordinates_by_axis(matrix_source, axis) = counted_matrix
+    where
+        matrix_source: Matrix
+        axis: Axis
+        counted_matrix: Matrix
+
+### - Фильтровать по координате
+
+filter_by_coordinate(matrix_source, coordinate) = filtered_matrix_by_coordinate
+    where
+        matrix_source: Matrix
+        coordinate: Coordinate
+        filtered_matrix_by_coordinate: Matrix
 
 ## Шаги алгоритма
 
 ### 0. Вычисляем суммарные объемы проливов по всем категориям НП в каждом регионе деятельности
 
-volumes_by_district = sum_by_axis(volumes, district)
+volumes_by_district = sum_by_axis(volumes_by_period, District)
     where
         volumes_by_district: Matrix(Region, Product_category, Product, Market_participant)
-        volumes: Matrix(Region, District, Product_category, Product, Market_participant)
+        volumes_by_period: Matrix(Region, District, Product_category, Product, Market_participant)
             where
                 Region, District, Product_category, Product, Market_participant: Axis
-        district: Axis
 
-volumes_by_product_category_region = sum_by_axis(volumes_by_district, product_category)
+volumes_by_product_category_region = sum_by_axis(volumes_by_district, Product_category)
     where
         volumes_by_product_category_region: Matrix(Region, Product, Market_participant)
         volumes_by_district: Matrix(Region, Product_category, Product, Market_participant)
             where
                 Region, Product_category, Product, Market_participant: Axis
-        product_category: Axis
 
 ### 1. Вычисляем суммарные запрашиваемые объемы по всем НПЗ и регионам поставки
 
-requests_by_market_participant = sum_by_axis(requests, market_participant)
+requests_by_market_participant = sum_by_axis(requests_by_period, Market_participant)
     where
         requests_by_market_participant: Matrix(Product, Refinery, Region)
-        requests: Matrix(Product, Refinery, Region, Market_participant)
+        requests_by_period: Matrix(Product, Refinery, Region, Market_participant)
             where
                 Product, Refinery, Region, Market_participant: Axis
-        market_participant: Axis
 
-requests_by_market_participant_region = sum_by_axis(requests_by_market_participant, region)
+requests_by_market_participant_region = sum_by_axis(requests_by_market_participant, Region)
     where
         requests_by_market_participant_region: Matrix(Product, Refinery)
-        requests_by_market_participant: Matrix(Product, Refinery, Region)
             where
                 Product, Refinery, Region: Axis
-        region: Axis
 
 ### 2. Умножаем суммарные объемы проливов на переменную «Превышение Доступных объемов по Запросам»
 
-volumes_scaled = for_each_element(requests_by_market_participant_region, multiply, OVERALL_REQUEST_CAPACITY)
+volumes_scaled = for_each_element(requests_by_market_participant_region, multiply, OVERALL_REQUEST_CAPACITY_COEFFICIENT)
     where
         volumes_scaled: Matrix(Product, Refinery)
-        requests_by_market_participant_region: Matrix(Product, Refinery)
-            where
-                Product, Region: Axis
         multiply: Operation
-        OVERALL_REQUEST_CAPACITY: number = 120/100
-```
+        OVERALL_REQUEST_CAPACITY_COEFFICIENT: number = OVERALL_REQUEST_CAPACITY_PERCENTAGE/100
+            where
+                OVERALL_REQUEST_CAPACITY_PERCENTAGE: number = 120
 
 ### 3. Период дефицита
 
-period_of_deficit = filter_by_matrix(requests_by_market_participant_region, less_than, volumes_scaled)
+period_of_deficit = filter_by_pair(requests_by_market_participant_region, less_than, volumes_scaled)
     where
         period_of_deficit: Matrix(Product, Refinery)
-        requests_by_market_participant_region: Matrix(Product, Refinery)
         less_than: Condition
-        volumes_scaled: Matrix(Product, Refinery)
-            where
-                Product, Region: Axis
-```
 
-### 3.1. Скользящее среднее
+#### 3.1. Скользящее среднее
 
-moving_average = for_each_pair(volumes_by_product_category_region, matrix_of_activity, divide)
+matrix_of_activity = count_coordinates_by_axis(volumes_by_product_category_region, Month_and_year)
     where
-        moving_average: Matrix(Region, Market_participant)
-        volumes_by_product: Matrix(Region, Market_participant)
-        divide: Operation
         matrix_of_activity: Matrix(Market_participant)
             where
-                Region, Market_participant: Axis
+                Market_participant, Month_and_year: Axis
+
+moving_average = for_each_pair(volumes_by_product_category_region, divide, matrix_of_activity)
+    where
+        moving_average: Matrix(Region, Market_participant)
+        divide: Operation
+
+#### 3.2. Определяем количество НПЗ в запросах субъекта рынка (которые являются владельцами АЗС)
+
+requests_by_gas_station_owner = filter_by_coordinate(requests_by_period, Gas_station_owner)
+    where
+        requests_by_gas_station_owner: Matrix(Product, Refinery, Region, Market_participant)
+            where
+                Product, Refinery, Region, Market_participant, Gas_station_owner: Axis
+
+requests_count_refineries = count_coordinates_by_axis(requests_by_gas_station_owner, Refinery)
+    where
+        requests_count_refineries: Matrix(Market_participant, Refinery, Region, Product)
+            where
+                Market_participant, Refinery, Region, Product: Axis
+
+##### 3.2.1.
+
+
 
 ### 4. Период профицита
 
-period_of_surplus = filter_by_matrix(requests_by_market_participant_region, greater_or_equal_to, volumes_scaled)
+period_of_surplus = filter_by_pair(requests_by_market_participant_region, greater_or_equal_to, volumes_scaled)
     where
         period_of_surplus: Matrix(Product, Refinery)
-        requests_by_market_participant_region: Matrix(Product, Refinery)
         greater_or_equal_to: Condition
-        volumes_scaled: Matrix(Product, Refinery)
-            where
-                Product, Region: Axis

@@ -18,13 +18,7 @@
                 "settings": {
                     "foreground": "#B5CEA8"
                 }
-            },
-            {
-                "scope": "constant.other",
-                "settings": {
-                    "foreground": "#D7BA7D"
-                }
-            },
+            }
             {
                 "scope": "entity.name.type",
                 "settings": {

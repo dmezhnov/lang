@@ -1,0 +1,31 @@
+[settings]
+windows_shim_mode = "symlink"
+yes = true
+experimental = true
+
+[settings.npm]
+bun = true
+
+[settings.status]
+missing_tools = "always"
+
+[hooks]
+postinstall = "bun i && mise build && bun trunk install"
+
+[tasks.build]
+run = "bun generate-lang.bun.ts && bun x vsce package"
+
+[tasks.test]
+run = "mise build && bun test"
+
+[tasks.publish]
+run = "mise test && bun x vsce publish"
+
+[tasks.lint]
+run = "bun trunk check --show-existing"
+
+[tasks.format]
+run = "bun trunk fmt"
+
+[tasks.install]
+run = "mise install && bun install && bun trunk install"
