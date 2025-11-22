@@ -6,7 +6,7 @@ alwaysApply: true
 
 # Rule files overview
 
-- `.rule.mdc`: root/meta rule file that describes the rule layout and applies globally.
+- `rule.mdc`: root/meta rule file that describes the rule layout and applies globally.
 - `project.rule.mdc`: primary rule file for this repository that defines the main behavioral rules (these are the effective defaults for this project and should normally be reused across other projects as well).
 - `*.project.rule.mdc`: additional project-scoped rule modules for specific concerns (for example, `java_fields_only.project.rule.mdc`, `java_interface_impl.project.rule.mdc`).
 
