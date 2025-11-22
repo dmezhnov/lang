@@ -28,4 +28,4 @@ run = "bun trunk check --show-existing"
 run = "bun trunk fmt"
 
 [tasks.install]
-run = "mise install && bun install && bun trunk install"
+run = "mise install"
