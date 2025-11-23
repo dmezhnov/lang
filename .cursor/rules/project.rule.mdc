@@ -134,6 +134,12 @@ alwaysApply: true
 
 - For all new project scripts and automation entrypoints (for example, tooling helpers, orchestration scripts, or CLI utilities), the assistant must prefer cross-platform Bun scripts with a `.bun.ts` extension over platform-specific shell scripts (such as `.sh`, `.bat`, or `.ps1`). Existing shell scripts should be migrated to `.bun.ts` when they are significantly modified, unless the user explicitly instructs otherwise.
 
+## NixOS devShell for mise
+
+- For this repository, when running project tasks via `mise run <task>` on NixOS (including the `install` task invoked as `mise run install`), all such tasks must automatically execute inside the project's flake-based Nix devShell (for example via `nix develop -c mise run <task>`), so that tools and tests always see a consistent Nix-managed environment.
+- Direct use of `mise install` to install tools should happen from within an already-activated Nix devShell (for example by running `nix develop` first or via a user-level shell alias), because this behavior cannot be fully enforced from within this repository's configuration alone.
+- This automatic devShell entry for `mise run` tasks must be implemented using Bun-based helper scripts or task indirection (such as `scripts/devshell-run.bun.ts`), not by adding standalone shell scripts or large inline shell snippets.
+
 ## Keeping directories small and focused
 
 - Directory contents should remain as small and focused as reasonably possible. Whenever a directory starts accumulating unrelated or loosely related files, the assistant must consider introducing subdirectories or modules to group related artifacts (for example, separating scripts, tests, configuration, and documentation). When creating new files, the assistant must prefer placing them into appropriate existing subdirectories rather than crowding higher-level directories, so that each directory contains only a minimal, coherent set of files.
