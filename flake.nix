@@ -24,8 +24,7 @@
         in {
           default = pkgs.mkShell {
             packages = [
-              pkgs.mise
-              pkgs.git
+
             ];
 
             shellHook = ''
@@ -42,5 +41,3 @@
         });
     };
 }
-
-
