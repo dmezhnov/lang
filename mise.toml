@@ -16,8 +16,8 @@ bun = true
 missing_tools = "always"
 
 [hooks]
-preinstall = ""
-postinstall = ""
+preinstall = "mise x bun -- bun run scripts/preinstall.bun.ts"
+postinstall = "mise x bun -- bun run scripts/postinstall.bun.ts"
 
 [tasks.preinstall]
 run = ""

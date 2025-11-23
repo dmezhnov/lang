@@ -1,12 +1,11 @@
 import { existsSync } from 'node:fs';
 
 let isMisePreinstalled: boolean = Boolean(process.env.IS_MISE_PREINSTALLED);
-let isMisePostinstalled: boolean = Boolean(process.env.IS_MISE_POSTINSTALLED);
 
 const isNixOS = process.platform === 'linux' && existsSync('/etc/NIXOS');
 const inNixShell = Boolean(process.env.IN_NIX_SHELL);
 
-const preinstall = (): void => {
+const preinstall = async (): Promise<void> => {
     if (isMisePreinstalled === true) {
         return;
     }
@@ -28,22 +27,10 @@ const preinstall = (): void => {
     }
 };
 
-const postinstall = (): void => {
-    if (isMisePostinstalled === true) {
-        return;
-    }
 
-    const env: Record<string, string | undefined> = {
-        ...process.env,
-        IS_MISE_POSTINSTALLED: 'true',
-    };
-
-    try {
-        Bun.spawn(['mise', 'run', 'postinstall'], { env });
-    } catch (error) {
-        console.error('Failed to start mise postinstall process.', error);
+if (import.meta.main) {
+    await preinstall().catch((error) => {
+        console.error('Unexpected error in devShell-run script.', error);
         process.exitCode = 1;
-    }
-};
-
-export { preinstall, postinstall };
+    });
+}
