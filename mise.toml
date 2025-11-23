@@ -13,7 +13,7 @@ missing_tools = "always"
 postinstall = "mise x bun -- bun i && mise build && mise x bun -- bun trunk install"
 
 [tasks.build]
-run = "mise x bun -- bun generate-lang.bun.ts && mise x bun -- bun x vsce package"
+run = "mise x bun -- bun run scripts/generate-lang.bun.ts && mise x bun -- bun x vsce package"
 
 [tasks.test]
 run = "mise build && mise x bun -- bun test"
