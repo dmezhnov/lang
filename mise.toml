@@ -10,22 +10,27 @@ bun = true
 missing_tools = "always"
 
 [hooks]
-postinstall = "bun i && mise build && bun trunk install"
+postinstall = "mise x bun -- bun i && mise build && mise x bun -- bun trunk install"
 
 [tasks.build]
-run = "bun generate-lang.bun.ts && bun x vsce package"
+run = "mise x bun -- bun generate-lang.bun.ts && mise x bun -- bun x vsce package"
 
 [tasks.test]
-run = "mise build && bun test"
+run = "mise build && mise x bun -- bun test"
 
 [tasks.publish]
-run = "mise test && bun x vsce publish"
+run = "mise test && mise x bun -- bun x vsce publish"
 
 [tasks.lint]
-run = "bun trunk check --show-existing"
+run = "mise x bun -- bun trunk check --show-existing"
 
 [tasks.format]
-run = "bun trunk fmt"
+run = "mise x bun -- bun trunk fmt"
+
+[tasks.save]
+run = '''
+    mise x bun -- bun run scripts/save.bun.ts
+'''
 
 [tasks.install]
 run = "mise install"
