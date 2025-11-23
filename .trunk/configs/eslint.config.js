@@ -36,6 +36,8 @@ export default [
             globals: {
                 console: 'readonly',
                 process: 'readonly',
+                Bun: 'readonly',
+                module: 'readonly'
             },
         },
         plugins: {
