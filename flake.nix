@@ -3,7 +3,8 @@
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
-  outputs = { self, nixpkgs }:
+  outputs =
+    { self, nixpkgs }:
     let
       supportedSystems = [
         "x86_64-linux"
@@ -12,19 +13,28 @@
         "aarch64-darwin"
       ];
 
-      forEachSystem = f:
-        builtins.listToAttrs (map (system: {
-          name = system;
-          value = f system;
-        }) supportedSystems);
-    in {
-      devShells = forEachSystem (system:
+      forEachSystem =
+        f:
+        builtins.listToAttrs (
+          map (system: {
+            name = system;
+            value = f system;
+          }) supportedSystems
+        );
+    in
+    {
+      devShells = forEachSystem (
+        system:
         let
-          pkgs = import nixpkgs { inherit system; };
-        in {
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        in
+        {
           default = pkgs.mkShell {
             packages = [
-
+              pkgs.trunk-io
             ];
 
             shellHook = ''
@@ -38,6 +48,7 @@
               eval "$(${pkgs.mise}/bin/mise activate bash)"
             '';
           };
-        });
+        }
+      );
     };
 }
