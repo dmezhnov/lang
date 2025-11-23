@@ -1,7 +1,6 @@
 // Basic diagnostics provider for the Lang language.
 // It highlights simple syntax issues such as unbalanced brackets and unclosed string literals.
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const vscode = require('vscode');
 
 /**
@@ -197,5 +196,3 @@ module.exports = {
     activate,
     deactivate,
 };
-
-

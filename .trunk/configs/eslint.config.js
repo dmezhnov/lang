@@ -37,7 +37,8 @@ export default [
                 console: 'readonly',
                 process: 'readonly',
                 Bun: 'readonly',
-                module: 'readonly'
+                module: 'readonly',
+                require: 'readonly'
             },
         },
         plugins: {

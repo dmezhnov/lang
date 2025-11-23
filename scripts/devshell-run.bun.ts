@@ -1,50 +1,47 @@
 import { existsSync } from 'node:fs';
 
-const DEV_SHELL_LABEL = 'nix develop devShell';
-const DIRECT_LABEL = 'direct mise task';
+const isNixOS = process.platform === 'linux' && existsSync('/etc/os-release');
+const inNixShell = Boolean(process.env.IN_NIX_SHELL);
+
+const runCommand = async (command: string[]): Promise<number> => {
+    const child = Bun.spawn(command, {
+        stdin: 'inherit',
+        stdout: 'inherit',
+        stderr: 'inherit',
+    });
+
+    const exitCode = await child.exited;
+
+    if (exitCode !== 0) {
+        console.error(
+            `Subprocess for ${command} failed with exit code ${exitCode}.`,
+        );
+    }
+
+    return exitCode;
+};
 
 async function main(): Promise<void> {
-    const [, , innerTaskName, ...innerTaskArgs] = process.argv;
+    const [, ,...taskArgs] = process.argv;
 
-    if (!innerTaskName) {
+    if (!taskArgs) {
         console.error(
-            'Usage: bun run scripts/devshell-run.bun.ts <inner-task-name> [task-args...]',
+            'devshell-run script requires at least one argument.',
         );
         process.exitCode = 1;
         return;
     }
 
-    const isNixOS = process.platform === 'linux' && existsSync('/etc/NIXOS');
-    const inNixShell = Boolean(process.env.IN_NIX_SHELL);
-
-    const baseCommand: string[] = ['mise', 'run', innerTaskName, ...innerTaskArgs];
-
-    const runCommand = async (command: string[], contextLabel: string): Promise<number> => {
-        const child = Bun.spawn(command, {
-            stdin: 'inherit',
-            stdout: 'inherit',
-            stderr: 'inherit',
-        });
-
-        const exitCode = await child.exited;
-
-        if (exitCode !== 0) {
-            console.error(
-                `Subprocess for ${contextLabel} failed with exit code ${exitCode}.`,
-            );
-        }
-
-        return exitCode;
-    };
+    const command: string[] = isNixOS && !inNixShell ? ['nix', 'develop', '-c', ...taskArgs] : [...taskArgs];
 
     try {
         let exitCode: number;
 
         if (isNixOS && !inNixShell) {
-            const command = ['nix', 'develop', '-c', ...baseCommand];
-            exitCode = await runCommand(command, DEV_SHELL_LABEL);
+            console.log('Entering Nix shell...');
+            exitCode = await runCommand(command);
         } else {
-            exitCode = await runCommand(baseCommand, DIRECT_LABEL);
+            exitCode = await runCommand(command);
         }
 
         process.exitCode = exitCode;

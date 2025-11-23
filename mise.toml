@@ -17,52 +17,38 @@ missing_tools = "always"
 
 [hooks]
 preinstall = ""
-postinstall = "mise x bun -- bun i && mise build && mise run trunk-install"
+postinstall = ""
+
+[tasks.preinstall]
+run = ""
+
+[tasks.postinstall]
+run = "mise sh-run mise x bun -- bun i && mise build && mise run trunk-install"
+
 
 [tasks.build]
-run = "mise x bun -- bun run scripts/devshell-run.bun.ts build-inner"
-
-[tasks.build-inner]
-run = "mise run save && mise x bun -- bun run scripts/generate-lang.bun.ts && mise x bun -- bun x vsce package"
+run = "mise sh-run mise x bun -- bun run scripts/generate-lang.bun.ts && mise x bun -- bun x vsce package"
 
 [tasks.test]
-run = "mise x bun -- bun run scripts/devshell-run.bun.ts test-inner"
-
-[tasks.test-inner]
-run = "mise run build && mise x bun -- bun test"
+run = "mise sh-run mise run build && mise x bun -- bun test"
 
 [tasks.publish]
-run = "mise x bun -- bun run scripts/devshell-run.bun.ts publish-inner"
-
-[tasks.publish-inner]
-run = "mise run test && mise x bun -- bun x vsce publish"
+run = "mise sh-run mise run test && mise x bun -- bun x vsce publish"
 
 [tasks.lint]
-run = "mise x bun -- bun run scripts/devshell-run.bun.ts lint-inner"
-
-[tasks.lint-inner]
-run = "mise x bun -- bun trunk check --show-existing"
+run = "mise sh-run mise x bun -- bun trunk check --show-existing"
 
 [tasks.format]
-run = "mise x bun -- bun run scripts/devshell-run.bun.ts format-inner"
-
-[tasks.format-inner]
-run = "mise x bun -- bun trunk fmt"
+run = "mise sh-run mise x bun -- bun trunk fmt"
 
 [tasks.save]
-run = "mise x bun -- bun run scripts/devshell-run.bun.ts save-inner"
-
-[tasks.save-inner]
-run = "mise x bun -- bun run scripts/save.bun.ts"
+run = "mise sh-run mise x bun -- bun run scripts/save.bun.ts"
 
 [tasks.trunk-install]
-run = "mise x bun -- bun run scripts/devshell-run.bun.ts trunk-install-inner"
-
-[tasks.trunk-install-inner]
-run = "mise x bun -- bun trunk install"
+run = "mise sh-run mise x bun -- bun trunk install"
 
 [tasks.install]
-run = "mise x bun -- bun run scripts/devshell-run.bun.ts install-inner"
+run = "mise sh-run mise install"
 
-[tasks.install-inner]
-run = "mise install"
+[tasks.sh-run]
+run = "mise x bun -- bun run scripts/devshell-run.bun.ts"
