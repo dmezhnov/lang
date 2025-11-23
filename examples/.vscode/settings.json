@@ -18,7 +18,7 @@
                 "settings": {
                     "foreground": "#B5CEA8"
                 }
-            }
+            },
             {
                 "scope": "entity.name.type",
                 "settings": {
