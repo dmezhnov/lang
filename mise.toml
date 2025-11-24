@@ -1,112 +1,50 @@
 [tasks.build]
-run = '''
-    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
-    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
-    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
-
-    echo "[task:build] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
-
-    mise sh-run bun run scripts/generate-lang.bun.ts && mise sh-run bun x vsce package
-'''
+run = [
+  "mise sh-run bun run scripts/generate-lang.bun.ts",
+  "mise sh-run bun x vsce package",
+]
 
 [tasks.test]
-run = '''
-    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
-    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
-    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
-
-    echo "[task:test] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
-
-    mise sh-run mise run build && mise sh-run bun test
-'''
+run = ["mise sh-run mise run build", "mise sh-run bun test"]
 
 [tasks.publish]
-run = '''
-    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
-    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
-    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
-
-    echo "[task:publish] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
-
-    mise sh-run mise run test && mise sh-run bun x vsce publish
-'''
+run = ["mise sh-run mise run test", "mise sh-run bun x vsce publish"]
 
 [tasks.lint]
-run = '''
-    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
-    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
-    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
-
-    echo "[task:lint] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
-
-    # Run trunk inside the effective environment (flake devShell on NixOS, or
-    # the current environment elsewhere). Within that environment, prefer a
-    # real `trunk` on PATH and only fall back to `bun x trunk` if it is missing.
-    mise sh-run bun run scripts/trunk.bun.ts -- check --show-existing
-'''
+run = [
+  # Run trunk inside the effective environment (flake devShell on NixOS, or
+  # the current environment elsewhere). Within that environment, prefer a
+  # real `trunk` on PATH and only fall back to `bun x trunk` if it is missing.
+  "mise sh-run bun run scripts/trunk.bun.ts -- check --show-existing",
+]
 
 [tasks.format]
-run = '''
-    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
-    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
-    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
-
-    echo "[task:format] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
-
-    # Same strategy as in [tasks.lint]: choose the effective environment first
-    # (flake devShell on NixOS, current env elsewhere), then prefer `trunk`
-    # from PATH and only fall back to `bun x trunk` if necessary.
-    mise sh-run bun run scripts/trunk.bun.ts -- fmt
-'''
+run = [
+  # Same strategy as in [tasks.lint]: choose the effective environment first
+  # (flake devShell on NixOS, current env elsewhere), then prefer `trunk`
+  # from PATH and only fall back to `bun x trunk` if necessary.
+  "mise sh-run bun run scripts/trunk.bun.ts -- fmt",
+]
 
 [tasks.save]
-run = '''
-    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
-    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
-    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
-
-    echo "[task:save] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
-
-    mise sh-run bun run scripts/save.bun.ts
-'''
+run = ["mise sh-run bun run scripts/save.bun.ts"]
 
 [tasks.install]
-run = '''
-    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
-    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
-    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
-
-    echo "[task:install] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
-
-    mise sh-run mise install
-'''
+run = ["mise sh-run mise install"]
 
 [tasks.preinstall]
-run = '''
-    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
-    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
-    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
-
-    echo "[task:preinstall] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
-'''
+run = ["mise sh-run bun run scripts/preinstall.bun.ts"]
 
 [tasks.postinstall]
-run = '''
-    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
-    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
-    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
-
-    echo "[task:postinstall] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
-
-    # Ensure JS dependencies and build artifacts are up to date.
-    mise sh-run bun install
-    mise build
-
-    # Make sure Trunk and its linters are installed.
-    # As with lint/format, decide inside the effective environment:
-    # use `trunk` from PATH when available, otherwise fall back to `bun x trunk`.
-    mise sh-run bun run scripts/trunk.bun.ts -- install
-'''
+run = [
+  # Ensure JS dependencies and build artifacts are up to date.
+  "mise sh-run bun install",
+  "mise build",
+  # Make sure Trunk and its linters are installed.
+  # As with lint/format, decide inside the effective environment:
+  # use `trunk` from PATH when available, otherwise fall back to `bun x trunk`.
+  "mise sh-run bun run scripts/trunk.bun.ts -- install",
+]
 
 [tasks.sh-run]
 run = '''

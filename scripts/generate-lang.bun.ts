@@ -36,7 +36,6 @@ const stringPattern = String.raw`${coreCharacters.string.doubleQuote}(?:\\.|[^${
 const numberSignCommentPattern = String.raw`${coreCharacters.commentLine}+(\s.*)|\s*^`;
 const numberPattern = /[0-9]+/.source;
 const keywordWherePattern = /\bwhere\b/.source;
-const typeNamePattern = /[A-Z][A-Za-z0-9_]*/.source;
 const assignmentOperatorPattern = /=/.source;
 const typeAnnotationOperatorPattern = /:/.source;
 // Punctuation and other operators
@@ -102,10 +101,6 @@ const grammar = {
         {
             match: ellipsisPattern,
             name: `keyword.operator.ellipsis.${lang_postfix}`,
-        },
-        {
-            match: typeNamePattern,
-            name: `entity.name.type.${lang_postfix}`,
         },
         {
             match: functionNamePattern,

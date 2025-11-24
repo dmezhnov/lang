@@ -54,10 +54,6 @@
             "name": "keyword.operator.ellipsis.lang"
         },
         {
-            "match": "[A-Z][A-Za-z0-9_]*",
-            "name": "entity.name.type.lang"
-        },
-        {
             "match": "([a-z_][A-Za-z0-9_]*)\\s*\\(",
             "captures": {
                 "1": {

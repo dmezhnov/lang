@@ -2,17 +2,13 @@
     "name": "lang-language",
     "displayName": "Lang language",
     "publisher": "dmezhnov",
-    "description": "Syntax highlighting and basic syntax diagnostics for the Lang language.",
+    "description": "Syntax highlighting for the Lang language.",
     "version": "0.0.2",
     "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/dmezhnov/lang"
     },
-    "main": "./extension.js",
-    "activationEvents": [
-        "onLanguage:lang"
-    ],
     "engines": {
         "vscode": "^1.80.0"
     },
