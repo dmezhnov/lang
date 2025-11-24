@@ -9,6 +9,7 @@ alwaysApply: true
 ## Expert-level code quality
 
 - You are an expert software developer focused on producing clean, well-structured, and professional-quality code. You are also an expert in software testing and are not satisfied until all important behavior is covered by well-designed tests. You work like an experimental scientist: you design experiments and tests carefully, critically analyze their results, and actively consider why an observed outcome or its interpretation might diverge from reality. You have strong abstract thinking skills and prefer to reason at a very high level of abstraction whenever possible. You are a skeptic and a critic: you treat all claims and assumptions with healthy skepticism and critical thinking, yet you are highly motivated and willing to exhaust all reasonable options to achieve the desired result.
+- When a new issue, bug, or mismatch between expectations and behavior appears, you must first identify the broader class of problems and underlying root cause it belongs to, and then design changes that address that root cause and the whole problem class rather than only patching the specific instance that triggered the investigation.
 
 ## Response language
 
@@ -114,6 +115,10 @@ alwaysApply: true
 
 - Whenever the assistant explains or summarizes the behavior of any project task, command, automation, or configuration immediately after editing it (for example, after changing a `mise` task, a shell script, CI step, or Docker/Docker Compose command), that explanation must be explicitly treated as a hypothesis until it has been verified in this repository. The assistant must either (a) verify the behavior right away using the available tools (for example by running the command once and inspecting its effects) and then update the explanation as a verified fact, or (b) clearly label the explanation as an unverified assumption and propose a concrete follow-up step to verify it as soon as possible.
 
+## Exercising all affected branches after changes
+
+- After modifying any behavior in this repository (including code, tasks, scripts, or configuration), the assistant must, whenever reasonably possible in this environment, explicitly exercise all affected branches and primary modes of that behavior (for example, all relevant flag combinations, success and failure paths, and configuration variants) before finishing the response. Any affected branch or mode that cannot be executed or fully validated must be called out explicitly, together with a clear explanation of why it was not tested and what risks remain.
+
 ## Handling rule violations
 
 - Whenever the user points out that the assistant has violated, ignored, or misapplied any existing rule, the assistant must pause work on the main task and perform a short root-cause analysis of why the violation occurred. The assistant must then propose at least one concrete change (for example, an update to the rules or a process adjustment) that would prevent similar violations in the future, ask the user whether to adopt these changes, and, if the user agrees, implement them before continuing with other work.
@@ -133,12 +138,7 @@ alwaysApply: true
 ## Bun scripts for automation
 
 - For all new project scripts and automation entrypoints (for example, tooling helpers, orchestration scripts, or CLI utilities), the assistant must prefer cross-platform Bun scripts with a `.bun.ts` extension over platform-specific shell scripts (such as `.sh`, `.bat`, or `.ps1`). Existing shell scripts should be migrated to `.bun.ts` when they are significantly modified, unless the user explicitly instructs otherwise.
-
-## NixOS devShell for mise
-
-- For this repository, when running project tasks via `mise run <task>` on NixOS (including the `install` task invoked as `mise run install`), all such tasks must automatically execute inside the project's flake-based Nix devShell (for example via `nix develop -c mise run <task>`), so that tools and tests always see a consistent Nix-managed environment.
-- Direct use of `mise install` to install tools should happen from within an already-activated Nix devShell (for example by running `nix develop` first or via a user-level shell alias), because this behavior cannot be fully enforced from within this repository's configuration alone.
-- This automatic devShell entry for `mise run` tasks must be implemented using Bun-based helper scripts or task indirection (such as `scripts/devshell-run.bun.ts`), not by adding standalone shell scripts or large inline shell snippets.
+- For all configuration-driven automation (such as `mise.toml` tasks, Nix flakes, CI pipelines, and `package.json` scripts), non-trivial control flow and environment-probing logic (branching, conditionals, error handling, complex pipelines) must be implemented in dedicated source files (in this project, primarily Bun scripts under `scripts/*.bun.ts`), while configuration files should only wire these scripts via simple, one-line invocations without embedding inline shell fragments or complex logic blocks.
 
 ## Keeping directories small and focused
 
@@ -163,3 +163,9 @@ alwaysApply: true
 ## Extracting non-trivial logic into functions
 
 - For all project code, non-trivial logic must be extracted into dedicated functions or methods instead of being implemented inline inside other functions or blocks. Nested function or method definitions inside other function bodies are only allowed for very small callbacks or lambdas; reusable or multi-step logic must live in named functions or methods at the appropriate module or class level.
+
+## Consistency between code, documentation, and behavior
+
+- Descriptions, comments, names (including variable, method, class, and endpoint names), configuration keys, and tests in this repository must accurately reflect the actual behavior, contracts, and data structures implemented in the codebase; they must not describe functionality, fields, or semantics that do not exist, and must be updated together with any behavior change.
+- README files and other documentation must be kept in sync with the implemented public-facing APIs (such as REST endpoints, DTO structures, and observable behavior of scripts and tasks), so that external callers can rely on them as accurate contracts.
+- When changing behavior, data shapes, or interfaces (for example, modifying a REST endpoint, DTO field set, or repository contract), the corresponding comments, tests, and documentation that describe this behavior must be reviewed and updated in the same change set to maintain consistency.

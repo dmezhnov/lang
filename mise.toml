@@ -1,51 +1,122 @@
 [tasks.build]
-run = "mise bun-run run scripts/generate-lang.bun.ts && mise bun-run x vsce package"
+run = '''
+    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
+    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
+    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
+
+    echo "[task:build] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
+
+    mise sh-run bun run scripts/generate-lang.bun.ts && mise sh-run bun x vsce package
+'''
 
 [tasks.test]
-run = "mise sh-run run build && mise bun-run test"
+run = '''
+    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
+    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
+    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
+
+    echo "[task:test] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
+
+    mise sh-run mise run build && mise sh-run bun test
+'''
 
 [tasks.publish]
-run = "mise sh-run run test && mise bun-run x vsce publish"
+run = '''
+    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
+    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
+    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
+
+    echo "[task:publish] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
+
+    mise sh-run mise run test && mise sh-run bun x vsce publish
+'''
 
 [tasks.lint]
-run = "mise trunk check --show-existing"
+run = '''
+    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
+    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
+    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
+
+    echo "[task:lint] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
+
+    # Run trunk inside the effective environment (flake devShell on NixOS, or
+    # the current environment elsewhere). Within that environment, prefer a
+    # real `trunk` on PATH and only fall back to `bun x trunk` if it is missing.
+    mise sh-run bun run scripts/trunk.bun.ts -- check --show-existing
+'''
 
 [tasks.format]
-run = "mise trunk fmt"
+run = '''
+    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
+    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
+    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
+
+    echo "[task:format] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
+
+    # Same strategy as in [tasks.lint]: choose the effective environment first
+    # (flake devShell on NixOS, current env elsewhere), then prefer `trunk`
+    # from PATH and only fall back to `bun x trunk` if necessary.
+    mise sh-run bun run scripts/trunk.bun.ts -- fmt
+'''
 
 [tasks.save]
-run = "mise bun-run run scripts/save.bun.ts"
-
-[tasks.trunk]
 run = '''
-    {%- if env.IS_TRUNK_INSTALLED == "true" -%}
-        mise sh-run trunk
-    {%- else -%}
-        mise bun-run trunk
-    {%- endif -%}
+    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
+    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
+    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
+
+    echo "[task:save] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
+
+    mise sh-run bun run scripts/save.bun.ts
 '''
 
 [tasks.install]
-run = "mise sh-run install"
+run = '''
+    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
+    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
+    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
+
+    echo "[task:install] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
+
+    mise sh-run mise install
+'''
 
 [tasks.preinstall]
-run = ""
+run = '''
+    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
+    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
+    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
+
+    echo "[task:preinstall] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
+'''
 
 [tasks.postinstall]
-run = "mise bun-run i && mise build && mise trunk install"
+run = '''
+    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
+    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
+    {%- set is_trunk_installed = env.IS_TRUNK_INSTALLED | default(value="false") -%}
+
+    echo "[task:postinstall] ctx: IS_NIX_OS={{ is_nix_os }} IN_NIX_SHELL={{ in_nix_shell }} IS_TRUNK_INSTALLED={{ is_trunk_installed }}"
+
+    # Ensure JS dependencies and build artifacts are up to date.
+    mise sh-run bun install
+    mise build
+
+    # Make sure Trunk and its linters are installed.
+    # As with lint/format, decide inside the effective environment:
+    # use `trunk` from PATH when available, otherwise fall back to `bun x trunk`.
+    mise sh-run bun run scripts/trunk.bun.ts -- install
+'''
 
 [tasks.sh-run]
 run = '''
-    mise trusted --all
-    {%- if env.IS_NIX_OS == "true" -%}
-        nix develop -c mise run
-    {%- else -%}
-        mise run
+    {%- set is_nix_os = env.IS_NIX_OS | default(value="false") -%}
+    {%- set in_nix_shell = env.IN_NIX_SHELL | default(value="") -%}
+
+    {%- if is_nix_os == "true" and in_nix_shell | length == 0 -%}
+        nix develop -c
     {%- endif -%}
 '''
-
-[tasks.bun-run]
-run = "mise sh-run x bun -- bun"
 
 [settings]
 windows_shim_mode = "symlink"
@@ -65,61 +136,53 @@ bun = true
 missing_tools = "always"
 
 [hooks]
-preinstall = "mise bun-run run scripts/preinstall.bun.ts"
-postinstall = "mise bun-run run scripts/postinstall.bun.ts"
+preinstall = "mise sh-run bun run scripts/preinstall.bun.ts"
+postinstall = "mise sh-run bun run scripts/postinstall.bun.ts"
 
 [env]
-IS_NIX_OS = '''{%- set os = os() -%}
-{%- set nix_folder = '/etc/os-release' -%}
+IS_NIX_OS = '''
+    {%- set os_name = os() | lower -%}
+    {%- set nix_marker_legacy = '/etc/NIXOS' -%}
 
-{%- if os is matching("linux") -%}
-{%- set is_linux = true -%}
-{%- else -%}
-{%- set is_linux = false -%}
-{%- endif -%}
-
-{%- if nix_folder is exists -%}
-{%- set is_nix_folder_exists = true -%}
-{%- else -%}
-{%- set is_nix_folder_exists = false -%}
-{%- endif -%}
-
-{%- if is_linux and is_nix_folder_exists -%}
-{%- set is_nix_os = true -%}
-{%- else -%}
-{%- set is_nix_os = false -%}
-{%- endif -%}
-
-{{- is_nix_os -}}'''
-
-IS_TRUNK_INSTALLED = '''{%- set os_name = os() | lower -%}
-{%- if os_name is matching("windows") -%}
-{%- set path_sep = ';' -%}
-{%- set exe_candidates = ['trunk.exe', 'trunk.bat', 'trunk.cmd'] -%}
-{%- else -%}
-{%- set path_sep = ':' -%}
-{%- set exe_candidates = ['trunk'] -%}
-{%- endif -%}
-
-{%- if env.PATH is defined -%}
-{%- set raw_path = env.PATH | default(value="") -%}
-{%- elif env.Path is defined -%}
-{%- set raw_path = env.Path | default(value="") -%}
-{%- else -%}
-{%- set raw_path = "" -%}
-{%- endif -%}
-
-{%- set path_dirs = raw_path | split(pat=path_sep) -%}
-{%- set_global existing = [] -%}
-{%- for dir in path_dirs -%}
-    {%- if dir | length > 0 -%}
-        {%- for exe in exe_candidates -%}
-            {%- set candidate = [dir, exe] | join_path -%}
-            {%- if candidate is file -%}
-                {%- set_global existing = existing | concat(with=[candidate]) -%}
-            {%- endif -%}
-        {%- endfor -%}
+    {%- if os_name is matching("linux") and (nix_marker_legacy is exists or env.__NIXOS_SET_ENVIRONMENT_DONE is defined) -%}
+        true
+    {%- else -%}
+        false
     {%- endif -%}
-{%- endfor -%}
+'''
 
-{{- (existing | length > 0) -}}'''
+IS_TRUNK_INSTALLED = '''
+    {%- set os_name = os() | lower -%}
+
+    {%- if os_name is matching("windows") -%}
+        {%- set path_sep = ';' -%}
+        {%- set exe_candidates = ['trunk.exe', 'trunk.bat', 'trunk.cmd'] -%}
+    {%- else -%}
+        {%- set path_sep = ':' -%}
+        {%- set exe_candidates = ['trunk'] -%}
+    {%- endif -%}
+
+    {%- if env.PATH is defined -%}
+        {%- set raw_path = env.PATH | default(value="") -%}
+    {%- elif env.Path is defined -%}
+        {%- set raw_path = env.Path | default(value="") -%}
+    {%- else -%}
+        {%- set raw_path = "" -%}
+    {%- endif -%}
+
+    {%- set path_dirs = raw_path | split(pat=path_sep) -%}
+    {%- set_global existing = [] -%}
+
+    {%- for dir in path_dirs -%}
+        {%- if dir | length > 0 -%}
+            {%- for exe in exe_candidates -%}
+                {%- set candidate = [dir, exe] | join_path -%}
+                {%- if candidate is file -%}
+                    {%- set_global existing = existing | concat(with=[candidate]) -%}
+                {%- endif -%}
+            {%- endfor -%}
+        {%- endif -%}
+    {%- endfor -%}
+
+    {{- (existing | length > 0) -}}
+'''

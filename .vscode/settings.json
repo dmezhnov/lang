@@ -256,5 +256,6 @@
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "automatic",
     "bruno.defaultCollectionLocation": "./bruno",
-    "peacock.color": "#5a5889"
+    "peacock.color": "#5a5889",
+    "nixEnvSelector.useFlakes": true
 }
