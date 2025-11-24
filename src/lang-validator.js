@@ -2,7 +2,7 @@
 // It checks:
 // - indentation consistency;
 // - placement of `where` blocks;
-// - balanced (), [], {} brackets;
+// - balanced () and {} brackets;
 // - unterminated string literals using double quotes.
 //
 // The validator operates line by line and is intentionally conservative:
@@ -159,12 +159,12 @@ function validateTextDocument(text) {
                 continue;
             }
 
-            if (ch === '(' || ch === '[' || ch === '{') {
+            if (ch === '(' || ch === '{') {
                 bracketStack.push({ char: ch, offset: pos });
                 continue;
             }
 
-            if (ch === ')' || ch === ']' || ch === '}') {
+            if (ch === ')' || ch === '}') {
                 if (bracketStack.length === 0) {
                     diagnostics.push({
                         start: pos,
@@ -177,9 +177,8 @@ function validateTextDocument(text) {
                 const top = bracketStack[bracketStack.length - 1];
                 const expected =
                     top.char === '(' ? ')' :
-                        top.char === '[' ? ']' :
-                            top.char === '{' ? '}' :
-                                null;
+                        top.char === '{' ? '}' :
+                            null;
 
                 if (expected !== ch) {
                     diagnostics.push({

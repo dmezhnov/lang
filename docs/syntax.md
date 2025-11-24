@@ -40,8 +40,6 @@ aspects that are currently validated by the extension.
   - `)`
   - `{`
   - `}`
-  - `[`
-  - `]`
   - `,`
 
 - **Comments**
@@ -149,12 +147,11 @@ The extension currently enforces the following structural rules:
 
 - **Brackets**
 
-  - Each opening bracket `(`, `[`, or `{` must have a matching closing bracket
-    `)`, `]`, or `}` of the correct type.
+  - Each opening bracket `(` or `{` must have a matching closing bracket
+    `)` or `}` of the correct type.
   - An unexpected closing bracket (with no corresponding opening bracket) is
     reported as an error.
-  - A mismatched closing bracket (for example, closing `]` for an opening `(`)
-    is reported as an error.
+  - A mismatched closing bracket is reported as an error.
   - Any remaining unmatched opening brackets at the end of the file are
     reported as unclosed.
 

@@ -16,8 +16,7 @@ language. The extension is focused on providing:
   - `where` keyword;
   - numbers;
   - identifiers and function‑like definitions;
-  - punctuation and operators such as `=`, `:`, `...`, parentheses, brackets,
-    and braces;
+  - punctuation and operators such as `=`, `:`, `...`, parentheses, and braces;
   - Markdown‑style heading lines that start with `#`, `##`, `###`, etc.
 
 - **Structural syntax validation**
@@ -28,7 +27,7 @@ language. The extension is focused on providing:
   - incorrect placement of `where` blocks (for example, a `where` line without
     a preceding statement at a lower indentation level, or multiple `where`
     blocks for the same statement);
-  - unbalanced parentheses, brackets, and braces;
+  - unbalanced parentheses and braces;
   - unterminated string literals.
 
   These checks are intentionally conservative and do not yet implement a full

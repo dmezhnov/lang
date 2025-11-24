@@ -11,7 +11,6 @@ const coreCharacters = {
     commentLine: '#',
     brackets: {
         curly: ['{', '}'] as const,
-        square: ['[', ']'] as const,
         paren: ['(', ')'] as const,
     },
     string: {
@@ -118,9 +117,10 @@ const grammar = {
     scopeName: `${lang_postfix}.${lang_postfix}`,
 };
 
-const bracketPairs: [string, string][] = Object.values(
-    coreCharacters.brackets,
-) as [string, string][];
+const bracketPairs: [string, string][] = [
+    coreCharacters.brackets.curly,
+    coreCharacters.brackets.paren,
+];
 
 const quotePair = {
     open: coreCharacters.string.doubleQuote,
