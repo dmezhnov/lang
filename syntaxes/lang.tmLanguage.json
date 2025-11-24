@@ -7,7 +7,7 @@
             "name": "string.quoted.double.lang"
         },
         {
-            "match": "#+(\\s.*)|\\s*^",
+            "match": "^#+.*$",
             "name": "comment.line.number-sign.lang"
         },
         {

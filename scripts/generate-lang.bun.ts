@@ -32,8 +32,9 @@ function escapeForCharClass(text: string): string {
 const stringPattern = String.raw`${coreCharacters.string.doubleQuote}(?:\\.|[^${escapeForCharClass(
     coreCharacters.string.doubleQuote,
 )}])*${coreCharacters.string.doubleQuote}`;
-// Lines starting with one or more `#` followed by space (Markdown-style headings and comments)
-const numberSignCommentPattern = String.raw`${coreCharacters.commentLine}+(\s.*)|\s*^`;
+// Lines starting with one or more `#` (Markdown-style headings and comments)
+// Use explicit line anchors to avoid zero-length matches that could interfere with other patterns.
+const numberSignCommentPattern = String.raw`^${escapeForRegex(coreCharacters.commentLine)}+.*$`;
 const numberPattern = /[0-9]+/.source;
 const keywordWherePattern = /\bwhere\b/.source;
 const assignmentOperatorPattern = /=/.source;
