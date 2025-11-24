@@ -17,6 +17,19 @@ export default [
             '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
         },
     },
+    {
+        files: ['**/*.js'],
+        languageOptions: {
+            globals: {
+                console: 'readonly',
+                process: 'readonly',
+                module: 'readonly',
+                require: 'readonly',
+                __dirname: 'readonly',
+                __filename: 'readonly',
+            },
+        },
+    },
     // {
     //     plugins: {
     //         putout,
@@ -38,7 +51,7 @@ export default [
                 process: 'readonly',
                 Bun: 'readonly',
                 module: 'readonly',
-                require: 'readonly'
+                require: 'readonly',
             },
         },
         plugins: {
