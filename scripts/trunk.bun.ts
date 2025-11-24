@@ -22,6 +22,10 @@ export async function main(): Promise<void> {
         trunkExecutables.some((exe) => existsSync(path.join(dir, exe))),
     );
 
+    const isNixOsEnv = process.env.IS_NIX_OS ?? 'undefined';
+    const inNixShellEnv = process.env.IN_NIX_SHELL ?? 'undefined';
+    const isTrunkInstalledEnv = process.env.IS_TRUNK_INSTALLED ?? 'undefined';
+
     const command: string[] = hasTrunkOnPath
         ? ['trunk', ...args]
         : ['bun', 'x', 'trunk', ...args];
@@ -30,6 +34,9 @@ export async function main(): Promise<void> {
         ? `[trunk-script] branch=trunk-on-path -> trunk ${args.join(' ')}`
         : `[trunk-script] branch=bun-x-trunk -> bun x trunk ${args.join(' ')}`;
 
+    console.log(
+        `[trunk-script] env: IS_NIX_OS=${isNixOsEnv} IN_NIX_SHELL=${inNixShellEnv} IS_TRUNK_INSTALLED=${isTrunkInstalledEnv}`,
+    );
     console.log(label);
 
     try {
