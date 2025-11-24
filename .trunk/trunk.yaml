@@ -15,12 +15,14 @@ runtimes:
 
 lint:
     enabled:
-        - yamllint@1.37.1
         - taplo@0.10.0
         - eslint@9.39.1
-        - checkov@3.2.494
         - git-diff-check
         - markdownlint@0.46.0
-        - osv-scanner@2.3.0
-        - trufflehog@3.91.1
-
+        # Security linters that require hermetic Python are disabled by default
+        # because they fail on NixOS due to missing libcrypt.so.1 in the system.
+        # They can be re-enabled in environments where hermetic runtimes work.
+        # - yamllint@1.37.1
+        # - checkov@3.2.494
+        # - osv-scanner@2.3.0
+        # - trufflehog@3.91.1

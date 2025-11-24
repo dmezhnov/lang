@@ -35,6 +35,7 @@
           default = pkgs.mkShell {
             packages = [
               pkgs.trunk-io
+              pkgs.libxcrypt
             ];
 
             shellHook = ''
@@ -43,6 +44,9 @@
               export NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
               export CURL_CA_BUNDLE=/etc/ssl/certs/ca-bundle.crt
               export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-bundle.crt
+
+              # Make libcrypt.so.1 (from libxcrypt) available for hermetic Python tools used by Trunk.
+              export LD_LIBRARY_PATH=${pkgs.libxcrypt}/lib:$LD_LIBRARY_PATH
 
               # Activate mise so that bun, node and other tools are available
               eval "$(${pkgs.mise}/bin/mise activate bash)"
