@@ -16,11 +16,14 @@ run = "mise trunk fmt"
 [tasks.save]
 run = "mise bun-run run scripts/save.bun.ts"
 
-[tasks.trunk-install]
-run = "mise trunk install"
-
 [tasks.trunk]
-run = "mise bun-run trunk"
+run = '''
+    {%- if env.IS_TRUNK_INSTALLED == "true" -%}
+        mise sh-run trunk
+    {%- else -%}
+        mise bun-run trunk
+    {%- endif -%}
+'''
 
 [tasks.install]
 run = "mise sh-run install"
@@ -29,10 +32,11 @@ run = "mise sh-run install"
 run = ""
 
 [tasks.postinstall]
-run = "mise bun-run i && mise build && mise run trunk-install"
+run = "mise bun-run i && mise build && mise trunk install"
 
 [tasks.sh-run]
 run = '''
+    mise trusted --all
     {%- if env.IS_NIX_OS == "true" -%}
         nix develop -c mise run
     {%- else -%}
@@ -87,3 +91,35 @@ IS_NIX_OS = '''{%- set os = os() -%}
 {%- endif -%}
 
 {{- is_nix_os -}}'''
+
+IS_TRUNK_INSTALLED = '''{%- set os_name = os() | lower -%}
+{%- if os_name is matching("windows") -%}
+{%- set path_sep = ';' -%}
+{%- set exe_candidates = ['trunk.exe', 'trunk.bat', 'trunk.cmd'] -%}
+{%- else -%}
+{%- set path_sep = ':' -%}
+{%- set exe_candidates = ['trunk'] -%}
+{%- endif -%}
+
+{%- if env.PATH is defined -%}
+{%- set raw_path = env.PATH | default(value="") -%}
+{%- elif env.Path is defined -%}
+{%- set raw_path = env.Path | default(value="") -%}
+{%- else -%}
+{%- set raw_path = "" -%}
+{%- endif -%}
+
+{%- set path_dirs = raw_path | split(pat=path_sep) -%}
+{%- set_global existing = [] -%}
+{%- for dir in path_dirs -%}
+    {%- if dir | length > 0 -%}
+        {%- for exe in exe_candidates -%}
+            {%- set candidate = [dir, exe] | join_path -%}
+            {%- if candidate is file -%}
+                {%- set_global existing = existing | concat(with=[candidate]) -%}
+            {%- endif -%}
+        {%- endfor -%}
+    {%- endif -%}
+{%- endfor -%}
+
+{{- (existing | length > 0) -}}'''
