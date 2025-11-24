@@ -2,6 +2,11 @@
 
 All notable changes to the **Lang** extension are documented in this file.
 
+## [0.0.3] - 2025-11-24
+
+- Bumped extension version to 0.0.3 and prepared the package for publishing to
+  the VS Code Marketplace.
+
 ## [0.0.2] - 2025-11-21
 
 - Updated the TextMate grammar and tests so that **ALL_CAPS** variable
