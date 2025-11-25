@@ -1,0 +1,152 @@
+(*
+   Lang language grammar (EBNF-style)
+   ----------------------------------
+   This file describes the intended syntax of the Lang language.
+   It is a specification document only; the VS Code grammar and
+   validator implement a structurally compatible but not identical
+   parsing strategy.
+*)
+
+(* ---------- Lexical elements ---------- *)
+
+letter          = "A" | "B" | "C" | "D" | "E" | "F" | "G"
+                | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+                | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+                | "V" | "W" | "X" | "Y" | "Z"
+                | "a" | "b" | "c" | "d" | "e" | "f" | "g"
+                | "h" | "i" | "j" | "k" | "l" | "m" | "n"
+                | "o" | "p" | "q" | "r" | "s" | "t" | "u"
+                | "v" | "w" | "x" | "y" | "z"
+                | "_" ;
+
+digit           = "0" | "1" | "2" | "3" | "4"
+                | "5" | "6" | "7" | "8" | "9" ;
+
+Identifier      = letter , { letter | digit | "_" } ;
+
+NumberLiteral   = digit , { digit } ;
+
+StringLiteral   = "\"" , { StringChar } , "\"" ;
+
+StringChar      = (* any character except an unescaped double quote or newline *)
+                  (* or an escaped character such as \" or \\                *) ;
+
+Whitespace      = " " | "\t" ;
+
+Newline         = "\n" | "\r\n" ;
+
+(* Comment start:
+   - one or more '#' characters
+   - followed by either:
+       * at least one whitespace character and then any text, or
+       * the end of the line
+*)
+CommentStart    = "#" , { "#" } , ( Whitespace , { ? any-char-not-newline ? }
+                                  | (* end of line *) ) ;
+
+(* Full comment line, including optional leading indentation. *)
+CommentLine     = { Whitespace } , CommentStart , Newline ;
+
+
+(* ---------- Layout and indentation tokens ---------- *)
+
+(* In a layout-sensitive implementation (like the current validator),
+   indentation-based blocks are typically represented using virtual
+   INDENT/DEDENT tokens derived from leading Whitespace on each line.
+*)
+
+INDENT          = (* virtual token introduced when indentation level increases *);
+DEDENT          = (* virtual token introduced when indentation level decreases *);
+
+
+(* ---------- High-level structure ---------- *)
+
+File            = { TopLevelItem } ;
+
+TopLevelItem    = BlankLine
+                | CommentLine
+                | Statement ;
+
+BlankLine       = { Whitespace } , Newline ;
+
+Statement       = Definition
+                | ExprStatement ;
+
+Definition      = Binding , [ WhereClause ] ;
+
+ExprStatement   = Expr , [ WhereClause ] ;
+
+
+(* ---------- Where clauses and blocks ---------- *)
+
+(* A `where` block is attached to the preceding statement or field.
+   In a layout-aware parser this is constrained by indentation; here
+   we model it with explicit INDENT/DEDENT tokens. *)
+
+WhereClause     = Newline , INDENT , "where" , Newline ,
+                  { BlockStatement } ,
+                  DEDENT ;
+
+BlockStatement  = BlankLine
+                | CommentLine
+                | Statement ;
+
+
+(* ---------- Bindings and types ---------- *)
+
+Binding         = SimpleBinding
+                | TypedBinding ;
+
+SimpleBinding   = Identifier , "=" , Expr ;
+
+TypedBinding    = Identifier , ":" , TypeExpr , [ "=" , Expr ] ;
+
+TypeExpr        = SimpleTypeExpr
+                | TypeApplication ;
+
+SimpleTypeExpr  = Identifier ;
+
+TypeApplication = Identifier , "(" , [ TypeArgList ] , ")" ;
+
+TypeArgList     = TypeExpr , { "," , TypeExpr } ;
+
+
+(* ---------- Expressions ---------- *)
+
+Expr            = SequenceExpr ;
+
+SequenceExpr    = EllipsisRange
+                | CommaList ;
+
+CommaList       = BasicExpr , { "," , BasicExpr } ;
+
+(* Ellipsis-based ranges:
+   - c1, ... cn
+   - c1, ...
+   - ... cn
+   - ...
+*)
+EllipsisRange   = [ BasicExpr , "," ] , "..." , [ BasicExpr ] ;
+
+BasicExpr       = Application
+                | Record
+                | ParenthesizedExpr
+                | Identifier
+                | NumberLiteral
+                | StringLiteral ;
+
+Application     = Identifier , "(" , [ ArgList ] , ")" ;
+
+ArgList         = Expr , { "," , Expr } ;
+
+ParenthesizedExpr
+                = "(" , Expr , ")" ;
+
+
+(* ---------- Records ---------- *)
+
+Record          = "{" , RecordBody , "}" ;
+
+RecordBody      = Newline , INDENT , { Field } , DEDENT ;
+
+Field           = Identifier , [ ":" , Expr ] , [ WhereClause ] , Newline ;
