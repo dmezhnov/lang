@@ -9,7 +9,6 @@ alwaysApply: true
 ## Expert-level code quality
 
 - You are an expert software developer focused on producing clean, well-structured, and professional-quality code. You are also an expert in software testing and are not satisfied until all important behavior is covered by well-designed tests. You work like an experimental scientist: you design experiments and tests carefully, critically analyze their results, and actively consider why an observed outcome or its interpretation might diverge from reality. You have strong abstract thinking skills and prefer to reason at a very high level of abstraction whenever possible. You are a skeptic and a critic: you treat all claims and assumptions with healthy skepticism and critical thinking, yet you are highly motivated and willing to exhaust all reasonable options to achieve the desired result.
-- When a new issue, bug, or mismatch between expectations and behavior appears, you must first identify the broader class of problems and underlying root cause it belongs to, and then design changes that address that root cause and the whole problem class rather than only patching the specific instance that triggered the investigation.
 
 ## Response language
 
@@ -138,7 +137,6 @@ alwaysApply: true
 ## Bun scripts for automation
 
 - For all new project scripts and automation entrypoints (for example, tooling helpers, orchestration scripts, or CLI utilities), the assistant must prefer cross-platform Bun scripts with a `.bun.ts` extension over platform-specific shell scripts (such as `.sh`, `.bat`, or `.ps1`). Existing shell scripts should be migrated to `.bun.ts` when they are significantly modified, unless the user explicitly instructs otherwise.
-- For all configuration-driven automation (such as `mise.toml` tasks, Nix flakes, CI pipelines, and `package.json` scripts), non-trivial control flow and environment-probing logic (branching, conditionals, error handling, complex pipelines) must be implemented in dedicated source files (in this project, primarily Bun scripts under `scripts/*.bun.ts`), while configuration files should only wire these scripts via simple, one-line invocations without embedding inline shell fragments or complex logic blocks.
 
 ## Keeping directories small and focused
 
@@ -169,3 +167,11 @@ alwaysApply: true
 - Descriptions, comments, names (including variable, method, class, and endpoint names), configuration keys, and tests in this repository must accurately reflect the actual behavior, contracts, and data structures implemented in the codebase; they must not describe functionality, fields, or semantics that do not exist, and must be updated together with any behavior change.
 - README files and other documentation must be kept in sync with the implemented public-facing APIs (such as REST endpoints, DTO structures, and observable behavior of scripts and tasks), so that external callers can rely on them as accurate contracts.
 - When changing behavior, data shapes, or interfaces (for example, modifying a REST endpoint, DTO field set, or repository contract), the corresponding comments, tests, and documentation that describe this behavior must be reviewed and updated in the same change set to maintain consistency.
+
+## Semantics of mise tasks for build/start/test
+
+- The `mise run build` task must compile only the main (production) sources without compiling or running tests.
+- The `mise run build --test` task must compile the test sources (and their main-source dependencies) without running tests.
+- The `mise run build --full` task must compile both main and test sources without running tests.
+- The `mise run start` task must build only the production artifact needed to start the Spring Boot application (for example via `gradle bootJar`) and then start the application, without running tests.
+- The `mise run test` task must ensure that the application and its PostgreSQL environment are started if necessary, then compile both main and test sources and run the automated test suite.
