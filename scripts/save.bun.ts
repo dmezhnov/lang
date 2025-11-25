@@ -6,6 +6,8 @@
 // - Stage all modifications.
 // - If there are staged changes, create a commit with a unique message
 //   in the format "draft-YYYY-MM-DD-HH-MM-SS".
+// - If an upstream is configured for the "draft" branch, merge remote changes via
+//   "git pull --no-rebase" before pushing.
 // - Push the "draft" branch to the remote (create remote branch if missing).
 
 const $ = Bun.$;
@@ -101,7 +103,38 @@ async function commitIfNeeded(): Promise<boolean> {
 }
 
 async function pushDraftBranch(remoteName: string): Promise<void> {
-    await $`git push -u ${remoteName} ${DRAFT_BRANCH_NAME}`;
+    const result = await $`git push -u ${remoteName} ${DRAFT_BRANCH_NAME}`.nothrow();
+
+    if (result.exitCode !== 0) {
+        throw new Error(
+            `Failed to push "${DRAFT_BRANCH_NAME}" branch to the "${remoteName}" remote. ` +
+                'Please inspect the Git output above, fix the problem, and run the save script again.',
+        );
+    }
+}
+
+async function pullDraftBranchWithMergeIfUpstreamExists(): Promise<void> {
+    // Check whether the draft branch has an upstream configured. If there is no upstream yet
+    // (for example, on the very first push), we skip the pull step and go straight to push.
+    const upstreamCheck = await $`git rev-parse --abbrev-ref --symbolic-full-name ${DRAFT_BRANCH_NAME}@{u}`.nothrow();
+
+    if (upstreamCheck.exitCode !== 0) {
+        console.log(
+            `No upstream is configured for the "${DRAFT_BRANCH_NAME}" branch yet. ` +
+                'Skipping "git pull" before push.',
+        );
+        return;
+    }
+
+    // Upstream exists – pull with merge (no rebase) to integrate remote changes before pushing.
+    const pullResult = await $`git pull --no-rebase`.nothrow();
+
+    if (pullResult.exitCode !== 0) {
+        throw new Error(
+            `Failed to pull and merge remote changes into the "${DRAFT_BRANCH_NAME}" branch. ` +
+                'Please resolve any Git conflicts manually and run the save script again.',
+        );
+    }
 }
 
 export async function main(): Promise<void> {
@@ -112,11 +145,15 @@ export async function main(): Promise<void> {
     await ensureDraftBranchExists();
     await checkoutDraftBranch();
     await stageAllChanges();
-
     const committed = await commitIfNeeded();
 
+    // Always attempt to integrate remote changes (via merge pull) before pushing to keep
+    // the local and remote "draft" branches in sync.
+    await pullDraftBranchWithMergeIfUpstreamExists();
+
     // Always attempt push to keep local and remote branches in sync, even if
-    // there were no new commits (this is effectively a no-op in that case).
+    // there were no new commits (this is effectively a no-op in that case once
+    // the branches are already aligned).
     await pushDraftBranch(remoteName);
 
     if (!committed) {
@@ -131,5 +168,3 @@ if (import.meta.main) {
         process.exitCode = 1;
     });
 }
-
-
