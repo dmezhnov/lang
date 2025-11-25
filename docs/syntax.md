@@ -44,14 +44,39 @@ aspects that are currently validated by the extension.
 
 - **Comments**
 
-  Lines that start with one or more `#` characters (after optional leading
-  whitespace) are treated as comments or Markdown‑style headings:
+  Comment regions start at the first run of one or more `#` characters that is
+  either followed by whitespace or reaches the end of the line. Everything
+  from the first `#` in that run to the end of the line is treated as comment
+  text.
 
   ```text
-  CommentLine ::= '^' '#'+' .* '\n'
+  CommentStart ::= '#'+' (?=\s|$)
   ```
 
-  The validator does not treat content inside comment lines as code.
+  Examples:
+
+  - full-line comments:
+
+    ```lang
+    # Heading
+    ## Subheading
+    ```
+
+  - inline comments after code:
+
+    ```lang
+    x = 5 # this is a comment
+    value: number  ## another comment
+    ```
+
+  - a run of `#` characters at the end of the line is also a comment marker:
+
+    ```lang
+    x = 5 ###
+    ```
+
+  Sequences like `x = 5 #comment` (without a space after `#`) are **not**
+  treated as comments by the validator.
 
 ## Indentation and blocks
 

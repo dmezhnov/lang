@@ -67,6 +67,27 @@ function validateTextDocument(text) {
         const isComment =
             !isBlank && trimmed[0] === '#';
 
+        // Detect the start of a comment region for inline comments. A comment
+        // begins at the first run of one or more `#` characters that is either
+        // followed by whitespace or reaches the end of the line.
+        let commentStartColumn = -1;
+        for (let j = 0; j < line.length; j += 1) {
+            if (line[j] !== '#') {
+                continue;
+            }
+
+            let k = j;
+            while (k < line.length && line[k] === '#') {
+                k += 1;
+            }
+            const afterRun = k < line.length ? line[k] : '';
+
+            if (afterRun === '' || /\s/.test(afterRun)) {
+                commentStartColumn = j;
+                break;
+            }
+        }
+
         // Track indentation only for non-blank, non-comment lines.
         if (!isBlank && !isComment) {
             if (indent > lastIndent) {
@@ -85,7 +106,9 @@ function validateTextDocument(text) {
             }
         }
 
-        // Skip comments and blank lines for structural analysis and bracket scanning.
+        // Skip comment-only lines and blank lines for structural analysis and
+        // bracket scanning. Lines with inline comments are still processed up
+        // to the start of the comment.
         if (isBlank || isComment) {
             offset = lineStartOffset + line.length + 1;
             continue;
@@ -131,8 +154,9 @@ function validateTextDocument(text) {
             };
         }
 
-        // Scan for strings and brackets on non-comment lines.
-        for (let j = 0; j < line.length; j += 1) {
+        // Scan for strings and brackets on non-comment parts of the line.
+        const scanLimit = commentStartColumn >= 0 ? commentStartColumn : line.length;
+        for (let j = 0; j < scanLimit; j += 1) {
             const ch = line[j];
             const pos = lineStartOffset + j;
 
