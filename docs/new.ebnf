@@ -30,7 +30,9 @@ set_operator            ::= ': '
 
 more_operator           ::= '...'
 
-term                    ::= !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+term                    ::= factor
+
+expression              ::= term { operator term }
 
 whitespace              ::= ' ' | '\t'
 

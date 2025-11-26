@@ -175,3 +175,7 @@ alwaysApply: true
 - The `mise run build --full` task must compile both main and test sources without running tests.
 - The `mise run start` task must build only the production artifact needed to start the Spring Boot application (for example via `gradle bootJar`) and then start the application, without running tests.
 - The `mise run test` task must ensure that the application and its PostgreSQL environment are started if necessary, then compile both main and test sources and run the automated test suite.
+
+## Automatic use of `mise run save`
+
+- Whenever the assistant is about to finish a response and the Git working tree of this repository is not clean (that is, there are uncommitted changes), the assistant must run `mise run save` from the repository root, unless the user explicitly instructs otherwise or the `save` task is known to be broken and this has been clearly communicated to the user.
