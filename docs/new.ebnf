@@ -38,9 +38,9 @@ newline                 ::= '\n' | '\r\n'
 
 comment                 ::= '#' { '#' } [ whitespace { char } ]
 
-file                    ::= { statement }
+file                    ::= [statement {whitespace}] | statement {whitespace} { newline statement }
 
-statement               ::= (comment | equation) [newline]
+statement               ::= (comment | equation)
 
 equation                ::= expression whitespace {whitespace} comparison_operator whitespace {whitespace} expression
 
