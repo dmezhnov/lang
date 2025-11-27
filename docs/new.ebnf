@@ -44,4 +44,4 @@ statement               ::= comment | equation
 
 equation                ::= expression {whitespace} comparison_operator {whitespace} expression
 
-comparison_operator     ::= '=' | '!=' | '>' | '<' | '>=' | '<=' | 'set_operator'
+comparison_operator     ::= '=' | '!=' | '>' | '<' | '>=' | '<=' | 'set_operator' | '=>'
