@@ -1,51 +1,59 @@
-lang_file               ::= [statement {whitespace}] | statement {whitespace} { newline [statement] }
+lang_file                     ::= [statement {whitespace}] | statement {whitespace} { newline [statement] }
 
-letter                  ::= 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'
+letter                        ::= 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'
 
-digit                   ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+digit                         ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
 
-number                  ::= digit { digit }
+number                        ::= digit { digit }
 
-char                    ::= ' '|'!'|'"'|'#'|'$'|'%'|'&'|'\''|'('|')'|'*'|'+'|','|'-'|'.'|'/'|'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'|':'|';'|'<'|'='|'>'|'?'|'@'|'A'|'B'|'C'|'D'|'E'|'F'|'G'|'H'|'I'|'J'|'K'|'L'|'M'|'N'|'O'|'P'|'Q'|'R'|'S'|'T'|'U'|'V'|'W'|'X'|'Y'|'Z'|'['|'\\'|']'|'^'|'_'|'`'|'a'|'b'|'c'|'d'|'e'|'f'|'g'|'h'|'i'|'j'|'k'|'l'|'m'|'n'|'o'|'p'|'q'|'r'|'s'|'t'|'u'|'v'|'w'|'x'|'y'|'z'|'{'|'|'|'}'|'~'
+char                          ::= ' '|'!'|'"'|'#'|'$'|'%'|'&'|'\''|'('|')'|'*'|'+'|','|'-'|'.'|'/'|'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'|':'|';'|'<'|'='|'>'|'?'|'@'|'A'|'B'|'C'|'D'|'E'|'F'|'G'|'H'|'I'|'J'|'K'|'L'|'M'|'N'|'O'|'P'|'Q'|'R'|'S'|'T'|'U'|'V'|'W'|'X'|'Y'|'Z'|'['|'\\'|']'|'^'|'_'|'`'|'a'|'b'|'c'|'d'|'e'|'f'|'g'|'h'|'i'|'j'|'k'|'l'|'m'|'n'|'o'|'p'|'q'|'r'|'s'|'t'|'u'|'v'|'w'|'x'|'y'|'z'|'{'|'|'|'}'|'~'
 
-string                  ::= '\"' { char } '\"'
+string                        ::= '\"' { char } '\"'
 
-identifier              ::= letter { letter | digit | '_' }
+identifier                    ::= letter { letter | digit | '_' }
 
-parenthesized           ::= '(' [parenthesized_contest] ')'
+parenthesized                 ::= '(' [parenthesized_contest] ')'
 
-parenthesized_contest   ::= expression | list
+parenthesized_contest         ::= list
 
-factor                  ::= number | identifier | parenthesized | function
+operator                      ::= ' + ' | ' - ' | ' * ' | ' / '
 
-operator                ::= ' + ' | ' - ' | ' * ' | ' / '
+list                          ::= element { ', ' element } | list ', ' more_elements ', ' list
 
-list                    ::= element { ', ' element }
+element                       ::= number | string | identifier | expression | equation | parenthesized
 
-element                 ::= number | string | identifier | expression | equation
+where                         ::= 'where'
 
-where                   ::= 'where'
+from_operator                 ::= ':'
 
-from_operator            ::= ': '
+more_elements                 ::= '...'
 
-more_elements           ::= '...'
+expression                    ::= list { operator list }
 
-term                    ::= factor
+whitespace                    ::= ' ' | '\t'
 
-expression              ::= term { operator term }
+newline                       ::= '\n' | '\r\n'
 
-whitespace              ::= ' ' | '\t'
+comment                       ::= '#' { '#' } [ whitespace { char } ]
 
-newline                 ::= '\n' | '\r\n'
+statement                     ::= comment | equation
 
-comment                 ::= '#' { '#' } [ whitespace { char } ]
+equation                      ::= expression comparison expression { comparison expression } {whitespace} [whitespace comment]
 
-statement               ::= comment | equation
+comparison_equal_for_each     ::= ' => '
 
-equation                ::= expression comparison_operator expression { comparison_operator expression } {whitespace} [whitespace comment]
+comparison_eaqual             ::= ' = '
 
-operator_equal_for_each ::= ' => '
+comparison_not_equal          ::= ' != '
 
-comparison_operator     ::= ' = ' | ' != ' | ' > ' | ' < ' | ' >= ' | ' <= ' | operator_equal_for_each | from_operator
+comparison_more_than          ::= ' > '
 
-function                ::= identifier parenthesized
+comparison_less_than          ::= ' < '
+
+comparison_more_than_or_equal ::= ' >= '
+
+comparison_less_than_or_equal ::= ' <= '
+
+comparison                    ::= comparison_eaqual | comparison_not_equal | comparison_more_than | comparison_less_than | comparison_more_than_or_equal | comparison_less_than_or_equal | comparison_equal_for_each | from_operator
+
+function                      ::= identifier parenthesized
