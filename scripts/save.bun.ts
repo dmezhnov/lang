@@ -18,6 +18,12 @@ const $ = Bun.$;
 
 const DRAFT_BRANCH_NAME = 'draft';
 
+// Workaround for NixOS/Home Manager read-only SSH config permission errors.
+// We force SSH to ignore the user config file since it's causing "Bad owner or permissions" errors.
+if (!process.env.GIT_SSH_COMMAND) {
+    process.env.GIT_SSH_COMMAND = 'ssh -F /dev/null';
+}
+
 async function ensureInsideGitRepo(repoPath: string): Promise<void> {
     const result = await $`git rev-parse --is-inside-work-tree`.cwd(repoPath).nothrow();
     if (result.exitCode !== 0) {
