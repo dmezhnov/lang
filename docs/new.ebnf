@@ -1,4 +1,4 @@
-lang_file                     ::= [{whitespace}] | [statement {whitespace}] | statement {whitespace} { newline [statement] }
+lang_file                     ::= [{whitespace | newline}] | [statement {whitespace}] | statement {whitespace} { newline [statement] }
 
 letter                        ::= 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'
 
@@ -10,7 +10,7 @@ char                          ::= digit|letter|' '|'!'|'"'|'#'|'$'|'%'|'&'|'\''|
 
 string                        ::= '\"' { char } '\"'
 
-identifier                    ::= letter { letter | digit | '_' }
+identifier                    ::= letter { letter | digit | '_' } | '("' [identifier] '")'
 
 parenthesized                 ::= '(' [parenthesized_contest] ')'
 
@@ -36,7 +36,9 @@ element                       ::= number | string | identifier | expression | eq
 
 where                         ::= 'where'
 
-from_operator                 ::= ':'
+of_operator                   ::= 'of'
+
+from_operator                 ::= 'from'
 
 more_elements                 ::= '...'
 
@@ -66,6 +68,6 @@ comparison_more_than_or_equal ::= ' >= '
 
 comparison_less_than_or_equal ::= ' <= '
 
-comparison                    ::= comparison_eaqual | comparison_not_equal | comparison_more_than | comparison_less_than | comparison_more_than_or_equal | comparison_less_than_or_equal | comparison_equal_for_each | from_operator
+comparison                    ::= comparison_eaqual | comparison_not_equal | comparison_more_than | comparison_less_than | comparison_more_than_or_equal | comparison_less_than_or_equal | comparison_equal_for_each | of_operator | from_operator
 
 function                      ::= identifier parenthesized

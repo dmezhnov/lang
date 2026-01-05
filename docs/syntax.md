@@ -34,7 +34,8 @@ aspects that are currently validated by the extension.
 
   - `where`
   - `=`
-  - `:`
+  - `of`
+  - `from`
   - `...`
   - `(`
   - `)`
@@ -66,7 +67,7 @@ aspects that are currently validated by the extension.
 
     ```lang
     x = 5 # this is a comment
-    value: number  ## another comment
+    value of number  ## another comment
     ```
 
   - a run of `#` characters at the end of the line is also a comment marker:
@@ -134,11 +135,11 @@ The language is expression‑oriented. At a high level, expressions include:
 
   ```lang
   MatrixEl = {
-      coords: c1, ... cn
+      coords from c1, ... cn
           where
-              c1: Coordinate
+              c1 of Coordinate
               ...
-              cn: Coordinate
+              cn of Coordinate
       value
   }
   ```

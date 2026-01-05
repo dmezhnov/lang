@@ -2,6 +2,27 @@
 
 All notable changes to the **Lang** extension are documented in this file.
 
+## [0.1.0] - 2026-01-05
+
+### ⚠️ BREAKING CHANGES
+
+- **Replaced `:` operator with two distinct operators:**
+  - `of` — for type annotations and set membership (e.g., `value of number`)
+  - `from` — for field access (e.g., `y from x` equivalent to `x.y`)
+- All existing `.lang` files must be updated to use the new syntax
+
+### Changed
+
+- Updated EBNF grammars (`docs/new.ebnf`, `docs/lang.ebnf`) with `of` and `from` operators
+- Updated TextMate grammar generator to produce patterns for both keywords
+- Updated documentation (`docs/syntax.md`, `docs/overview.md`) with new syntax examples
+- Updated all example files to use new operator syntax
+- Fixed `scopeName` from `lang.lang` to `source.lang` (follows TextMate conventions)
+
+### Added
+
+- New test files: `operator-of.test.ts` and `operator-from.test.ts`
+
 ## [0.0.3] - 2025-11-24
 
 - Bumped extension version to 0.0.3 and prepared the package for publishing to

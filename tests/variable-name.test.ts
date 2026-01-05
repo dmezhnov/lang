@@ -12,7 +12,7 @@ describe('variable.name.lang', () => {
         const varPattern = getPatternByName(grammar, 'variable.name.lang');
         const re = new RegExp(varPattern.match, 'g');
 
-        const text = await loadExample('some.lang');
+        const text = await loadExample('ident.lang');
         const matches = Array.from(text.matchAll(re)).map((m) => m[0]);
 
         expect(matches).toContain('x');
@@ -23,7 +23,7 @@ describe('variable.name.lang', () => {
         const varPattern = getPatternByName(grammar, 'variable.name.lang');
         const re = new RegExp(varPattern.match, 'g');
 
-        const line = 'matrix_source: Matrix';
+        const line = 'matrix_source of Matrix';
         const matches = Array.from(line.matchAll(re)).map((m) => m[0]);
 
         expect(matches).toContain('matrix_source');
@@ -34,7 +34,7 @@ describe('variable.name.lang', () => {
         const pattern = getPatternByCaptureName(grammar, 'variable.name.lang');
         const re = new RegExp(pattern.match);
 
-        const line = 'OVERALL_REQUEST_CAPACITY: number';
+        const line = 'OVERALL_REQUEST_CAPACITY of number';
         const match = re.exec(line);
 
         expect(match?.[1]).toBe('OVERALL_REQUEST_CAPACITY');

@@ -23,17 +23,21 @@
             "name": "keyword.operator.assignment.lang"
         },
         {
-            "match": ":",
-            "name": "keyword.operator.type.annotation.lang"
+            "match": "\\bof\\b",
+            "name": "keyword.operator.of.lang"
         },
         {
-            "match": "([A-Za-z_][A-Za-z0-9_]*)\\s*(:)",
+            "match": "\\bfrom\\b",
+            "name": "keyword.operator.from.lang"
+        },
+        {
+            "match": "([A-Za-z_][A-Za-z0-9_]*)\\s+(of|from)\\b",
             "captures": {
                 "1": {
                     "name": "variable.name.lang"
                 },
                 "2": {
-                    "name": "keyword.operator.type.annotation.lang"
+                    "name": "keyword.operator.lang"
                 }
             }
         },
@@ -67,5 +71,5 @@
         }
     ],
     "repository": {},
-    "scopeName": "lang.lang"
+    "scopeName": "source.lang"
 }

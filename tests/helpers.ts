@@ -18,7 +18,7 @@ export async function loadGrammar(): Promise<Grammar> {
 }
 
 export async function loadExample(file: string): Promise<string> {
-    const examplePath = resolve("examples", file);
+    const examplePath = resolve("examples", "correct", file);
     return readFile(examplePath, "utf8");
 }
 
@@ -39,5 +39,3 @@ export function getPatternByCaptureName(grammar: Grammar, captureName: string): 
     }
     return pattern;
 }
-
-

@@ -42,14 +42,15 @@ const numberSignCommentPattern = String.raw`(?:${escapeForRegex(
 const numberPattern = /[0-9]+/.source;
 const keywordWherePattern = /\bwhere\b/.source;
 const assignmentOperatorPattern = /=/.source;
-const typeAnnotationOperatorPattern = /:/.source;
+const ofOperatorPattern = /\bof\b/.source;
+const fromOperatorPattern = /\bfrom\b/.source;
 // Punctuation and other operators
 const lParenPattern = escapeForRegex(coreCharacters.brackets.paren[0]);
 const rParenPattern = escapeForRegex(coreCharacters.brackets.paren[1]);
 const commaPattern = /,/.source;
 const ellipsisPattern = /\.{3}/.source;
-// capture 1: variable name (any case), capture 2: colon as type-annotation operator
-const variableBeforeColonPattern = /([A-Za-z_][A-Za-z0-9_]*)\s*(:)/.source;
+// capture 1: variable name (any case), capture 2: of or from keyword
+const variableBeforeKeywordPattern = /([A-Za-z_][A-Za-z0-9_]*)\s+(of|from)\b/.source;
 const functionNamePattern = /([a-z_][A-Za-z0-9_]*)\s*\(/.source;
 const variablePattern = /[a-z_][A-Za-z0-9_]*/.source;
 
@@ -81,14 +82,18 @@ const grammar = {
             name: `keyword.operator.assignment.${lang_postfix}`,
         },
         {
-            match: typeAnnotationOperatorPattern,
-            name: `keyword.operator.type.annotation.${lang_postfix}`,
+            match: ofOperatorPattern,
+            name: `keyword.operator.of.${lang_postfix}`,
         },
         {
-            match: variableBeforeColonPattern,
+            match: fromOperatorPattern,
+            name: `keyword.operator.from.${lang_postfix}`,
+        },
+        {
+            match: variableBeforeKeywordPattern,
             captures: {
                 '1': { name: `variable.name.${lang_postfix}` },
-                '2': { name: `keyword.operator.type.annotation.${lang_postfix}` },
+                '2': { name: `keyword.operator.${lang_postfix}` },
             },
         },
         {
@@ -119,7 +124,7 @@ const grammar = {
         },
     ],
     repository: {},
-    scopeName: `${lang_postfix}.${lang_postfix}`,
+    scopeName: `source.${lang_postfix}`,
 };
 
 const bracketPairs: [string, string][] = [

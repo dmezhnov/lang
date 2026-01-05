@@ -3,8 +3,8 @@ import { loadExample } from './helpers';
 import { validateTextDocument } from '../src/lang-validator';
 
 describe('lang syntax validator', () => {
-    it('does not report errors for the operations.lang example', async () => {
-        const text = await loadExample('operations.lang');
+    it('does not report errors for the ident.lang example', async () => {
+        const text = await loadExample('ident.lang');
         const diagnostics = validateTextDocument(text);
 
         expect(diagnostics.length).toBe(0);
@@ -34,5 +34,3 @@ describe('lang syntax validator', () => {
         expect(diagnostics[0]?.message).toContain('Unterminated string literal');
     });
 });
-
-

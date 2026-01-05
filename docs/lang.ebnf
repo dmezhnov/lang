@@ -99,7 +99,7 @@ Binding         = SimpleBinding
 
 SimpleBinding   = Identifier , "=" , Expr ;
 
-TypedBinding    = Identifier , ":" , TypeExpr , [ "=" , Expr ] ;
+TypedBinding    = Identifier , "of" , TypeExpr , [ "=" , Expr ] ;
 
 TypeExpr        = SimpleTypeExpr
                 | TypeApplication ;
@@ -149,4 +149,4 @@ Record          = "{" , RecordBody , "}" ;
 
 RecordBody      = Newline , INDENT , { Field } , DEDENT ;
 
-Field           = Identifier , [ ":" , Expr ] , [ WhereClause ] , Newline ;
+Field           = Identifier , [ "from" , Expr ] , [ WhereClause ] , Newline ;
