@@ -2,6 +2,7 @@ import { type LangiumCoreServices, type Module, type PartialLangiumCoreServices,
 import { type DefaultSharedModuleContext, createDefaultModule, createDefaultSharedModule } from 'langium/lsp';
 import { LangGeneratedModule, LangGeneratedSharedModule } from './generated/module';
 import { LangValidator, registerValidationChecks } from './lang-validator';
+import { LangLexer } from './lang-lexer';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -25,6 +26,9 @@ export type LangServices = LangiumCoreServices & LangAddedServices;
 export const LangModule: Module<LangServices, PartialLangiumCoreServices & LangAddedServices> = {
     validation: {
         LangValidator: () => new LangValidator()
+    },
+    parser: {
+        Lexer: (services) => new LangLexer(services)
     }
 };
 

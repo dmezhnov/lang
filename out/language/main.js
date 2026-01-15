@@ -32570,16 +32570,28 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
       "entry": true,
       "name": "File",
       "definition": {
-        "$type": "Assignment",
-        "feature": "statements",
-        "operator": "+=",
-        "terminal": {
-          "$type": "RuleCall",
-          "rule": {
-            "$ref": "#/rules@1"
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "statements",
+            "operator": "+=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@1"
+              },
+              "arguments": []
+            }
           },
-          "arguments": []
-        },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@16"
+            },
+            "arguments": []
+          }
+        ],
         "cardinality": "*"
       },
       "fragment": false,
@@ -32589,19 +32601,31 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
       "$type": "ParserRule",
       "name": "Statement",
       "definition": {
-        "$type": "Alternatives",
+        "$type": "Group",
         "elements": [
           {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@2"
-            },
-            "arguments": []
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@2"
+                },
+                "arguments": []
+              },
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@4"
+                },
+                "arguments": []
+              }
+            ]
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@4"
+              "$ref": "#/rules@16"
             },
             "arguments": []
           }
@@ -32776,6 +32800,13 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "arguments": []
           },
           {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@17"
+            },
+            "arguments": []
+          },
+          {
             "$type": "Assignment",
             "feature": "statements",
             "operator": "+=",
@@ -32791,7 +32822,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@17"
+              "$ref": "#/rules@18"
             },
             "arguments": []
           }
@@ -32954,7 +32985,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@19"
+                "$ref": "#/rules@20"
               },
               "arguments": []
             }
@@ -32966,7 +32997,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@20"
+                "$ref": "#/rules@21"
               },
               "arguments": []
             }
@@ -32978,7 +33009,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@18"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -33036,17 +33067,29 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "value": "("
           },
           {
-            "$type": "Assignment",
-            "feature": "inner",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@7"
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "inner",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@7"
+                  },
+                  "arguments": []
+                }
               },
-              "arguments": []
-            },
-            "cardinality": "?"
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@16"
+                },
+                "arguments": []
+              }
+            ],
+            "cardinality": "*"
           },
           {
             "$type": "Keyword",
@@ -33067,6 +33110,14 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
           {
             "$type": "Keyword",
             "value": "{"
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@16"
+            },
+            "arguments": [],
+            "cardinality": "?"
           },
           {
             "$type": "Assignment",
@@ -33104,7 +33155,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@18"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -33143,6 +33194,13 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
               "arguments": []
             },
             "cardinality": "?"
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@16"
+            },
+            "arguments": []
           }
         ]
       },
@@ -33163,7 +33221,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@18"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -33318,10 +33376,21 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
       "name": "WS",
       "definition": {
         "$type": "RegexToken",
-        "regex": "/\\\\s+/",
+        "regex": "/[ \\\\t]+/",
         "parenthesized": false
       },
       "fragment": false
+    },
+    {
+      "$type": "TerminalRule",
+      "name": "NEWLINE",
+      "definition": {
+        "$type": "RegexToken",
+        "regex": "/\\\\r?\\\\n/",
+        "parenthesized": false
+      },
+      "fragment": false,
+      "hidden": false
     },
     {
       "$type": "TerminalRule",
@@ -33435,10 +33504,95 @@ var LangValidator = class {
   // }
 };
 
+// src/language/lang-lexer.ts
+var LangLexer = class extends DefaultLexer {
+  lex(source) {
+    const result = super.lex(source);
+    const tokens = result.tokens;
+    const newTokens = [];
+    const indentStack = [0];
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
+      newTokens.push(token);
+      if (token.tokenType.name === "NEWLINE") {
+        let nextToken = tokens[i + 1];
+        if (!nextToken || nextToken.tokenType.name === "NEWLINE") {
+          continue;
+        }
+        const currentIndent = indentStack[indentStack.length - 1];
+        const nextIndent = this.getIndentation(source, nextToken);
+        if (nextIndent > currentIndent) {
+          indentStack.push(nextIndent);
+          newTokens.push(this.createVirtualToken("INDENT", nextToken));
+        } else if (nextIndent < currentIndent) {
+          while (indentStack.length > 1 && nextIndent < indentStack[indentStack.length - 1]) {
+            indentStack.pop();
+            newTokens.push(this.createVirtualToken("DEDENT", nextToken));
+          }
+          if (nextIndent !== indentStack[indentStack.length - 1]) {
+          }
+        }
+      }
+    }
+    while (indentStack.length > 1) {
+      indentStack.pop();
+      const lastToken = newTokens[newTokens.length - 1] || {
+        endOffset: source.length,
+        startLine: 0,
+        // Dummy token if empty
+        tokenType: { name: "EOF" }
+      };
+      newTokens.push(this.createVirtualToken("DEDENT", lastToken));
+    }
+    result.tokens = newTokens;
+    return result;
+  }
+  getIndentation(source, token) {
+    let index = token.startOffset - 1;
+    while (index >= 0) {
+      const char = source[index];
+      if (char === "\n" || char === "\r") {
+        break;
+      }
+      index--;
+    }
+    const lineStart = index + 1;
+    const indentText = source.substring(lineStart, token.startOffset);
+    return this.computeIndentCounts(indentText);
+  }
+  computeIndentCounts(text) {
+    let count = 0;
+    for (const char of text) {
+      if (char === "	") {
+        count += 4;
+      } else if (char === " ") {
+        count++;
+      }
+    }
+    return count;
+  }
+  createVirtualToken(name, anchor) {
+    return {
+      tokenType: { name, label: name },
+      image: "",
+      startOffset: anchor.startOffset,
+      endOffset: anchor.startOffset,
+      startLine: anchor.startLine,
+      endLine: anchor.startLine,
+      startColumn: anchor.startColumn,
+      endColumn: anchor.startColumn,
+      tokenIndex: -1
+    };
+  }
+};
+
 // src/language/lang-module.ts
 var LangModule = {
   validation: {
     LangValidator: () => new LangValidator()
+  },
+  parser: {
+    Lexer: (services) => new LangLexer(services)
   }
 };
 function createLangServices(context) {

@@ -7,7 +7,8 @@
 import * as langium from 'langium';
 
 export const LangTerminals = {
-    WS: /\s+/,
+    WS: /[ \t]+/,
+    NEWLINE: /\r?\n/,
     INDENT: /INDENT/,
     DEDENT: /DEDENT/,
     ID: /[_a-zA-Z][\w_]*/,

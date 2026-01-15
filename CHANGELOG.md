@@ -1,17 +1,27 @@
 # Changelog
 
+## [0.3.3] - 2026-01-16
+
+### Added
+
+- **Significant Whitespace**: Implemented Python-style indentation usage.
+  - Newlines are now statement terminators.
+  - `where` blocks and records require indentation.
+  - Removed strict requirement for "INDENT"/"DEDENT" keywords (now inferred from whitespace).
+
 ## [0.3.2] - 2026-01-15
 
 ### Fixed
 
-- **Tests**: Removed obsolete test files (`lang-validator.test.ts`, `ebnf-validator.test.ts`) that were causing build failures.
+- **Tests**: Removed obsolete test files (`lang-validator.test.ts`,
+  `ebnf-validator.test.ts`) that were causing build failures.
 
 ## [0.3.1] - 2026-01-15
 
 ### Fixed
 
-- **VS Code Compatibility**: Downgraded `engines.vscode` requirement to `^1.104.0` to support
-  older IDE versions.
+- **VS Code Compatibility**: Downgraded `engines.vscode` requirement to
+  `^1.104.0` to support older IDE versions.
 - **Build**: Resolved typescript errors and removed unused imports.
 
 ## [0.2.0] - 2026-01-13

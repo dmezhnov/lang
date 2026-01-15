@@ -1,22 +1,22 @@
 grammar Lang
 
 entry File:
-    (statements+=Statement)*;
+    (statements+=Statement | NEWLINE)*;
 
 Statement:
     Equation | ExprStatement;
 
 Equation:
-    left=Expression op=Comparison right=Expression (rest+=ComparisonRight)* (where=WhereClause)?;
+    left=Expression op=Comparison right=Expression (rest+=ComparisonRight)* (where=WhereClause | NEWLINE);
 
 ComparisonRight:
     op=Comparison right=Expression;
 
 ExprStatement:
-    expr=Expression (where=WhereClause)?;
+    expr=Expression (where=WhereClause | NEWLINE);
 
 WhereClause:
-    'where' INDENT statements+=Statement* DEDENT;
+    'where' NEWLINE INDENT statements+=Statement* DEDENT;
 
 Expression:
     List ({infer BinaryExpression.left=current} op=Operator right=List)*;
@@ -28,13 +28,13 @@ Element:
     number=NUMBER | string=STRING | id=ID | expr=Parenthesized | record=Record | func=FunctionCall;
 
 Parenthesized:
-    '(' inner=List? ')';
+    '(' (inner+=List | NEWLINE)* ')';
 
 Record:
-    '{' fields+=Field* '}';
+    '{' NEWLINE? fields+=Field* '}';
 
 Field:
-    name=ID ('from' value=Expression)? (where=WhereClause)?;
+     name=ID ('from' value=Expression)? (where=WhereClause | NEWLINE);
 
 FunctionCall:
     name=ID '(' (args+=Expression (',' args+=Expression)*)? ')';
@@ -45,7 +45,8 @@ Comparison returns string:
 Operator returns string:
     '+' | '-' | '*' | '/' | '^' | '<>';
 
-hidden terminal WS: /\s+/;
+hidden terminal WS: /[ \t]+/;
+terminal NEWLINE: /\r?\n/;
 terminal INDENT: 'INDENT';
 terminal DEDENT: 'DEDENT';
 

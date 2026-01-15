@@ -19,14 +19,17 @@ async function ensureGitClean(repoPath: string): Promise<void> {
     }
 }
 
-async function promptForVersion(): Promise<string> {
-    process.stdout.write('Enter new version number (e.g., 0.3.1): ');
+async function promptForVersion(currentVersion: string): Promise<string> {
+    const [major, minor, patch] = currentVersion.split('.').map(Number);
+    const nextPatch = `${major}.${minor}.${(patch || 0) + 1}`;
+
+    process.stdout.write(`Enter new version number (current: ${currentVersion}, default: ${nextPatch}): `);
     for await (const line of console) {
         const trimmed = line.trim();
         if (trimmed) {
             return trimmed;
         }
-        process.stdout.write('Version cannot be empty. Enter new version number: ');
+        return nextPatch;
     }
     throw new Error('No version provided.');
 }
@@ -77,8 +80,13 @@ export async function main(): Promise<void> {
     // 1. Ensure clean state
     await ensureGitClean(repoPath);
 
+    // Read current version
+    const pkgPath = resolvePath(repoPath, 'package.json');
+    const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+    const currentVersion = pkg.version;
+
     // 2. Prompt for version
-    const version = await promptForVersion();
+    const version = await promptForVersion(currentVersion);
     console.log(`Preparing to publish version: ${version}`);
 
     // 3. Verify Changelog and Extract Notes
