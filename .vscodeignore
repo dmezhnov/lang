@@ -15,3 +15,4 @@
 !syntaxes/**
 !extension.js
 !src/**
+!out/**

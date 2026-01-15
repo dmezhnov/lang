@@ -36,6 +36,7 @@ aspects that are currently validated by the extension.
   - `=`
   - `of`
   - `from`
+  - `for`
   - `...`
   - `(`
   - `)`

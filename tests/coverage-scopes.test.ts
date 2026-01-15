@@ -1,16 +1,16 @@
-import { describe, it, expect } from "bun:test";
-import { readdir, readFile } from "fs/promises";
-import { resolve } from "path";
-import { loadGrammar } from "./helpers";
+import { describe, it, expect } from 'bun:test';
+import { readdir, readFile } from 'fs/promises';
+import { resolve } from 'path';
+import { loadGrammar } from './helpers';
 
 async function listTestFiles(): Promise<string[]> {
-    const dir = resolve("tests");
+    const dir = resolve('tests');
     const entries = await readdir(dir);
-    return entries.filter((name) => name.endsWith(".test.ts") && name !== "coverage-scopes.test.ts");
+    return entries.filter((name) => name.endsWith('.test.ts') && name !== 'coverage-scopes.test.ts');
 }
 
-describe("grammar test coverage for scopes", () => {
-    it("has at least one dedicated test mentioning every scope used in the grammar", async () => {
+describe('grammar test coverage for scopes', () => {
+    it('has at least one dedicated test mentioning every scope used in the grammar', async () => {
         const grammar = await loadGrammar();
 
         // Collect all unique scope names from pattern.name and captures[*].name
@@ -28,8 +28,8 @@ describe("grammar test coverage for scopes", () => {
         const testFiles = await listTestFiles();
         const fileContents: string[] = [];
         for (const file of testFiles) {
-            const fullPath = resolve("tests", file);
-            fileContents.push(await readFile(fullPath, "utf8"));
+            const fullPath = resolve('tests', file);
+            fileContents.push(await readFile(fullPath, 'utf8'));
         }
 
         const missingScopes: string[] = [];

@@ -1,6 +1,18 @@
 # Changelog
 
-All notable changes to the **Lang** extension are documented in this file.
+## [0.3.1] - 2026-01-15
+
+### Fixed
+
+- **VS Code Compatibility**: Downgraded `engines.vscode` requirement to `^1.104.0` to support
+  older IDE versions.
+- **Build**: Resolved typescript errors and removed unused imports.
+
+## [0.2.0] - 2026-01-13
+
+### Added
+
+- Added `for` operator to the language syntax (supported in grammar and textmate)
 
 ## [0.1.0] - 2026-01-05
 
@@ -13,7 +25,8 @@ All notable changes to the **Lang** extension are documented in this file.
 
 ### Changed
 
-- Updated EBNF grammars (`docs/new.ebnf`, `docs/lang.ebnf`) with `of` and `from` operators
+- Updated EBNF grammars (`docs/new.ebnf`, `docs/lang.ebnf`) with `of` and
+  `from` operators
 - Updated TextMate grammar generator to produce patterns for both keywords
 - Updated documentation (`docs/syntax.md`, `docs/overview.md`) with new syntax examples
 - Updated all example files to use new operator syntax

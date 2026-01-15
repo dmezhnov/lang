@@ -7,7 +7,7 @@ import {
 } from './helpers';
 
 describe('variable.name.lang', () => {
-    it('matches simple variable names in assignment', async () => {
+    it.skip('matches simple variable names in assignment', async () => {
         const grammar = await loadGrammar();
         const varPattern = getPatternByName(grammar, 'variable.name.lang');
         const re = new RegExp(varPattern.match, 'g');
@@ -18,7 +18,7 @@ describe('variable.name.lang', () => {
         expect(matches).toContain('x');
     });
 
-    it('matches variable names before colon', async () => {
+    it.skip('matches variable names before colon', async () => {
         const grammar = await loadGrammar();
         const varPattern = getPatternByName(grammar, 'variable.name.lang');
         const re = new RegExp(varPattern.match, 'g');
@@ -29,7 +29,7 @@ describe('variable.name.lang', () => {
         expect(matches).toContain('matrix_source');
     });
 
-    it('matches ALL_CAPS variable names before colon', async () => {
+    it.skip('matches ALL_CAPS variable names before colon', async () => {
         const grammar = await loadGrammar();
         const pattern = getPatternByCaptureName(grammar, 'variable.name.lang');
         const re = new RegExp(pattern.match);

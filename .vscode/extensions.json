@@ -6,6 +6,7 @@
         "hverlin.mise-vscode",
         "tombi-toml.tombi",
         "gruntfuggly.todo-tree",
-        "arrterian.nix-env-selector"
+        "arrterian.nix-env-selector",
+        "langium.langium-vscode"
     ]
 }

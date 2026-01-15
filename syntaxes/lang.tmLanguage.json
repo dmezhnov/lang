@@ -1,75 +1,46 @@
 {
-    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-    "name": "Lang",
-    "patterns": [
+  "name": "lang",
+  "scopeName": "source.lang",
+  "fileTypes": [
+    ".lang"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "name": "keyword.control.lang",
+      "match": "\\b(for|from|of|where)\\b"
+    },
+    {
+      "name": "string.quoted.double.lang",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
         {
-            "match": "\"(?:\\\\.|[^\"])*\"",
-            "name": "string.quoted.double.lang"
-        },
-        {
-            "match": "(?:#+\\s+.*$|#+$)",
-            "name": "comment.line.number-sign.lang"
-        },
-        {
-            "match": "[0-9]+",
-            "name": "constant.numeric.lang"
-        },
-        {
-            "match": "\\bwhere\\b",
-            "name": "keyword.other.lang"
-        },
-        {
-            "match": "=",
-            "name": "keyword.operator.assignment.lang"
-        },
-        {
-            "match": "\\bof\\b",
-            "name": "keyword.operator.of.lang"
-        },
-        {
-            "match": "\\bfrom\\b",
-            "name": "keyword.operator.from.lang"
-        },
-        {
-            "match": "([A-Za-z_][A-Za-z0-9_]*)\\s+(of|from)\\b",
-            "captures": {
-                "1": {
-                    "name": "variable.name.lang"
-                },
-                "2": {
-                    "name": "keyword.operator.lang"
-                }
-            }
-        },
-        {
-            "match": "\\(",
-            "name": "punctuation.parenthesis.open.lang"
-        },
-        {
-            "match": "\\)",
-            "name": "punctuation.parenthesis.close.lang"
-        },
-        {
-            "match": ",",
-            "name": "punctuation.separator.comma.lang"
-        },
-        {
-            "match": "\\.{3}",
-            "name": "keyword.operator.ellipsis.lang"
-        },
-        {
-            "match": "([a-z_][A-Za-z0-9_]*)\\s*\\(",
-            "captures": {
-                "1": {
-                    "name": "entity.name.function.lang"
-                }
-            }
-        },
-        {
-            "match": "[a-z_][A-Za-z0-9_]*",
-            "name": "variable.name.lang"
+          "include": "#string-character-escape"
         }
-    ],
-    "repository": {},
-    "scopeName": "source.lang"
+      ]
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "begin": "#",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.whitespace.comment.leading.lang"
+            }
+          },
+          "end": "(?=$)",
+          "name": "comment.line.lang"
+        }
+      ]
+    },
+    "string-character-escape": {
+      "name": "constant.character.escape.lang",
+      "match": "\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|u\\{[0-9A-Fa-f]+\\}|[0-2][0-7]{0,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)"
+    }
+  }
 }

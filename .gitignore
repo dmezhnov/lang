@@ -5,4 +5,5 @@ node_modules
 !**.env.example
 .vscode-test
 dist
+out/
 *.log

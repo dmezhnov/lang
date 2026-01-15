@@ -16,7 +16,8 @@ language. The extension is focused on providing:
   - `where` keyword;
   - numbers;
   - identifiers and function‑like definitions;
-  - punctuation and operators such as `=`, `of`, `from`, `...`, parentheses, and braces;
+  - punctuation and operators such as `=`, `of`, `from`, `for`, `...`,
+    parentheses, and braces;
   - Markdown‑style heading lines that start with `#`, `##`, `###`, etc.
 
 - **Structural syntax validation**

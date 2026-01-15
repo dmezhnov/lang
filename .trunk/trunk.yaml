@@ -19,3 +19,8 @@ lint:
         - eslint@9.39.1
         - git-diff-check
         - markdownlint@0.46.0
+    ignore:
+        - linters: [ALL]
+          paths:
+              - out/**
+              - src/language/generated/**

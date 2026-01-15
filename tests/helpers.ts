@@ -1,5 +1,5 @@
-import { readFile } from "fs/promises";
-import { resolve } from "path";
+import { readFile } from 'fs/promises';
+import { resolve } from 'path';
 
 export type GrammarPattern = {
     match: string;
@@ -12,14 +12,14 @@ export type Grammar = {
 };
 
 export async function loadGrammar(): Promise<Grammar> {
-    const grammarPath = resolve("syntaxes", "lang.tmLanguage.json");
-    const raw = await readFile(grammarPath, "utf8");
+    const grammarPath = resolve('syntaxes', 'lang.tmLanguage.json');
+    const raw = await readFile(grammarPath, 'utf8');
     return JSON.parse(raw) as Grammar;
 }
 
 export async function loadExample(file: string): Promise<string> {
-    const examplePath = resolve("examples", "correct", file);
-    return readFile(examplePath, "utf8");
+    const examplePath = resolve('examples', 'correct syntax', file);
+    return readFile(examplePath, 'utf8');
 }
 
 export function getPatternByName(grammar: Grammar, name: string): GrammarPattern {
