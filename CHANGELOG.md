@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.2] - 2026-01-15
+
+### Fixed
+
+- **Tests**: Removed obsolete test files (`lang-validator.test.ts`, `ebnf-validator.test.ts`) that were causing build failures.
+
 ## [0.3.1] - 2026-01-15
 
 ### Fixed
