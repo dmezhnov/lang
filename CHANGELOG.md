@@ -1,10 +1,18 @@
 # Changelog
 
+## [0.3.5] - 2026-01-16
+
+### Added
+
+- **Grammar**: Added support for dot member access (e.g., `list.A`) and chained function calls (e.g., `f(a)(b)`).
+- **Validation**: Verified compliance with provided syntax examples.
+
 ## [0.3.4] - 2026-01-16
 
 ### Fixed
 
-- **Grammar**: Resolved `MismatchedTokenException` in parser by ensuring virtual tokens carry correct type indices.
+- **Grammar**: Resolved `MismatchedTokenException` in parser by ensuring virtual
+  tokens carry correct type indices.
 - **Lexer**: Fixed type safety issues in `LangLexer`.
 
 ## [0.3.3] - 2026-01-16
@@ -14,7 +22,8 @@
 - **Significant Whitespace**: Implemented Python-style indentation usage.
   - Newlines are now statement terminators.
   - `where` blocks and records require indentation.
-  - Removed strict requirement for "INDENT"/"DEDENT" keywords (now inferred from whitespace).
+  - Removed strict requirement for "INDENT"/"DEDENT" keywords (now inferred
+    from whitespace).
 
 ## [0.3.2] - 2026-01-15
 

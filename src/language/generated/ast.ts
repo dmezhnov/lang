@@ -27,6 +27,7 @@ export type LangKeywordNames =
     | "+"
     | ","
     | "-"
+    | "."
     | "..."
     | "/"
     | "<"
@@ -88,25 +89,10 @@ export function isComparisonRight(item: unknown): item is ComparisonRight {
     return reflection.isInstance(item, ComparisonRight.$type);
 }
 
-export interface Element extends langium.AstNode {
-    readonly $container: List;
-    readonly $type: 'Element';
-    expr?: Parenthesized;
-    func?: FunctionCall;
-    id?: string;
-    number?: number;
-    record?: Record;
-    string?: string;
-}
+export type Element = FunctionCall | MemberAccess | Primary;
 
 export const Element = {
-    $type: 'Element',
-    expr: 'expr',
-    func: 'func',
-    id: 'id',
-    number: 'number',
-    record: 'record',
-    string: 'string'
+    $type: 'Element'
 } as const;
 
 export function isElement(item: unknown): item is Element {
@@ -197,16 +183,16 @@ export function isFile(item: unknown): item is File {
 }
 
 export interface FunctionCall extends langium.AstNode {
-    readonly $container: Element;
+    readonly $container: List;
     readonly $type: 'FunctionCall';
     args: Array<Expression>;
-    name: string;
+    receiver: Primary;
 }
 
 export const FunctionCall = {
     $type: 'FunctionCall',
     args: 'args',
-    name: 'name'
+    receiver: 'receiver'
 } as const;
 
 export function isFunctionCall(item: unknown): item is FunctionCall {
@@ -228,6 +214,38 @@ export function isList(item: unknown): item is List {
     return reflection.isInstance(item, List.$type);
 }
 
+export interface MemberAccess extends langium.AstNode {
+    readonly $container: List;
+    readonly $type: 'MemberAccess';
+    member: number | string;
+    receiver: Primary;
+}
+
+export const MemberAccess = {
+    $type: 'MemberAccess',
+    member: 'member',
+    receiver: 'receiver'
+} as const;
+
+export function isMemberAccess(item: unknown): item is MemberAccess {
+    return reflection.isInstance(item, MemberAccess.$type);
+}
+
+export interface NumberLiteral extends langium.AstNode {
+    readonly $container: FunctionCall | List | MemberAccess;
+    readonly $type: 'NumberLiteral';
+    value: number;
+}
+
+export const NumberLiteral = {
+    $type: 'NumberLiteral',
+    value: 'value'
+} as const;
+
+export function isNumberLiteral(item: unknown): item is NumberLiteral {
+    return reflection.isInstance(item, NumberLiteral.$type);
+}
+
 export type Operator = '*' | '+' | '-' | '/' | '<>' | '^';
 
 export function isOperator(item: unknown): item is Operator {
@@ -235,7 +253,7 @@ export function isOperator(item: unknown): item is Operator {
 }
 
 export interface Parenthesized extends langium.AstNode {
-    readonly $container: Element;
+    readonly $container: FunctionCall | List | MemberAccess;
     readonly $type: 'Parenthesized';
     inner: Array<List>;
 }
@@ -249,8 +267,18 @@ export function isParenthesized(item: unknown): item is Parenthesized {
     return reflection.isInstance(item, Parenthesized.$type);
 }
 
+export type Primary = NumberLiteral | Parenthesized | Record | Reference | StringLiteral;
+
+export const Primary = {
+    $type: 'Primary'
+} as const;
+
+export function isPrimary(item: unknown): item is Primary {
+    return reflection.isInstance(item, Primary.$type);
+}
+
 export interface Record extends langium.AstNode {
-    readonly $container: Element;
+    readonly $container: FunctionCall | List | MemberAccess;
     readonly $type: 'Record';
     fields: Array<Field>;
 }
@@ -264,6 +292,21 @@ export function isRecord(item: unknown): item is Record {
     return reflection.isInstance(item, Record.$type);
 }
 
+export interface Reference extends langium.AstNode {
+    readonly $container: FunctionCall | List | MemberAccess;
+    readonly $type: 'Reference';
+    name: string;
+}
+
+export const Reference = {
+    $type: 'Reference',
+    name: 'name'
+} as const;
+
+export function isReference(item: unknown): item is Reference {
+    return reflection.isInstance(item, Reference.$type);
+}
+
 export type Statement = Equation | ExprStatement;
 
 export const Statement = {
@@ -272,6 +315,21 @@ export const Statement = {
 
 export function isStatement(item: unknown): item is Statement {
     return reflection.isInstance(item, Statement.$type);
+}
+
+export interface StringLiteral extends langium.AstNode {
+    readonly $container: FunctionCall | List | MemberAccess;
+    readonly $type: 'StringLiteral';
+    value: string;
+}
+
+export const StringLiteral = {
+    $type: 'StringLiteral',
+    value: 'value'
+} as const;
+
+export function isStringLiteral(item: unknown): item is StringLiteral {
+    return reflection.isInstance(item, StringLiteral.$type);
 }
 
 export interface WhereClause extends langium.AstNode {
@@ -300,9 +358,14 @@ export type LangAstType = {
     File: File
     FunctionCall: FunctionCall
     List: List
+    MemberAccess: MemberAccess
+    NumberLiteral: NumberLiteral
     Parenthesized: Parenthesized
+    Primary: Primary
     Record: Record
+    Reference: Reference
     Statement: Statement
+    StringLiteral: StringLiteral
     WhereClause: WhereClause
 }
 
@@ -338,24 +401,6 @@ export class LangAstReflection extends langium.AbstractAstReflection {
         Element: {
             name: Element.$type,
             properties: {
-                expr: {
-                    name: Element.expr
-                },
-                func: {
-                    name: Element.func
-                },
-                id: {
-                    name: Element.id
-                },
-                number: {
-                    name: Element.number
-                },
-                record: {
-                    name: Element.record
-                },
-                string: {
-                    name: Element.string
-                }
             },
             superTypes: []
         },
@@ -431,11 +476,11 @@ export class LangAstReflection extends langium.AbstractAstReflection {
                     name: FunctionCall.args,
                     defaultValue: []
                 },
-                name: {
-                    name: FunctionCall.name
+                receiver: {
+                    name: FunctionCall.receiver
                 }
             },
-            superTypes: []
+            superTypes: [Element.$type]
         },
         List: {
             name: List.$type,
@@ -447,6 +492,27 @@ export class LangAstReflection extends langium.AbstractAstReflection {
             },
             superTypes: [Expression.$type]
         },
+        MemberAccess: {
+            name: MemberAccess.$type,
+            properties: {
+                member: {
+                    name: MemberAccess.member
+                },
+                receiver: {
+                    name: MemberAccess.receiver
+                }
+            },
+            superTypes: [Element.$type]
+        },
+        NumberLiteral: {
+            name: NumberLiteral.$type,
+            properties: {
+                value: {
+                    name: NumberLiteral.value
+                }
+            },
+            superTypes: [Primary.$type]
+        },
         Parenthesized: {
             name: Parenthesized.$type,
             properties: {
@@ -455,7 +521,13 @@ export class LangAstReflection extends langium.AbstractAstReflection {
                     defaultValue: []
                 }
             },
-            superTypes: []
+            superTypes: [Primary.$type]
+        },
+        Primary: {
+            name: Primary.$type,
+            properties: {
+            },
+            superTypes: [Element.$type]
         },
         Record: {
             name: Record.$type,
@@ -465,13 +537,31 @@ export class LangAstReflection extends langium.AbstractAstReflection {
                     defaultValue: []
                 }
             },
-            superTypes: []
+            superTypes: [Primary.$type]
+        },
+        Reference: {
+            name: Reference.$type,
+            properties: {
+                name: {
+                    name: Reference.name
+                }
+            },
+            superTypes: [Primary.$type]
         },
         Statement: {
             name: Statement.$type,
             properties: {
             },
             superTypes: []
+        },
+        StringLiteral: {
+            name: StringLiteral.$type,
+            properties: {
+                value: {
+                    name: StringLiteral.value
+                }
+            },
+            superTypes: [Primary.$type]
         },
         WhereClause: {
             name: WhereClause.$type,

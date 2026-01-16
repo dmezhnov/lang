@@ -33588,9 +33588,6 @@ var LangLexer = class extends DefaultLexer {
   }
   createVirtualToken(name, anchor) {
     const tokenType = this.definition[name];
-    if (!tokenType) {
-      console.error(`CRITICAL: TokenType '${name}' not found in definition! Keys: ${Object.keys(this.definition).join(", ")}`);
-    }
     return {
       tokenType,
       image: name,
@@ -33600,7 +33597,7 @@ var LangLexer = class extends DefaultLexer {
       endLine: anchor.startLine,
       startColumn: anchor.startColumn,
       endColumn: anchor.startColumn,
-      tokenIndex: -1
+      tokenTypeIdx: tokenType.tokenTypeIdx
     };
   }
 };

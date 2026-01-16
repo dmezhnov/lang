@@ -25,7 +25,15 @@ List:
     elements+=Element (',' elements+=Element)* (',' '...' (',' elements+=Element)*)?;
 
 Element:
-    number=NUMBER | string=STRING | id=ID | expr=Parenthesized | record=Record | func=FunctionCall;
+    Primary ({infer MemberAccess.receiver=current} '.' member=(ID | NUMBER) |
+             {infer FunctionCall.receiver=current} '(' (args+=Expression (',' args+=Expression)*)? ')' )*;
+
+Primary:
+    {infer NumberLiteral} value=NUMBER |
+    {infer StringLiteral} value=STRING |
+    {infer Reference} name=ID |
+    Parenthesized |
+    Record;
 
 Parenthesized:
     '(' (inner+=List | NEWLINE)* ')';
@@ -36,8 +44,7 @@ Record:
 Field:
      name=ID ('from' value=Expression)? (where=WhereClause | NEWLINE);
 
-FunctionCall:
-    name=ID '(' (args+=Expression (',' args+=Expression)*)? ')';
+
 
 Comparison returns string:
     '=' | '!=' | '>' | '<' | '>=' | '<=' | '=>' | 'of' | 'from' | 'for';

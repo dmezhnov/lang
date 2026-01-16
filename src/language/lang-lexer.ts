@@ -104,7 +104,7 @@ export class LangLexer extends DefaultLexer {
     }
 
     private createVirtualToken(name: string, anchor: IToken): IToken {
-        const tokenType = this.definition[name];
+        const tokenType: TokenType = this.definition[name];
         return {
             tokenType: tokenType,
             image: name,
