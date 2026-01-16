@@ -4,7 +4,10 @@
 
 ### Added
 
-- **Grammar**: Added support for dot member access (e.g., `list.A`) and chained function calls (e.g., `f(a)(b)`).
+- **Grammar**: Added support for:
+  - Dot member access (e.g., `list.A`).
+  - Chained function calls (e.g., `f(a)(b)`).
+  - Multiline lists and nested structures (implicit line joining inside parentheses).
 - **Validation**: Verified compliance with provided syntax examples.
 
 ## [0.3.4] - 2026-01-16

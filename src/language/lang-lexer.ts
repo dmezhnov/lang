@@ -8,12 +8,25 @@ export class LangLexer extends DefaultLexer {
         const tokens = result.tokens;
         const newTokens: IToken[] = [];
         const indentStack: number[] = [0];
+        let parenDepth = 0;
 
         for (let i = 0; i < tokens.length; i++) {
             const token = tokens[i];
-            newTokens.push(token);
+
+            if (token.image === '(' || token.image === '[' || token.image === '{') {
+                parenDepth++;
+            } else if (token.image === ')' || token.image === ']' || token.image === '}') {
+                if (parenDepth > 0) {
+                    parenDepth--;
+                }
+            }
 
             if (token.tokenType.name === 'NEWLINE') {
+                if (parenDepth > 0) {
+                    continue;
+                }
+                newTokens.push(token);
+
                 // Look ahead for the next non-hidden token
                 let nextToken = tokens[i + 1];
 
@@ -50,6 +63,8 @@ export class LangLexer extends DefaultLexer {
                         // We could report an error here
                     }
                 }
+            } else {
+                newTokens.push(token);
             }
         }
 
