@@ -48,7 +48,7 @@ export type LangKeywordNames =
 export type LangTokenNames = LangTerminalNames | LangKeywordNames;
 
 export interface BinaryExpression extends langium.AstNode {
-    readonly $container: FunctionCall | List;
+    readonly $container: Field | FunctionCall | List;
     readonly $type: 'BinaryExpression' | 'Element' | 'FunctionCall' | 'MemberAccess' | 'NumberLiteral' | 'Parenthesized' | 'Primary' | 'Record' | 'Reference' | 'StringLiteral';
     left: Element;
     op: Operator;
@@ -153,8 +153,8 @@ export interface Field extends langium.AstNode {
     readonly $container: Record;
     readonly $type: 'Field';
     name: string;
-    value?: Expression;
-    where: WhereClause;
+    value?: BinaryExpression;
+    where?: WhereClause;
 }
 
 export const Field = {
@@ -200,7 +200,7 @@ export function isFunctionCall(item: unknown): item is FunctionCall {
 }
 
 export interface List extends langium.AstNode {
-    readonly $container: ComparisonRight | Equation | ExprStatement | Field | Parenthesized;
+    readonly $container: ComparisonRight | Equation | ExprStatement | Parenthesized;
     readonly $type: 'List';
     elements: Array<BinaryExpression>;
 }

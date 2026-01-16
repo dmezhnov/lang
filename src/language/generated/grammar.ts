@@ -842,16 +842,38 @@ export const LangGrammar = (): Grammar => loadedLangGrammar ?? (loadedLangGramma
             "cardinality": "?"
           },
           {
-            "$type": "Assignment",
-            "feature": "fields",
-            "operator": "+=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@13"
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "fields",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@13"
+                  },
+                  "arguments": []
+                }
               },
-              "arguments": []
-            },
+              {
+                "$type": "Alternatives",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": ","
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@17"
+                    },
+                    "arguments": []
+                  }
+                ],
+                "cardinality": "*"
+              }
+            ],
             "cardinality": "*"
           },
           {
@@ -886,8 +908,17 @@ export const LangGrammar = (): Grammar => loadedLangGrammar ?? (loadedLangGramma
             "$type": "Group",
             "elements": [
               {
-                "$type": "Keyword",
-                "value": "from"
+                "$type": "Alternatives",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": "from"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": "="
+                  }
+                ]
               },
               {
                 "$type": "Assignment",
@@ -896,7 +927,7 @@ export const LangGrammar = (): Grammar => loadedLangGrammar ?? (loadedLangGramma
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@6"
+                    "$ref": "#/rules@8"
                   },
                   "arguments": []
                 }
@@ -963,7 +994,8 @@ export const LangGrammar = (): Grammar => loadedLangGrammar ?? (loadedLangGramma
                   }
                 ]
               }
-            ]
+            ],
+            "cardinality": "?"
           }
         ]
       },

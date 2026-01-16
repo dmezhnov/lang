@@ -4,8 +4,11 @@
 
 ### Fixed
 
-- **Grammar**: Refactored `Expression` hierarchy to ensure logical operators (`from`, `of`, `for`) bind tighter than list separators (`,`). This fixes issues with lists of binary expressions like `(1 from I, 1 from C)`.
+- **Grammar**: Refactored `Expression` hierarchy to ensure logical operators (`from`, `of`, `for`) bind tighter than
+  list separators (`,`). This fixes issues with lists of binary expressions like `(1 from I, 1 from C)`.
 - **Grammar**: Removed `where` from comparison operators to resolve ambiguity with `where` clauses.
+- **Grammar**: Updated `Record` syntax to support `=` assignment for fields (e.g., `{ a = 5 }`) and comma separators
+  between fields.
 
 ## [0.3.6] - 2026-01-16
 

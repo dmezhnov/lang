@@ -51,13 +51,13 @@ Parenthesized:
     '(' (inner+=Expression | NEWLINE)* ')';
 
 Record:
-    '{' NEWLINE? fields+=Field* '}';
+    '{' NEWLINE? (fields+=Field (',' | NEWLINE)*)* '}';
 
 Field:
-     name=ID ('from' value=Expression)? (
+     name=ID (('from' | '=') value=BinaryExpression)? (
         (where=WhereClause) |
         (NEWLINE (INDENT where=WhereClause DEDENT)?)
-     );
+     )?;
 
 
 
