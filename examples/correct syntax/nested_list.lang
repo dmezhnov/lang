@@ -7,3 +7,15 @@ nested_list_1 = (
 )
 
 nested_list_2 = (1, (1, 2, 3), x)
+
+nested_list_more_1 = 1, ... , 5
+
+nested_list_more_2 = (
+    1,
+    ...,
+    2
+)
+
+requests_i_j_k_l_s_l0 = (
+    (1 from I, 1 from C)
+)

@@ -28,14 +28,17 @@ WhereClause:
     );
 
 Expression:
-    List ({infer BinaryExpression.left=current} op=Operator right=List)*;
+    List;
 
 List:
-    elements+=Element (',' elements+=Element)* (',' '...' (',' elements+=Element)*)?;
+    elements+=BinaryExpression (',' elements+=BinaryExpression)* (',' '...' (',' elements+=BinaryExpression)*)?;
+
+BinaryExpression:
+    Element ({infer BinaryExpression.left=current} op=Operator right=Element)*;
 
 Element:
     Primary ({infer MemberAccess.receiver=current} '.' member=(ID | NUMBER) |
-             {infer FunctionCall.receiver=current} '(' (args+=Expression (',' args+=Expression)*)? ')' )*;
+             {infer FunctionCall.receiver=current} '(' (args+=BinaryExpression (',' args+=BinaryExpression)*)? ')' )*;
 
 Primary:
     {infer NumberLiteral} value=NUMBER |
@@ -45,7 +48,7 @@ Primary:
     Record;
 
 Parenthesized:
-    '(' (inner+=List | NEWLINE)* ')';
+    '(' (inner+=Expression | NEWLINE)* ')';
 
 Record:
     '{' NEWLINE? fields+=Field* '}';
@@ -59,10 +62,10 @@ Field:
 
 
 Comparison returns string:
-    '=' | '!=' | '>' | '<' | '>=' | '<=' | '=>' | 'of' | 'from' | 'for';
+    '=' | '!=' | '>' | '<' | '>=' | '<=' | '=>';
 
 Operator returns string:
-    '+' | '-' | '*' | '/' | '^' | '<>';
+    '+' | '-' | '*' | '/' | '^' | '<>' | 'of' | 'from' | 'for';
 
 hidden terminal WS: /[ \t]+/;
 terminal NEWLINE: /\r?\n/;

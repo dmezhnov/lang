@@ -33781,10 +33781,21 @@ var LangLexer = class extends DefaultLexer {
     const tokens = result.tokens;
     const newTokens = [];
     const indentStack = [0];
+    let parenDepth = 0;
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i];
-      newTokens.push(token);
+      if (token.image === "(" || token.image === "[" || token.image === "{") {
+        parenDepth++;
+      } else if (token.image === ")" || token.image === "]" || token.image === "}") {
+        if (parenDepth > 0) {
+          parenDepth--;
+        }
+      }
       if (token.tokenType.name === "NEWLINE") {
+        if (parenDepth > 0) {
+          continue;
+        }
+        newTokens.push(token);
         let nextToken = tokens[i + 1];
         if (!nextToken || nextToken.tokenType.name === "NEWLINE") {
           continue;
@@ -33802,6 +33813,8 @@ var LangLexer = class extends DefaultLexer {
           if (nextIndent !== indentStack[indentStack.length - 1]) {
           }
         }
+      } else {
+        newTokens.push(token);
       }
     }
     while (indentStack.length > 1) {
