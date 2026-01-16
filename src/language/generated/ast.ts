@@ -106,7 +106,7 @@ export interface Equation extends langium.AstNode {
     op: Comparison;
     rest: Array<ComparisonRight>;
     right: Expression;
-    where?: WhereClause;
+    where: WhereClause;
 }
 
 export const Equation = {
@@ -136,7 +136,7 @@ export interface ExprStatement extends langium.AstNode {
     readonly $container: File | WhereClause;
     readonly $type: 'ExprStatement';
     expr: Expression;
-    where?: WhereClause;
+    where: WhereClause;
 }
 
 export const ExprStatement = {
@@ -154,7 +154,7 @@ export interface Field extends langium.AstNode {
     readonly $type: 'Field';
     name: string;
     value?: Expression;
-    where?: WhereClause;
+    where: WhereClause;
 }
 
 export const Field = {

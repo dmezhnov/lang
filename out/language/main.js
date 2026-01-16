@@ -32319,13 +32319,7 @@ var ComparisonRight = {
   right: "right"
 };
 var Element = {
-  $type: "Element",
-  expr: "expr",
-  func: "func",
-  id: "id",
-  number: "number",
-  record: "record",
-  string: "string"
+  $type: "Element"
 };
 var Equation = {
   $type: "Equation",
@@ -32356,22 +32350,42 @@ var File = {
 var FunctionCall = {
   $type: "FunctionCall",
   args: "args",
-  name: "name"
+  receiver: "receiver"
 };
 var List = {
   $type: "List",
   elements: "elements"
 };
+var MemberAccess = {
+  $type: "MemberAccess",
+  member: "member",
+  receiver: "receiver"
+};
+var NumberLiteral2 = {
+  $type: "NumberLiteral",
+  value: "value"
+};
 var Parenthesized = {
   $type: "Parenthesized",
   inner: "inner"
+};
+var Primary = {
+  $type: "Primary"
 };
 var Record = {
   $type: "Record",
   fields: "fields"
 };
+var Reference = {
+  $type: "Reference",
+  name: "name"
+};
 var Statement = {
   $type: "Statement"
+};
+var StringLiteral2 = {
+  $type: "StringLiteral",
+  value: "value"
 };
 var WhereClause = {
   $type: "WhereClause",
@@ -32410,26 +32424,7 @@ var LangAstReflection = class extends AbstractAstReflection {
       },
       Element: {
         name: Element.$type,
-        properties: {
-          expr: {
-            name: Element.expr
-          },
-          func: {
-            name: Element.func
-          },
-          id: {
-            name: Element.id
-          },
-          number: {
-            name: Element.number
-          },
-          record: {
-            name: Element.record
-          },
-          string: {
-            name: Element.string
-          }
-        },
+        properties: {},
         superTypes: []
       },
       Equation: {
@@ -32503,11 +32498,11 @@ var LangAstReflection = class extends AbstractAstReflection {
             name: FunctionCall.args,
             defaultValue: []
           },
-          name: {
-            name: FunctionCall.name
+          receiver: {
+            name: FunctionCall.receiver
           }
         },
-        superTypes: []
+        superTypes: [Element.$type]
       },
       List: {
         name: List.$type,
@@ -32519,6 +32514,27 @@ var LangAstReflection = class extends AbstractAstReflection {
         },
         superTypes: [Expression.$type]
       },
+      MemberAccess: {
+        name: MemberAccess.$type,
+        properties: {
+          member: {
+            name: MemberAccess.member
+          },
+          receiver: {
+            name: MemberAccess.receiver
+          }
+        },
+        superTypes: [Element.$type]
+      },
+      NumberLiteral: {
+        name: NumberLiteral2.$type,
+        properties: {
+          value: {
+            name: NumberLiteral2.value
+          }
+        },
+        superTypes: [Primary.$type]
+      },
       Parenthesized: {
         name: Parenthesized.$type,
         properties: {
@@ -32527,7 +32543,12 @@ var LangAstReflection = class extends AbstractAstReflection {
             defaultValue: []
           }
         },
-        superTypes: []
+        superTypes: [Primary.$type]
+      },
+      Primary: {
+        name: Primary.$type,
+        properties: {},
+        superTypes: [Element.$type]
       },
       Record: {
         name: Record.$type,
@@ -32537,12 +32558,30 @@ var LangAstReflection = class extends AbstractAstReflection {
             defaultValue: []
           }
         },
-        superTypes: []
+        superTypes: [Primary.$type]
+      },
+      Reference: {
+        name: Reference.$type,
+        properties: {
+          name: {
+            name: Reference.name
+          }
+        },
+        superTypes: [Primary.$type]
       },
       Statement: {
         name: Statement.$type,
         properties: {},
         superTypes: []
+      },
+      StringLiteral: {
+        name: StringLiteral2.$type,
+        properties: {
+          value: {
+            name: StringLiteral2.value
+          }
+        },
+        superTypes: [Primary.$type]
       },
       WhereClause: {
         name: WhereClause.$type,
@@ -32987,79 +33026,222 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
       "$type": "ParserRule",
       "name": "Element",
       "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@9"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Action",
+                    "inferredType": {
+                      "$type": "InferredType",
+                      "name": "MemberAccess"
+                    },
+                    "feature": "receiver",
+                    "operator": "="
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": "."
+                  },
+                  {
+                    "$type": "Assignment",
+                    "feature": "member",
+                    "operator": "=",
+                    "terminal": {
+                      "$type": "Alternatives",
+                      "elements": [
+                        {
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$ref": "#/rules@19"
+                          },
+                          "arguments": []
+                        },
+                        {
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$ref": "#/rules@20"
+                          },
+                          "arguments": []
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Action",
+                    "inferredType": {
+                      "$type": "InferredType",
+                      "name": "FunctionCall"
+                    },
+                    "feature": "receiver",
+                    "operator": "="
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": "("
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "Assignment",
+                        "feature": "args",
+                        "operator": "+=",
+                        "terminal": {
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$ref": "#/rules@6"
+                          },
+                          "arguments": []
+                        }
+                      },
+                      {
+                        "$type": "Group",
+                        "elements": [
+                          {
+                            "$type": "Keyword",
+                            "value": ","
+                          },
+                          {
+                            "$type": "Assignment",
+                            "feature": "args",
+                            "operator": "+=",
+                            "terminal": {
+                              "$type": "RuleCall",
+                              "rule": {
+                                "$ref": "#/rules@6"
+                              },
+                              "arguments": []
+                            }
+                          }
+                        ],
+                        "cardinality": "*"
+                      }
+                    ],
+                    "cardinality": "?"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ")"
+                  }
+                ]
+              }
+            ],
+            "cardinality": "*"
+          }
+        ]
+      },
+      "entry": false,
+      "fragment": false,
+      "parameters": []
+    },
+    {
+      "$type": "ParserRule",
+      "name": "Primary",
+      "definition": {
         "$type": "Alternatives",
         "elements": [
           {
-            "$type": "Assignment",
-            "feature": "number",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@20"
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Action",
+                "inferredType": {
+                  "$type": "InferredType",
+                  "name": "NumberLiteral"
+                }
               },
-              "arguments": []
-            }
+              {
+                "$type": "Assignment",
+                "feature": "value",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@20"
+                  },
+                  "arguments": []
+                }
+              }
+            ]
           },
           {
-            "$type": "Assignment",
-            "feature": "string",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@21"
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Action",
+                "inferredType": {
+                  "$type": "InferredType",
+                  "name": "StringLiteral"
+                }
               },
-              "arguments": []
-            }
+              {
+                "$type": "Assignment",
+                "feature": "value",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@21"
+                  },
+                  "arguments": []
+                }
+              }
+            ]
           },
           {
-            "$type": "Assignment",
-            "feature": "id",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@19"
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Action",
+                "inferredType": {
+                  "$type": "InferredType",
+                  "name": "Reference"
+                }
               },
-              "arguments": []
-            }
+              {
+                "$type": "Assignment",
+                "feature": "name",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@19"
+                  },
+                  "arguments": []
+                }
+              }
+            ]
           },
           {
-            "$type": "Assignment",
-            "feature": "expr",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@9"
-              },
-              "arguments": []
-            }
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@10"
+            },
+            "arguments": []
           },
           {
-            "$type": "Assignment",
-            "feature": "record",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@10"
-              },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Assignment",
-            "feature": "func",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@12"
-              },
-              "arguments": []
-            }
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@11"
+            },
+            "arguments": []
           }
         ]
       },
@@ -33137,7 +33319,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@11"
+                "$ref": "#/rules@12"
               },
               "arguments": []
             },
@@ -33216,78 +33398,6 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                 "arguments": []
               }
             ]
-          }
-        ]
-      },
-      "entry": false,
-      "fragment": false,
-      "parameters": []
-    },
-    {
-      "$type": "ParserRule",
-      "name": "FunctionCall",
-      "definition": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@19"
-              },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Keyword",
-            "value": "("
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Assignment",
-                "feature": "args",
-                "operator": "+=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$ref": "#/rules@6"
-                  },
-                  "arguments": []
-                }
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "Keyword",
-                    "value": ","
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "args",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@6"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "*"
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Keyword",
-            "value": ")"
           }
         ]
       },

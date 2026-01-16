@@ -1,0 +1,11 @@
+some_1 = 5
+    where
+        some of number
+
+some_2 = 6 where some of number
+
+some_3 = a + b
+    where
+        some of number
+        a of number
+        b of number

@@ -7,16 +7,25 @@ Statement:
     Equation | ExprStatement;
 
 Equation:
-    left=Expression op=Comparison right=Expression (rest+=ComparisonRight)* (where=WhereClause | NEWLINE);
+    left=Expression op=Comparison right=Expression (rest+=ComparisonRight)* (
+        (where=WhereClause) |
+        (NEWLINE (INDENT where=WhereClause DEDENT)?)
+    );
 
 ComparisonRight:
     op=Comparison right=Expression;
 
 ExprStatement:
-    expr=Expression (where=WhereClause | NEWLINE);
+    expr=Expression (
+        (where=WhereClause) |
+        (NEWLINE (INDENT where=WhereClause DEDENT)?)
+    );
 
 WhereClause:
-    'where' NEWLINE INDENT statements+=Statement* DEDENT;
+    'where' (
+        (NEWLINE INDENT (statements+=Statement | NEWLINE)* DEDENT) |
+        (statements+=Statement)
+    );
 
 Expression:
     List ({infer BinaryExpression.left=current} op=Operator right=List)*;
@@ -42,7 +51,10 @@ Record:
     '{' NEWLINE? fields+=Field* '}';
 
 Field:
-     name=ID ('from' value=Expression)? (where=WhereClause | NEWLINE);
+     name=ID ('from' value=Expression)? (
+        (where=WhereClause) |
+        (NEWLINE (INDENT where=WhereClause DEDENT)?)
+     );
 
 
 
