@@ -23,9 +23,9 @@ describe('Significant Whitespace', () => {
 
     test('Valid simple assignments', async () => {
         const result = await parse(`
-            x = 1
-            y = 2
-        `);
+x = 1
+y = 2
+`);
         expect(result.parseResult.parserErrors.length).toBe(0);
         expect(result.parseResult.value.statements.length).toBe(2);
     });
@@ -36,6 +36,9 @@ describe('Significant Whitespace', () => {
 x = 1 where
     y = 2
 `);
+        if (result.parseResult.parserErrors.length > 0) {
+            console.log('Parser Errors:', JSON.stringify(result.parseResult.parserErrors, null, 2));
+        }
         expect(result.parseResult.parserErrors.length).toBe(0);
     });
 

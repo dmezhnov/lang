@@ -48,31 +48,19 @@ export const LangGrammar = (): Grammar => loadedLangGrammar ?? (loadedLangGramma
       "$type": "ParserRule",
       "name": "Statement",
       "definition": {
-        "$type": "Group",
+        "$type": "Alternatives",
         "elements": [
           {
-            "$type": "Alternatives",
-            "elements": [
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@2"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@4"
-                },
-                "arguments": []
-              }
-            ]
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@2"
+            },
+            "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@16"
+              "$ref": "#/rules@4"
             },
             "arguments": []
           }
@@ -138,17 +126,28 @@ export const LangGrammar = (): Grammar => loadedLangGrammar ?? (loadedLangGramma
             "cardinality": "*"
           },
           {
-            "$type": "Assignment",
-            "feature": "where",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@5"
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "where",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@5"
+                  },
+                  "arguments": []
+                }
               },
-              "arguments": []
-            },
-            "cardinality": "?"
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@16"
+                },
+                "arguments": []
+              }
+            ]
           }
         ]
       },
@@ -211,17 +210,28 @@ export const LangGrammar = (): Grammar => loadedLangGrammar ?? (loadedLangGramma
             }
           },
           {
-            "$type": "Assignment",
-            "feature": "where",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@5"
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "where",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@5"
+                  },
+                  "arguments": []
+                }
               },
-              "arguments": []
-            },
-            "cardinality": "?"
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@16"
+                },
+                "arguments": []
+              }
+            ]
           }
         ]
       },
@@ -519,7 +529,7 @@ export const LangGrammar = (): Grammar => loadedLangGrammar ?? (loadedLangGramma
               {
                 "$type": "Assignment",
                 "feature": "inner",
-                "operator": "=",
+                "operator": "+=",
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
@@ -630,24 +640,28 @@ export const LangGrammar = (): Grammar => loadedLangGrammar ?? (loadedLangGramma
             "cardinality": "?"
           },
           {
-            "$type": "Assignment",
-            "feature": "where",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@5"
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "where",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@5"
+                  },
+                  "arguments": []
+                }
               },
-              "arguments": []
-            },
-            "cardinality": "?"
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@16"
-            },
-            "arguments": []
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@16"
+                },
+                "arguments": []
+              }
+            ]
           }
         ]
       },

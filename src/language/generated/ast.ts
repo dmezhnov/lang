@@ -237,7 +237,7 @@ export function isOperator(item: unknown): item is Operator {
 export interface Parenthesized extends langium.AstNode {
     readonly $container: Element;
     readonly $type: 'Parenthesized';
-    inner?: List;
+    inner: Array<List>;
 }
 
 export const Parenthesized = {
@@ -451,7 +451,8 @@ export class LangAstReflection extends langium.AbstractAstReflection {
             name: Parenthesized.$type,
             properties: {
                 inner: {
-                    name: Parenthesized.inner
+                    name: Parenthesized.inner,
+                    defaultValue: []
                 }
             },
             superTypes: []

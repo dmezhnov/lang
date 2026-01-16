@@ -32523,7 +32523,8 @@ var LangAstReflection = class extends AbstractAstReflection {
         name: Parenthesized.$type,
         properties: {
           inner: {
-            name: Parenthesized.inner
+            name: Parenthesized.inner,
+            defaultValue: []
           }
         },
         superTypes: []
@@ -32601,31 +32602,19 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
       "$type": "ParserRule",
       "name": "Statement",
       "definition": {
-        "$type": "Group",
+        "$type": "Alternatives",
         "elements": [
           {
-            "$type": "Alternatives",
-            "elements": [
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@2"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@4"
-                },
-                "arguments": []
-              }
-            ]
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@2"
+            },
+            "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@16"
+              "$ref": "#/rules@4"
             },
             "arguments": []
           }
@@ -32691,17 +32680,28 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "cardinality": "*"
           },
           {
-            "$type": "Assignment",
-            "feature": "where",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@5"
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "where",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@5"
+                  },
+                  "arguments": []
+                }
               },
-              "arguments": []
-            },
-            "cardinality": "?"
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@16"
+                },
+                "arguments": []
+              }
+            ]
           }
         ]
       },
@@ -32764,17 +32764,28 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             }
           },
           {
-            "$type": "Assignment",
-            "feature": "where",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@5"
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "where",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@5"
+                  },
+                  "arguments": []
+                }
               },
-              "arguments": []
-            },
-            "cardinality": "?"
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@16"
+                },
+                "arguments": []
+              }
+            ]
           }
         ]
       },
@@ -33072,7 +33083,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
               {
                 "$type": "Assignment",
                 "feature": "inner",
-                "operator": "=",
+                "operator": "+=",
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
@@ -33183,24 +33194,28 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "cardinality": "?"
           },
           {
-            "$type": "Assignment",
-            "feature": "where",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@5"
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "where",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@5"
+                  },
+                  "arguments": []
+                }
               },
-              "arguments": []
-            },
-            "cardinality": "?"
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@16"
-            },
-            "arguments": []
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@16"
+                },
+                "arguments": []
+              }
+            ]
           }
         ]
       },
@@ -33506,8 +33521,8 @@ var LangValidator = class {
 
 // src/language/lang-lexer.ts
 var LangLexer = class extends DefaultLexer {
-  lex(source) {
-    const result = super.lex(source);
+  tokenize(source) {
+    const result = super.tokenize(source);
     const tokens = result.tokens;
     const newTokens = [];
     const indentStack = [0];
@@ -33572,9 +33587,13 @@ var LangLexer = class extends DefaultLexer {
     return count;
   }
   createVirtualToken(name, anchor) {
+    const tokenType = this.definition[name];
+    if (!tokenType) {
+      console.error(`CRITICAL: TokenType '${name}' not found in definition! Keys: ${Object.keys(this.definition).join(", ")}`);
+    }
     return {
-      tokenType: { name, label: name },
-      image: "",
+      tokenType,
+      image: name,
       startOffset: anchor.startOffset,
       endOffset: anchor.startOffset,
       startLine: anchor.startLine,

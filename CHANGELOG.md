@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.4] - 2026-01-16
+
+### Fixed
+
+- **Grammar**: Resolved `MismatchedTokenException` in parser by ensuring virtual tokens carry correct type indices.
+- **Lexer**: Fixed type safety issues in `LangLexer`.
+
 ## [0.3.3] - 2026-01-16
 
 ### Added

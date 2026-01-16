@@ -1,11 +1,12 @@
-import { DefaultLexer, type LexingResult, type Token } from 'langium';
+import { DefaultLexer, type LexerResult } from 'langium';
+import type { IToken, TokenType } from 'chevrotain';
 
 export class LangLexer extends DefaultLexer {
 
-    override lex(source: string): LexingResult {
-        const result = super.lex(source);
+    override tokenize(source: string): LexerResult {
+        const result = super.tokenize(source);
         const tokens = result.tokens;
-        const newTokens: Token[] = [];
+        const newTokens: IToken[] = [];
         const indentStack: number[] = [0];
 
         for (let i = 0; i < tokens.length; i++) {
@@ -58,15 +59,15 @@ export class LangLexer extends DefaultLexer {
             const lastToken = newTokens[newTokens.length - 1] || { endOffset: source.length, startLine: 0,
                 // Dummy token if empty
                 tokenType: { name: 'EOF' }
-            } as Token;
+            } as IToken;
             newTokens.push(this.createVirtualToken('DEDENT', lastToken));
         }
 
         result.tokens = newTokens;
-        return result;
+        return result as LexerResult;
     }
 
-    private getIndentation(source: string, token: Token): number {
+    private getIndentation(source: string, token: IToken): number {
         // Find the start of the line containing the token
         // Use token.startOffset and scan backwards in source until \n or start of file
         let index = token.startOffset - 1;
@@ -102,17 +103,18 @@ export class LangLexer extends DefaultLexer {
         return count;
     }
 
-    private createVirtualToken(name: string, anchor: Token): Token {
+    private createVirtualToken(name: string, anchor: IToken): IToken {
+        const tokenType = this.definition[name];
         return {
-            tokenType: { name, label: name },
-            image: '',
+            tokenType: tokenType,
+            image: name,
             startOffset: anchor.startOffset,
             endOffset: anchor.startOffset,
             startLine: anchor.startLine,
             endLine: anchor.startLine,
             startColumn: anchor.startColumn,
             endColumn: anchor.startColumn,
-            tokenIndex: -1
-        } as Token;
+            tokenTypeIdx: tokenType.tokenTypeIdx!
+        };
     }
 }
