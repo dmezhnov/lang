@@ -21,3 +21,8 @@ requests_i_j_k_l_s_l0 = (
 )
 
 some = (fn_1(1), ..., fn_1(N), fn_2(1), ..., fn_2(M))
+
+some_2 = (1, 2,  )
+
+some_3 = ( , 2, 3)
+

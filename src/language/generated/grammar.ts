@@ -772,6 +772,22 @@ export const LangGrammar = (): Grammar => loadedLangGrammar ?? (loadedLangGramma
                 "$type": "Action",
                 "inferredType": {
                   "$type": "InferredType",
+                  "name": "NothingLiteral"
+                }
+              },
+              {
+                "$type": "Keyword",
+                "value": "nothing"
+              }
+            ]
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Action",
+                "inferredType": {
+                  "$type": "InferredType",
                   "name": "Reference"
                 }
               },

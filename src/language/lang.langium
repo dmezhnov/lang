@@ -45,6 +45,7 @@ Primary:
     {infer NumberLiteral} value=NUMBER |
     {infer StringLiteral} value=STRING |
     {infer BooleanLiteral} value=('true' | 'false') |
+    {infer NothingLiteral} 'nothing' |
     {infer Reference} name=ID |
     {infer Ellipsis} '...' |
     Parenthesized |

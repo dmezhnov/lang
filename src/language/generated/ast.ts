@@ -43,6 +43,7 @@ export type LangKeywordNames =
     | "for"
     | "from"
     | "not"
+    | "nothing"
     | "of"
     | "or"
     | "true"
@@ -54,7 +55,7 @@ export type LangTokenNames = LangTerminalNames | LangKeywordNames;
 
 export interface BinaryExpression extends langium.AstNode {
     readonly $container: Field | FieldComparison | FunctionCall | List;
-    readonly $type: 'BinaryExpression' | 'BooleanLiteral' | 'Element' | 'Ellipsis' | 'FunctionCall' | 'MemberAccess' | 'NumberLiteral' | 'Parenthesized' | 'Primary' | 'Record' | 'Reference' | 'StringLiteral' | 'UnaryExpression';
+    readonly $type: 'BinaryExpression' | 'BooleanLiteral' | 'Element' | 'Ellipsis' | 'FunctionCall' | 'MemberAccess' | 'NothingLiteral' | 'NumberLiteral' | 'Parenthesized' | 'Primary' | 'Record' | 'Reference' | 'StringLiteral' | 'UnaryExpression';
     left: UnaryExpression;
     op: Operator;
     right: UnaryExpression;
@@ -270,6 +271,19 @@ export function isMemberAccess(item: unknown): item is MemberAccess {
     return reflection.isInstance(item, MemberAccess.$type);
 }
 
+export interface NothingLiteral extends langium.AstNode {
+    readonly $container: FunctionCall | MemberAccess;
+    readonly $type: 'NothingLiteral';
+}
+
+export const NothingLiteral = {
+    $type: 'NothingLiteral'
+} as const;
+
+export function isNothingLiteral(item: unknown): item is NothingLiteral {
+    return reflection.isInstance(item, NothingLiteral.$type);
+}
+
 export interface NumberLiteral extends langium.AstNode {
     readonly $container: FunctionCall | MemberAccess;
     readonly $type: 'NumberLiteral';
@@ -306,7 +320,7 @@ export function isParenthesized(item: unknown): item is Parenthesized {
     return reflection.isInstance(item, Parenthesized.$type);
 }
 
-export type Primary = BooleanLiteral | Ellipsis | NumberLiteral | Parenthesized | Record | Reference | StringLiteral;
+export type Primary = BooleanLiteral | Ellipsis | NothingLiteral | NumberLiteral | Parenthesized | Record | Reference | StringLiteral;
 
 export const Primary = {
     $type: 'Primary'
@@ -373,7 +387,7 @@ export function isStringLiteral(item: unknown): item is StringLiteral {
 
 export interface UnaryExpression extends BinaryExpression {
     readonly $container: BinaryExpression | UnaryExpression;
-    readonly $type: 'BooleanLiteral' | 'Element' | 'Ellipsis' | 'FunctionCall' | 'MemberAccess' | 'NumberLiteral' | 'Parenthesized' | 'Primary' | 'Record' | 'Reference' | 'StringLiteral' | 'UnaryExpression';
+    readonly $type: 'BooleanLiteral' | 'Element' | 'Ellipsis' | 'FunctionCall' | 'MemberAccess' | 'NothingLiteral' | 'NumberLiteral' | 'Parenthesized' | 'Primary' | 'Record' | 'Reference' | 'StringLiteral' | 'UnaryExpression';
     op?: UnaryOperator;
     operand?: UnaryExpression;
 }
@@ -426,6 +440,7 @@ export type LangAstType = {
     FunctionCall: FunctionCall
     List: List
     MemberAccess: MemberAccess
+    NothingLiteral: NothingLiteral
     NumberLiteral: NumberLiteral
     Parenthesized: Parenthesized
     Primary: Primary
@@ -586,6 +601,12 @@ export class LangAstReflection extends langium.AbstractAstReflection {
                 }
             },
             superTypes: [Element.$type]
+        },
+        NothingLiteral: {
+            name: NothingLiteral.$type,
+            properties: {
+            },
+            superTypes: [Primary.$type]
         },
         NumberLiteral: {
             name: NumberLiteral.$type,

@@ -10,7 +10,7 @@
     },
     {
       "name": "keyword.control.lang",
-      "match": "\\b(and|false|for|from|not|of|or|true|where)\\b"
+      "match": "\\b(and|false|for|from|not|nothing|of|or|true|where)\\b"
     },
     {
       "name": "string.quoted.double.lang",

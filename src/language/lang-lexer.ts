@@ -78,7 +78,59 @@ export class LangLexer extends DefaultLexer {
             newTokens.push(this.createVirtualToken('DEDENT', lastToken));
         }
 
-        result.tokens = newTokens;
+
+        // Insert 'nothing' tokens between consecutive commas
+        const finalTokens: IToken[] = [];
+        for (let i = 0; i < newTokens.length; i++) {
+            const current = newTokens[i];
+            finalTokens.push(current);
+
+            // Check if current token is a comma
+            if (current.image === ',') {
+                // Look for next non-whitespace token (WS tokens are hidden)
+                const nextIdx = i + 1;
+
+                if (nextIdx < newTokens.length) {
+                    const next = newTokens[nextIdx];
+                    // If next is comma or closing paren, insert nothing
+                    if (next.image === ',' || next.image === ')') {
+                        const nothingToken: IToken = {
+                            tokenType: this.definition['nothing'],
+                            image: 'nothing',
+                            startOffset: current.endOffset! + 1,
+                            endOffset: current.endOffset! + 1,
+                            startLine: current.endLine!,
+                            endLine: current.endLine!,
+                            startColumn: (current.endColumn || 0) + 1,
+                            endColumn: (current.endColumn || 0) + 1,
+                            tokenTypeIdx: this.definition['nothing'] ? this.definition['nothing'].tokenTypeIdx : -1
+                        };
+                        finalTokens.push(nothingToken);
+                    }
+                }
+            }
+            // Check if current token is opening paren followed by comma
+            else if (current.image === '(') {
+                const nextIdx = i + 1;
+
+                if (nextIdx < newTokens.length && newTokens[nextIdx].image === ',') {
+                    const nothingToken: IToken = {
+                        tokenType: this.definition['nothing'],
+                        image: 'nothing',
+                        startOffset: current.endOffset! + 1,
+                        endOffset: current.endOffset! + 1,
+                        startLine: current.endLine!,
+                        endLine: current.endLine!,
+                        startColumn: (current.endColumn || 0) + 1,
+                        endColumn: (current.endColumn || 0) + 1,
+                        tokenTypeIdx: this.definition['nothing'] ? this.definition['nothing'].tokenTypeIdx : -1
+                    };
+                    finalTokens.push(nothingToken);
+                }
+            }
+        }
+
+        result.tokens = finalTokens;
         return result as LexerResult;
     }
 

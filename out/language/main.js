@@ -32369,6 +32369,9 @@ var MemberAccess = {
   member: "member",
   receiver: "receiver"
 };
+var NothingLiteral = {
+  $type: "NothingLiteral"
+};
 var NumberLiteral2 = {
   $type: "NumberLiteral",
   value: "value"
@@ -32554,6 +32557,11 @@ var LangAstReflection = class extends AbstractAstReflection {
           }
         },
         superTypes: [Element.$type]
+      },
+      NothingLiteral: {
+        name: NothingLiteral.$type,
+        properties: {},
+        superTypes: [Primary.$type]
       },
       NumberLiteral: {
         name: NumberLiteral2.$type,
@@ -33412,6 +33420,22 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                 "$type": "Action",
                 "inferredType": {
                   "$type": "InferredType",
+                  "name": "NothingLiteral"
+                }
+              },
+              {
+                "$type": "Keyword",
+                "value": "nothing"
+              }
+            ]
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Action",
+                "inferredType": {
+                  "$type": "InferredType",
                   "name": "Reference"
                 }
               },
@@ -34034,7 +34058,48 @@ var LangLexer = class extends DefaultLexer {
       };
       newTokens.push(this.createVirtualToken("DEDENT", lastToken));
     }
-    result.tokens = newTokens;
+    const finalTokens = [];
+    for (let i = 0; i < newTokens.length; i++) {
+      const current = newTokens[i];
+      finalTokens.push(current);
+      if (current.image === ",") {
+        const nextIdx = i + 1;
+        if (nextIdx < newTokens.length) {
+          const next = newTokens[nextIdx];
+          if (next.image === "," || next.image === ")") {
+            const nothingToken = {
+              tokenType: this.definition["nothing"],
+              image: "nothing",
+              startOffset: current.endOffset + 1,
+              endOffset: current.endOffset + 1,
+              startLine: current.endLine,
+              endLine: current.endLine,
+              startColumn: (current.endColumn || 0) + 1,
+              endColumn: (current.endColumn || 0) + 1,
+              tokenTypeIdx: this.definition["nothing"] ? this.definition["nothing"].tokenTypeIdx : -1
+            };
+            finalTokens.push(nothingToken);
+          }
+        }
+      } else if (current.image === "(") {
+        const nextIdx = i + 1;
+        if (nextIdx < newTokens.length && newTokens[nextIdx].image === ",") {
+          const nothingToken = {
+            tokenType: this.definition["nothing"],
+            image: "nothing",
+            startOffset: current.endOffset + 1,
+            endOffset: current.endOffset + 1,
+            startLine: current.endLine,
+            endLine: current.endLine,
+            startColumn: (current.endColumn || 0) + 1,
+            endColumn: (current.endColumn || 0) + 1,
+            tokenTypeIdx: this.definition["nothing"] ? this.definition["nothing"].tokenTypeIdx : -1
+          };
+          finalTokens.push(nothingToken);
+        }
+      }
+    }
+    result.tokens = finalTokens;
     return result;
   }
   getIndentation(source, token) {

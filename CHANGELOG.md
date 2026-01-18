@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.13] - 2026-01-18
+
+### Added
+
+- **Grammar**: Added `nothing` literal for representing omitted list elements.
+- **Lexer**: Automatic insertion of `nothing` between consecutive commas (e.g., `(A, , B)` becomes `(A, nothing, B)`).
+
 ## [0.3.12] - 2026-01-18
 
 ### Added
