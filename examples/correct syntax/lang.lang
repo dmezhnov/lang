@@ -15,3 +15,5 @@ list.A = list("A") = list(1) = list.1 = A from list = 1 from list
 list.B = list("B") = list(2) = list.2 = B from list = 2 from list
 
 list_with_nothing = (A, nothing, B) = (A, , B)
+
+z = 370 - 390 = -20

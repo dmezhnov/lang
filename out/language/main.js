@@ -33807,8 +33807,17 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
       "name": "UnaryOperator",
       "dataType": "string",
       "definition": {
-        "$type": "Keyword",
-        "value": "not"
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "Keyword",
+            "value": "not"
+          },
+          {
+            "$type": "Keyword",
+            "value": "-"
+          }
+        ]
       },
       "entry": false,
       "fragment": false,

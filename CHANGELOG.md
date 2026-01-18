@@ -1,6 +1,16 @@
 # Changelog
 
+## [0.3.16] - 2026-01-18
+
+### Changed
+
+- Version bump to include all fixes from 0.3.15 in published extension.
+
 ## [0.3.15] - 2026-01-18
+
+### Added
+
+- **Grammar**: Added unary minus operator (e.g., `-20`).
 
 ### Fixed
 

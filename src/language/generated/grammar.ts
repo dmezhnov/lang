@@ -1159,8 +1159,17 @@ export const LangGrammar = (): Grammar => loadedLangGrammar ?? (loadedLangGramma
       "name": "UnaryOperator",
       "dataType": "string",
       "definition": {
-        "$type": "Keyword",
-        "value": "not"
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "Keyword",
+            "value": "not"
+          },
+          {
+            "$type": "Keyword",
+            "value": "-"
+          }
+        ]
       },
       "entry": false,
       "fragment": false,

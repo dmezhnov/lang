@@ -70,7 +70,7 @@ Comparison returns string:
     '=' | '!=' | '>' | '<' | '>=' | '<=' | '=>';
 
 UnaryOperator returns string:
-    'not';
+    'not' | '-';
 
 Operator returns string:
     '+' | '-' | '*' | '/' | '^' | '<>' | 'of' | 'from' | 'for' | 'and' | 'or';

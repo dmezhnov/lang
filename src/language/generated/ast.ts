@@ -404,10 +404,10 @@ export function isUnaryExpression(item: unknown): item is UnaryExpression {
     return reflection.isInstance(item, UnaryExpression.$type);
 }
 
-export type UnaryOperator = 'not';
+export type UnaryOperator = '-' | 'not';
 
 export function isUnaryOperator(item: unknown): item is UnaryOperator {
-    return item === 'not';
+    return item === 'not' || item === '-';
 }
 
 export interface WhereClause extends langium.AstNode {
