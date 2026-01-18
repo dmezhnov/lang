@@ -21,18 +21,4 @@ describe('Associate Syntax Verification', () => {
         }
         expect(result.parseResult.parserErrors.length).toBe(0);
     });
-
-    test('parsers examples/error syntax/associate.lang (Should Fail)', async () => {
-        const path = resolve(import.meta.dir, '../examples/error syntax/associate.lang');
-        const content = readFileSync(path, 'utf-8');
-        const result = await parse(content);
-
-        if (result.parseResult.parserErrors.length === 0) {
-            console.log('Unexpected success for error syntax/associate.lang');
-        } else {
-            // console.log('Expected Parser Errors:', result.parseResult.parserErrors.length);
-        }
-
-        expect(result.parseResult.parserErrors.length).toBeGreaterThan(0);
-    });
 });

@@ -1,31 +1,42 @@
 # Changelog
 
+## [0.3.15] - 2026-01-18
+
+### Fixed
+
+- **Tests**: Removed broken error syntax test for `associate.lang` (parenthesized statements are now
+  valid).
+
 ## [0.3.14] - 2026-01-18
 
 ### Fixed
 
-- **Grammar**: Updated `Parenthesized` to accept statements, allowing equations in parentheses (e.g., `(x = 5) and (y = 6)`).
+- **Grammar**: Updated `Parenthesized` to accept statements, allowing equations in parentheses (e.g.,
+  `(x = 5) and (y = 6)`).
 
 ## [0.3.13] - 2026-01-18
 
 ### Added
 
 - **Grammar**: Added `nothing` literal for representing omitted list elements.
-- **Lexer**: Automatic insertion of `nothing` between consecutive commas (e.g., `(A, , B)` becomes `(A, nothing, B)`).
+- **Lexer**: Automatic insertion of `nothing` between consecutive commas (e.g., `(A, , B)` becomes
+  `(A, nothing, B)`).
 
 ## [0.3.12] - 2026-01-18
 
 ### Added
 
-- **Grammar**: Support for comparison chains in `Record` field values (e.g., `key = 850 + 350 + 1000 = 2200`).
+- **Grammar**: Support for comparison chains in `Record` field values (e.g., `key = 850 + 350 + 1000 =
+  2200`).
 - **Grammar**: Allow multiple blank lines between record closing braces and `where` clauses.
 
 ## [0.3.11] - 2026-01-18
 
 ### Fixed
 
-- **Grammar**: Fixed `Statement` rule to allow statements without explicit termination in certain contexts (e.g., last
-  statement in where blocks before closing braces). This resolves parsing issues with nested where clauses in records.
+- **Grammar**: Fixed `Statement` rule to allow statements without explicit termination in certain contexts
+  (e.g., last statement in where blocks before closing braces). This resolves parsing issues with nested where
+  clauses in records.
 
 ## [0.3.10] - 2026-01-17
 
