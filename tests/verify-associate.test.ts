@@ -11,8 +11,8 @@ const parse = parseHelper(services);
 
 describe('Associate Syntax Verification', () => {
 
-    test('parsers examples/correct syntax/associate.lang (Should Pass)', async () => {
-        const path = resolve(import.meta.dir, '../examples/correct syntax/associate.lang');
+    test('parsers examples/syntax/correct syntax/associate.lang (Should Pass)', async () => {
+        const path = resolve(import.meta.dir, '../examples/syntax/correct syntax/associate.lang');
         const content = readFileSync(path, 'utf-8');
         const result = await parse(content);
 

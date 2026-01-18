@@ -1,0 +1,8 @@
+
+x = 1 + 1 = 2
+y = 10 * 2 = 20
+z = 5 > 3
+test = 1 < 2 < 3
+ok = 10 >= 10
+complex = (2 + 2) * 2 = 8
+nothing_check = nothing = nothing

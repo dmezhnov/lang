@@ -10,8 +10,8 @@ const parse = parseHelper(services);
 
 describe('Where Syntax Verification', () => {
 
-    test('parsers examples/correct syntax/where.lang (Should Pass)', async () => {
-        const path = resolve(__dirname, '../examples/correct syntax/where.lang');
+    test('parsers examples/syntax/correct syntax/where.lang (Should Pass)', async () => {
+        const path = resolve(__dirname, '../examples/syntax/correct syntax/where.lang');
         const content = readFileSync(path, 'utf-8');
         const result = await parse(content);
 
@@ -21,8 +21,8 @@ describe('Where Syntax Verification', () => {
         expect(result.parseResult.parserErrors.length).toBe(0);
     });
 
-    test('parsers examples/error syntax/where.lang (Should Fail)', async () => {
-        const path = resolve(__dirname, '../examples/error syntax/where.lang');
+    test('parsers examples/syntax/error syntax/where.lang (Should Fail)', async () => {
+        const path = resolve(__dirname, '../examples/syntax/error syntax/where.lang');
         const content = readFileSync(path, 'utf-8');
         const result = await parse(content);
 

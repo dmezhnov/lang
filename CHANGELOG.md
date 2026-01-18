@@ -1,6 +1,15 @@
 # Changelog
 
-## [0.3.16] - 2026-01-18
+## [0.4.0] - 2026-01-18
+
+### Added
+
+- **Validation**: Added semantic validation for constant equations. The IDE now
+  detects and reports errors for:
+  - False equality (e.g., `x = 1 + 1 = 3`).
+  - False comparisons (e.g., `5 < 3`).
+  - Invalid chained comparisons (e.g., `1 < 2 > 3`).
+- **Examples**: Added validation examples in `examples/validation/`.
 
 ### Changed
 

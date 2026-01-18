@@ -11,8 +11,8 @@ const parse = parseHelper(services);
 
 describe('Ident Error Syntax Verification', () => {
 
-    test('parsers examples/error syntax/ident.lang (Should Fail)', async () => {
-        const path = resolve(__dirname, '../examples/error syntax/ident.lang');
+    test('parsers examples/syntax/error syntax/ident.lang (Should Fail)', async () => {
+        const path = resolve(__dirname, '../examples/syntax/error syntax/ident.lang');
         const content = readFileSync(path, 'utf-8');
         const result = await parse(content);
 

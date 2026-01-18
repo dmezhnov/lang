@@ -18,7 +18,7 @@ export async function loadGrammar(): Promise<Grammar> {
 }
 
 export async function loadExample(file: string): Promise<string> {
-    const examplePath = resolve('examples', 'correct syntax', file);
+    const examplePath = resolve('examples/syntax', 'correct syntax', file);
     return readFile(examplePath, 'utf8');
 }
 

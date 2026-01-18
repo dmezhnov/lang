@@ -1,5 +1,8 @@
 [tasks.build]
-run = ["mise sh-run bun run build", "mise sh-run bun x vsce package"]
+run = [
+  "mise sh-run bun run build",
+  "mise sh-run bun run scripts/package.bun.ts",
+]
 
 [tasks.test]
 run = ["mise sh-run mise run build", "mise sh-run bun test"]

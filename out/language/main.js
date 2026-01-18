@@ -32313,10 +32313,16 @@ var BinaryExpression = {
   op: "op",
   right: "right"
 };
+function isBinaryExpression(item) {
+  return reflection2.isInstance(item, BinaryExpression.$type);
+}
 var BooleanLiteral2 = {
   $type: "BooleanLiteral",
   value: "value"
 };
+function isBooleanLiteral2(item) {
+  return reflection2.isInstance(item, BooleanLiteral2.$type);
+}
 var ComparisonRight = {
   $type: "ComparisonRight",
   op: "op",
@@ -32330,14 +32336,19 @@ var Ellipsis = {
 };
 var Equation = {
   $type: "Equation",
-  left: "left"
+  left: "left",
+  op: "op",
+  rest: "rest",
+  right: "right",
+  where: "where"
 };
 var Expression = {
   $type: "Expression"
 };
 var ExprStatement = {
   $type: "ExprStatement",
-  expr: "expr"
+  expr: "expr",
+  where: "where"
 };
 var Field = {
   $type: "Field",
@@ -32364,6 +32375,9 @@ var List = {
   $type: "List",
   elements: "elements"
 };
+function isList(item) {
+  return reflection2.isInstance(item, List.$type);
+}
 var MemberAccess = {
   $type: "MemberAccess",
   member: "member",
@@ -32372,10 +32386,16 @@ var MemberAccess = {
 var NothingLiteral = {
   $type: "NothingLiteral"
 };
+function isNothingLiteral(item) {
+  return reflection2.isInstance(item, NothingLiteral.$type);
+}
 var NumberLiteral2 = {
   $type: "NumberLiteral",
   value: "value"
 };
+function isNumberLiteral2(item) {
+  return reflection2.isInstance(item, NumberLiteral2.$type);
+}
 var Parenthesized = {
   $type: "Parenthesized",
   inner: "inner"
@@ -32405,6 +32425,9 @@ var UnaryExpression = {
   operand: "operand",
   right: "right"
 };
+function isUnaryExpression(item) {
+  return reflection2.isInstance(item, UnaryExpression.$type);
+}
 var WhereClause = {
   $type: "WhereClause",
   statements: "statements"
@@ -32464,6 +32487,19 @@ var LangAstReflection = class extends AbstractAstReflection {
         properties: {
           left: {
             name: Equation.left
+          },
+          op: {
+            name: Equation.op
+          },
+          rest: {
+            name: Equation.rest,
+            defaultValue: []
+          },
+          right: {
+            name: Equation.right
+          },
+          where: {
+            name: Equation.where
           }
         },
         superTypes: [Statement.$type]
@@ -32473,6 +32509,9 @@ var LangAstReflection = class extends AbstractAstReflection {
         properties: {
           expr: {
             name: ExprStatement.expr
+          },
+          where: {
+            name: ExprStatement.where
           }
         },
         superTypes: [Statement.$type]
@@ -32682,7 +32721,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@18"
+              "$ref": "#/rules@20"
             },
             "arguments": []
           }
@@ -32696,138 +32735,119 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
       "$type": "ParserRule",
       "name": "Statement",
       "definition": {
-        "$type": "Group",
+        "$type": "Alternatives",
         "elements": [
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@4"
+              "$ref": "#/rules@2"
             },
             "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@3"
+            },
+            "arguments": []
+          }
+        ]
+      },
+      "entry": false,
+      "fragment": false,
+      "parameters": []
+    },
+    {
+      "$type": "ParserRule",
+      "name": "Equation",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "left",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@6"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "op",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@16"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "right",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@6"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "rest",
+            "operator": "+=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@4"
+              },
+              "arguments": []
+            },
+            "cardinality": "*"
           },
           {
             "$type": "Alternatives",
             "elements": [
               {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "Assignment",
-                    "feature": "op",
-                    "operator": "=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@14"
-                      },
-                      "arguments": []
-                    }
+                "$type": "Assignment",
+                "feature": "where",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@5"
                   },
-                  {
-                    "$type": "Assignment",
-                    "feature": "right",
-                    "operator": "=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@4"
-                      },
-                      "arguments": []
-                    }
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "rest",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@2"
-                      },
-                      "arguments": []
-                    },
-                    "cardinality": "*"
-                  },
-                  {
-                    "$type": "Alternatives",
-                    "elements": [
-                      {
-                        "$type": "Assignment",
-                        "feature": "where",
-                        "operator": "=",
-                        "terminal": {
-                          "$type": "RuleCall",
-                          "rule": {
-                            "$ref": "#/rules@3"
-                          },
-                          "arguments": []
-                        }
-                      },
-                      {
-                        "$type": "Group",
-                        "elements": [
-                          {
-                            "$type": "RuleCall",
-                            "rule": {
-                              "$ref": "#/rules@18"
-                            },
-                            "arguments": [],
-                            "cardinality": "+"
-                          },
-                          {
-                            "$type": "Group",
-                            "elements": [
-                              {
-                                "$type": "RuleCall",
-                                "rule": {
-                                  "$ref": "#/rules@19"
-                                },
-                                "arguments": []
-                              },
-                              {
-                                "$type": "Assignment",
-                                "feature": "where",
-                                "operator": "=",
-                                "terminal": {
-                                  "$type": "RuleCall",
-                                  "rule": {
-                                    "$ref": "#/rules@3"
-                                  },
-                                  "arguments": []
-                                }
-                              },
-                              {
-                                "$type": "RuleCall",
-                                "rule": {
-                                  "$ref": "#/rules@20"
-                                },
-                                "arguments": []
-                              }
-                            ],
-                            "cardinality": "?"
-                          }
-                        ]
-                      }
-                    ],
-                    "cardinality": "?"
-                  },
-                  {
-                    "$type": "Action",
-                    "inferredType": {
-                      "$type": "InferredType",
-                      "name": "Equation"
-                    },
-                    "feature": "left",
-                    "operator": "="
-                  }
-                ]
+                  "arguments": []
+                }
               },
               {
                 "$type": "Group",
                 "elements": [
                   {
-                    "$type": "Alternatives",
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@20"
+                    },
+                    "arguments": [],
+                    "cardinality": "+"
+                  },
+                  {
+                    "$type": "Group",
                     "elements": [
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@21"
+                        },
+                        "arguments": []
+                      },
                       {
                         "$type": "Assignment",
                         "feature": "where",
@@ -32835,71 +32855,112 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                         "terminal": {
                           "$type": "RuleCall",
                           "rule": {
-                            "$ref": "#/rules@3"
+                            "$ref": "#/rules@5"
                           },
                           "arguments": []
                         }
                       },
                       {
-                        "$type": "Group",
-                        "elements": [
-                          {
-                            "$type": "RuleCall",
-                            "rule": {
-                              "$ref": "#/rules@18"
-                            },
-                            "arguments": [],
-                            "cardinality": "+"
-                          },
-                          {
-                            "$type": "Group",
-                            "elements": [
-                              {
-                                "$type": "RuleCall",
-                                "rule": {
-                                  "$ref": "#/rules@19"
-                                },
-                                "arguments": []
-                              },
-                              {
-                                "$type": "Assignment",
-                                "feature": "where",
-                                "operator": "=",
-                                "terminal": {
-                                  "$type": "RuleCall",
-                                  "rule": {
-                                    "$ref": "#/rules@3"
-                                  },
-                                  "arguments": []
-                                }
-                              },
-                              {
-                                "$type": "RuleCall",
-                                "rule": {
-                                  "$ref": "#/rules@20"
-                                },
-                                "arguments": []
-                              }
-                            ],
-                            "cardinality": "?"
-                          }
-                        ]
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@22"
+                        },
+                        "arguments": []
                       }
                     ],
                     "cardinality": "?"
-                  },
-                  {
-                    "$type": "Action",
-                    "inferredType": {
-                      "$type": "InferredType",
-                      "name": "ExprStatement"
-                    },
-                    "feature": "expr",
-                    "operator": "="
                   }
                 ]
               }
-            ]
+            ],
+            "cardinality": "?"
+          }
+        ]
+      },
+      "entry": false,
+      "fragment": false,
+      "parameters": []
+    },
+    {
+      "$type": "ParserRule",
+      "name": "ExprStatement",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "expr",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@6"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Alternatives",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "where",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@5"
+                  },
+                  "arguments": []
+                }
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@20"
+                    },
+                    "arguments": [],
+                    "cardinality": "+"
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@21"
+                        },
+                        "arguments": []
+                      },
+                      {
+                        "$type": "Assignment",
+                        "feature": "where",
+                        "operator": "=",
+                        "terminal": {
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$ref": "#/rules@5"
+                          },
+                          "arguments": []
+                        }
+                      },
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@22"
+                        },
+                        "arguments": []
+                      }
+                    ],
+                    "cardinality": "?"
+                  }
+                ]
+              }
+            ],
+            "cardinality": "?"
           }
         ]
       },
@@ -32920,7 +32981,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@14"
+                "$ref": "#/rules@16"
               },
               "arguments": []
             }
@@ -32932,7 +32993,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@4"
+                "$ref": "#/rules@6"
               },
               "arguments": []
             }
@@ -32962,14 +33023,14 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@18"
+                      "$ref": "#/rules@20"
                     },
                     "arguments": []
                   },
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@19"
+                      "$ref": "#/rules@21"
                     },
                     "arguments": []
                   },
@@ -32991,7 +33052,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                       {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@18"
+                          "$ref": "#/rules@20"
                         },
                         "arguments": []
                       }
@@ -33001,7 +33062,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@20"
+                      "$ref": "#/rules@22"
                     },
                     "arguments": []
                   }
@@ -33033,7 +33094,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
       "definition": {
         "$type": "RuleCall",
         "rule": {
-          "$ref": "#/rules@5"
+          "$ref": "#/rules@7"
         },
         "arguments": []
       },
@@ -33054,7 +33115,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@6"
+                "$ref": "#/rules@8"
               },
               "arguments": []
             }
@@ -33073,7 +33134,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@6"
+                    "$ref": "#/rules@8"
                   },
                   "arguments": []
                 }
@@ -33096,7 +33157,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@7"
+              "$ref": "#/rules@9"
             },
             "arguments": []
           },
@@ -33119,7 +33180,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@16"
+                    "$ref": "#/rules@18"
                   },
                   "arguments": []
                 }
@@ -33131,7 +33192,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@7"
+                    "$ref": "#/rules@9"
                   },
                   "arguments": []
                 }
@@ -33168,7 +33229,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@15"
+                    "$ref": "#/rules@17"
                   },
                   "arguments": []
                 }
@@ -33180,7 +33241,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@7"
+                    "$ref": "#/rules@9"
                   },
                   "arguments": []
                 }
@@ -33190,7 +33251,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@8"
+              "$ref": "#/rules@10"
             },
             "arguments": []
           }
@@ -33209,7 +33270,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@9"
+              "$ref": "#/rules@11"
             },
             "arguments": []
           },
@@ -33242,14 +33303,14 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                         {
                           "$type": "RuleCall",
                           "rule": {
-                            "$ref": "#/rules@21"
+                            "$ref": "#/rules@23"
                           },
                           "arguments": []
                         },
                         {
                           "$type": "RuleCall",
                           "rule": {
-                            "$ref": "#/rules@22"
+                            "$ref": "#/rules@24"
                           },
                           "arguments": []
                         }
@@ -33284,7 +33345,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                         "terminal": {
                           "$type": "RuleCall",
                           "rule": {
-                            "$ref": "#/rules@6"
+                            "$ref": "#/rules@8"
                           },
                           "arguments": []
                         }
@@ -33303,7 +33364,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                             "terminal": {
                               "$type": "RuleCall",
                               "rule": {
-                                "$ref": "#/rules@6"
+                                "$ref": "#/rules@8"
                               },
                               "arguments": []
                             }
@@ -33352,7 +33413,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@22"
+                    "$ref": "#/rules@24"
                   },
                   "arguments": []
                 }
@@ -33376,7 +33437,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@23"
+                    "$ref": "#/rules@25"
                   },
                   "arguments": []
                 }
@@ -33446,7 +33507,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@21"
+                    "$ref": "#/rules@23"
                   },
                   "arguments": []
                 }
@@ -33472,14 +33533,14 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@10"
+              "$ref": "#/rules@12"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@11"
+              "$ref": "#/rules@13"
             },
             "arguments": []
           }
@@ -33517,7 +33578,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@18"
+                  "$ref": "#/rules@20"
                 },
                 "arguments": []
               }
@@ -33547,7 +33608,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@18"
+              "$ref": "#/rules@20"
             },
             "arguments": [],
             "cardinality": "?"
@@ -33562,7 +33623,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@12"
+                    "$ref": "#/rules@14"
                   },
                   "arguments": []
                 }
@@ -33577,7 +33638,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@18"
+                      "$ref": "#/rules@20"
                     },
                     "arguments": []
                   }
@@ -33610,7 +33671,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@6"
+                "$ref": "#/rules@8"
               },
               "arguments": []
             }
@@ -33641,7 +33702,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@6"
+                        "$ref": "#/rules@8"
                       },
                       "arguments": []
                     }
@@ -33653,7 +33714,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@13"
+                        "$ref": "#/rules@15"
                       },
                       "arguments": []
                     },
@@ -33671,7 +33732,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@3"
+                        "$ref": "#/rules@5"
                       },
                       "arguments": []
                     }
@@ -33682,14 +33743,14 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                       {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@18"
+                          "$ref": "#/rules@20"
                         },
                         "arguments": []
                       },
                       {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@19"
+                          "$ref": "#/rules@21"
                         },
                         "arguments": []
                       },
@@ -33700,7 +33761,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                         "terminal": {
                           "$type": "RuleCall",
                           "rule": {
-                            "$ref": "#/rules@3"
+                            "$ref": "#/rules@5"
                           },
                           "arguments": []
                         }
@@ -33708,7 +33769,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                       {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@20"
+                          "$ref": "#/rules@22"
                         },
                         "arguments": []
                       }
@@ -33738,7 +33799,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@14"
+                "$ref": "#/rules@16"
               },
               "arguments": []
             }
@@ -33750,7 +33811,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@6"
+                "$ref": "#/rules@8"
               },
               "arguments": []
             }
@@ -34000,18 +34061,133 @@ var LangGeneratedModule = {
   parser: {}
 };
 
+// src/language/constant-evaluator.ts
+function evaluateConstant(expr) {
+  if (isList(expr)) {
+    if (expr.elements.length === 1) {
+      return evaluateConstant(expr.elements[0]);
+    }
+    return void 0;
+  }
+  if (isNumberLiteral2(expr)) {
+    return expr.value;
+  }
+  if (isBooleanLiteral2(expr)) {
+    return expr.value === "true";
+  }
+  if (isNothingLiteral(expr)) {
+    return null;
+  }
+  if (isUnaryExpression(expr) && expr.op && expr.operand) {
+    const operand = evaluateConstant(expr.operand);
+    if (operand === void 0) return void 0;
+    switch (expr.op) {
+      case "-":
+        return typeof operand === "number" ? -operand : void 0;
+      case "not":
+        return typeof operand === "boolean" ? !operand : void 0;
+      default:
+        return void 0;
+    }
+  }
+  if (isBinaryExpression(expr) && expr.op) {
+    const left = evaluateConstant(expr.left);
+    if (left === void 0) return void 0;
+    const right = expr.right ? evaluateConstant(expr.right) : void 0;
+    if (right === void 0) return void 0;
+    if (typeof left === "number" && typeof right === "number") {
+      switch (expr.op) {
+        case "+":
+          return left + right;
+        case "-":
+          return left - right;
+        case "*":
+          return left * right;
+        case "/":
+          return right !== 0 ? left / right : void 0;
+        case "^":
+          return Math.pow(left, right);
+      }
+    }
+    if (typeof left === "boolean" && typeof right === "boolean") {
+      switch (expr.op) {
+        case "and":
+          return left && right;
+        case "or":
+          return left || right;
+      }
+    }
+  }
+  return void 0;
+}
+
 // src/language/lang-validator.ts
 function registerValidationChecks(services) {
   const registry = services.validation.ValidationRegistry;
   const validator = services.validation.LangValidator;
   const checks = {
-    // Field: validator.checkField
+    Equation: validator.checkEquation
   };
   registry.register(checks, validator);
 }
 var LangValidator = class {
-  // checkField(field: Field, accept: ValidationAcceptor): void {
-  // }
+  checkEquation(equation, accept) {
+    const leftValue = evaluateConstant(equation.left);
+    const rightValue = evaluateConstant(equation.right);
+    if (leftValue !== void 0 && rightValue !== void 0) {
+      const result = this.compareValues(leftValue, rightValue, equation.op);
+      if (result === false) {
+        accept(
+          "error",
+          `Equation is false: ${leftValue} ${equation.op} ${rightValue}`,
+          { node: equation }
+        );
+        return;
+      }
+    }
+    let prevValue = rightValue;
+    for (const comp of equation.rest) {
+      if (prevValue === void 0) {
+        prevValue = evaluateConstant(comp.right);
+        continue;
+      }
+      const nextValue = evaluateConstant(comp.right);
+      if (nextValue === void 0) {
+        prevValue = void 0;
+        continue;
+      }
+      const chainResult = this.compareValues(prevValue, nextValue, comp.op);
+      if (chainResult === false) {
+        accept(
+          "error",
+          `Equation is false: ${prevValue} ${comp.op} ${nextValue}`,
+          { node: comp, property: "right" }
+        );
+        return;
+      }
+      prevValue = nextValue;
+    }
+  }
+  compareValues(left, right, op) {
+    switch (op) {
+      case "=":
+        return left === right;
+      case "!=":
+        return left !== right;
+      case ">":
+        return typeof left === "number" && typeof right === "number" ? left > right : void 0;
+      case "<":
+        return typeof left === "number" && typeof right === "number" ? left < right : void 0;
+      case ">=":
+        return typeof left === "number" && typeof right === "number" ? left >= right : void 0;
+      case "<=":
+        return typeof left === "number" && typeof right === "number" ? left <= right : void 0;
+      case "=>":
+        return typeof left === "number" && typeof right === "number" ? left >= right : void 0;
+      default:
+        return void 0;
+    }
+  }
 };
 
 // src/language/lang-lexer.ts

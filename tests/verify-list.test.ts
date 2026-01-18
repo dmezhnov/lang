@@ -11,8 +11,8 @@ const parse = parseHelper(services);
 
 describe('List Syntax Verification', () => {
 
-    test('parsers examples/correct syntax/list.lang', async () => {
-        const path = resolve(import.meta.dir, '../examples/correct syntax/list.lang');
+    test('parsers examples/syntax/correct syntax/list.lang', async () => {
+        const path = resolve(import.meta.dir, '../examples/syntax/correct syntax/list.lang');
         const content = readFileSync(path, 'utf-8');
         const result = await parse(content);
 

@@ -94,6 +94,7 @@ export function isComparison(item: unknown): item is Comparison {
 }
 
 export interface ComparisonRight extends langium.AstNode {
+    readonly $container: Equation;
     readonly $type: 'ComparisonRight';
     op: Comparison;
     right: Expression;
@@ -136,11 +137,19 @@ export interface Equation extends langium.AstNode {
     readonly $container: File | Parenthesized | WhereClause;
     readonly $type: 'Equation';
     left: Expression;
+    op: Comparison;
+    rest: Array<ComparisonRight>;
+    right: Expression;
+    where?: WhereClause;
 }
 
 export const Equation = {
     $type: 'Equation',
-    left: 'left'
+    left: 'left',
+    op: 'op',
+    rest: 'rest',
+    right: 'right',
+    where: 'where'
 } as const;
 
 export function isEquation(item: unknown): item is Equation {
@@ -161,11 +170,13 @@ export interface ExprStatement extends langium.AstNode {
     readonly $container: File | Parenthesized | WhereClause;
     readonly $type: 'ExprStatement';
     expr: Expression;
+    where?: WhereClause;
 }
 
 export const ExprStatement = {
     $type: 'ExprStatement',
-    expr: 'expr'
+    expr: 'expr',
+    where: 'where'
 } as const;
 
 export function isExprStatement(item: unknown): item is ExprStatement {
@@ -411,7 +422,7 @@ export function isUnaryOperator(item: unknown): item is UnaryOperator {
 }
 
 export interface WhereClause extends langium.AstNode {
-    readonly $container: Field;
+    readonly $container: Equation | ExprStatement | Field;
     readonly $type: 'WhereClause';
     statements: Array<Statement>;
 }
@@ -507,6 +518,19 @@ export class LangAstReflection extends langium.AbstractAstReflection {
             properties: {
                 left: {
                     name: Equation.left
+                },
+                op: {
+                    name: Equation.op
+                },
+                rest: {
+                    name: Equation.rest,
+                    defaultValue: []
+                },
+                right: {
+                    name: Equation.right
+                },
+                where: {
+                    name: Equation.where
                 }
             },
             superTypes: [Statement.$type]
@@ -516,6 +540,9 @@ export class LangAstReflection extends langium.AbstractAstReflection {
             properties: {
                 expr: {
                     name: ExprStatement.expr
+                },
+                where: {
+                    name: ExprStatement.where
                 }
             },
             superTypes: [Statement.$type]

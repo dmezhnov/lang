@@ -4,16 +4,15 @@ entry File:
     (statements+=Statement | NEWLINE)*;
 
 Statement:
-    Expression (
-        (op=Comparison right=Expression (rest+=ComparisonRight)* (
-            (where=WhereClause) |
-            (NEWLINE+ (INDENT where=WhereClause DEDENT)?)
-        )? {infer Equation.left=current}) |
-        ((
-            (where=WhereClause) |
-            (NEWLINE+ (INDENT where=WhereClause DEDENT)?)
-        )? {infer ExprStatement.expr=current})
-    );
+    Equation | ExprStatement;
+
+Equation:
+    left=Expression op=Comparison right=Expression (rest+=ComparisonRight)*
+    (where=WhereClause | (NEWLINE+ (INDENT where=WhereClause DEDENT)?))?;
+
+ExprStatement:
+    expr=Expression
+    (where=WhereClause | (NEWLINE+ (INDENT where=WhereClause DEDENT)?))?;
 
 ComparisonRight:
     op=Comparison right=Expression;
