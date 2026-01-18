@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.1] - 2026-01-18
+
+### Added
+
+- **Meta**: Added extension icon.
+
 ## [0.4.0] - 2026-01-18
 
 ### Added

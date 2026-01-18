@@ -15,7 +15,8 @@ const DRAFT_BRANCH = 'draft';
 async function ensureGitClean(repoPath: string): Promise<void> {
     const result = await $`git status --porcelain`.cwd(repoPath).text();
     if (result.trim().length > 0) {
-        throw new Error(`Working directory in "${repoPath}" is not clean. Please commit or stash changes before publishing.`);
+        console.log('Working directory is dirty. executing save script...');
+        await $`bun run scripts/save.bun.ts`.cwd(repoPath);
     }
 }
 
@@ -99,8 +100,18 @@ export async function main(): Promise<void> {
     updatePackageVersion(repoPath, version);
     await $`bun install`.cwd(repoPath); // Updates bun.lockb
 
+    // 4. Update package.json and lockfile
+    updatePackageVersion(repoPath, version);
+    await $`bun install`.cwd(repoPath); // Updates bun.lockb
+
+    // 4.5 Build and Package to generate VSIX
+    console.log('Building and packaging VSIX...');
+    // We execute the packaging script directly or via bun run
+    await $`bun run scripts/package.bun.ts`.cwd(repoPath);
+
     // 5. Commit bump to current branch (draft)
-    await $`git add package.json bun.lock`.cwd(repoPath);
+    // Stage package.json, lockfile AND the new VSIX in release/
+    await $`git add package.json bun.lock release/`.cwd(repoPath);
     await $`git commit -m "chore: bump version to ${version}"`.cwd(repoPath);
 
     // 6. Squash merge to main

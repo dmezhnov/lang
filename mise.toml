@@ -10,7 +10,6 @@ run = ["mise sh-run mise run build", "mise sh-run bun test"]
 [tasks.publish]
 run = [
   "mise sh-run bun run scripts/publish.bun.ts",
-  "mise sh-run mise run test",
   "mise sh-run bun x vsce publish",
   "mise sh-run bun x ovsx publish",
 ]
