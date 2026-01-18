@@ -10,7 +10,7 @@ export function registerValidationChecks(services: LangServices) {
     const registry = services.validation.ValidationRegistry;
     const validator = services.validation.LangValidator;
     const checks: ValidationChecks<LangAstType> = {
-        Equation: validator.checkEquation
+        Equation: (node, accept) => validator.checkEquation(node, accept)
     };
     registry.register(checks, validator);
 }

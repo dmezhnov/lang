@@ -1,11 +1,19 @@
 # Changelog
 
-## [0.4.2] - 2026-01-18
+## [0.4.3] - 2026-01-18
 
 ### Changed
 
-- **Build**: Migrated build system from `esbuild` to native `Bun.build` for faster and simpler builds.
+- **Build**: Migrated build system to run via `Bun`, using stable `esbuild` for bundling (resolved crash issues).
 - **Packaging**: Fixed publish workflow to correctly attach VSIX assets and include the extension icon.
+- **LSP**: Added standalone language server binary `lang-language-server` usage in other editors.
+
+## [0.4.2] - 2026-01-18 [YANKED]
+
+### Changed
+
+- Failed release (build instability). Superseded by 0.4.3.
+
 
 ## [0.4.1] - 2026-01-18
 

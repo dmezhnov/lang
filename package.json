@@ -3,7 +3,7 @@
     "displayName": "Lang language",
     "publisher": "dmezhnov",
     "description": "Syntax highlighting and basic structural validation for the Lang language.",
-    "version": "0.4.2",
+    "version": "0.4.3",
     "icon": "icon.png",
     "license": "MIT",
     "repository": {
@@ -11,13 +11,16 @@
         "url": "https://github.com/dmezhnov/lang"
     },
     "main": "out/extension/main.js",
+    "bin": {
+        "lang-language-server": "./out/language/main.js"
+    },
     "engines": {
         "vscode": "^1.104.0"
     },
     "scripts": {
         "langium:generate": "langium generate",
-        "build": "bun run langium:generate && bun run scripts/build.bun.ts",
-        "watch": "bun run langium:generate && bun run scripts/build.bun.ts --watch",
+        "build": "bun run langium:generate && bun run scripts/build.ts",
+        "watch": "bun run langium:generate && bun run scripts/build.ts --watch",
         "test": "bun test"
     },
     "categories": [
@@ -69,6 +72,7 @@
         "@vscode/vsce-sign"
     ],
     "dependencies": {
+        "esbuild": "^0.27.2",
         "langium": "^4.1.3",
         "vscode-languageclient": "^9.0.1",
         "vscode-languageserver": "^9.0.1"
