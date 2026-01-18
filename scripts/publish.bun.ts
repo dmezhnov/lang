@@ -133,8 +133,12 @@ export async function main(): Promise<void> {
 
     // 9. GitHub Release
     console.log('Creating GitHub Release...');
+    const pkgName = pkg.name; // "lang-language"
+    const vsixPath = `release/${version}/${pkgName}-${version}.vsix`;
+
     // Using --target to ensure it tags the commit we just pushed to main
-    await $`gh release create v${version} --title "v${version}" --notes ${releaseNotes} --target ${TARGET_BRANCH}`.cwd(repoPath);
+    // Pass vsixPath to attach the file
+    await $`gh release create v${version} ${vsixPath} --title "v${version}" --notes ${releaseNotes} --target ${TARGET_BRANCH}`.cwd(repoPath);
     console.log(`GitHub Release v${version} created.`);
 
     // Fetch the new tag locally

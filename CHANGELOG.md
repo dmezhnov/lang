@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2] - 2026-01-18
+
+### Changed
+
+- **Build**: Migrated build system from `esbuild` to native `Bun.build` for faster and simpler builds.
+- **Packaging**: Fixed publish workflow to correctly attach VSIX assets and include the extension icon.
+
 ## [0.4.1] - 2026-01-18
 
 ### Added
