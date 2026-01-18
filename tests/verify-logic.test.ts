@@ -9,15 +9,15 @@ import { resolve } from 'path';
 const services = createLangServices(EmptyFileSystem).Lang;
 const parse = parseHelper(services);
 
-describe('Nested List Syntax Verification', () => {
+describe('Logic Syntax Verification', () => {
 
-    test('parsers examples/correct syntax/nested_list.lang', async () => {
-        const path = resolve(__dirname, '../examples/correct syntax/nested_list.lang');
+    test('parsers examples/correct syntax/logic.lang', async () => {
+        const path = resolve(import.meta.dir, '../examples/correct syntax/logic.lang');
         const content = readFileSync(path, 'utf-8');
         const result = await parse(content);
 
         if (result.parseResult.parserErrors.length > 0) {
-            console.log('Parser Errors:', JSON.stringify(result.parseResult.parserErrors, null, 2));
+            console.log('Parser Errors (logic.lang):', JSON.stringify(result.parseResult.parserErrors, null, 2));
         }
         expect(result.parseResult.parserErrors.length).toBe(0);
     });

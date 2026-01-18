@@ -19,3 +19,5 @@ nested_list_more_2 = (
 requests_i_j_k_l_s_l0 = (
     (1 from I, 1 from C)
 )
+
+some = (fn_1(1), ..., fn_1(N), fn_2(1), ..., fn_2(M))

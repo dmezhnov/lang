@@ -8,4 +8,8 @@ z = z
 
 a of b
 
+c for e
+
 c = 1 from x
+
+f of some(Tel(1), ..., Tel(n), else)

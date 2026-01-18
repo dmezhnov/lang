@@ -1,14 +1,54 @@
 # Changelog
 
+## [0.3.12] - 2026-01-18
+
+### Added
+
+- **Grammar**: Support for comparison chains in `Record` field values (e.g., `key = 850 + 350 + 1000 = 2200`).
+- **Grammar**: Allow multiple blank lines between record closing braces and `where` clauses.
+
+## [0.3.11] - 2026-01-18
+
+### Fixed
+
+- **Grammar**: Fixed `Statement` rule to allow statements without explicit termination in certain contexts (e.g., last
+  statement in where blocks before closing braces). This resolves parsing issues with nested where clauses in records.
+
+## [0.3.10] - 2026-01-17
+
+### Added
+
+- **Grammar**: Added support for logical operators `and`, `or`, and `not`.
+- **Grammar**: Added support for boolean literals `true` and `false`.
+- **Verification**: Verified `examples/correct syntax/logic.lang`.
+
+## [0.3.9] - 2026-01-16
+
+### Fixed
+
+- **Grammar**: Resolved parsing ambiguity between `Equation` and `ExprStatement`. This fixes errors where
+  expressions starting with an identifier (like `f of ...`) were incorrectly treated as failed equations.
+- **Grammar**: Updated `FunctionCall` and `List` to support ellipsis (`...`) in argument lists (e.g.,
+  `func(a, ..., b)`) and anywhere in lists.
+- **Verification**: Verified `examples/correct syntax/list.lang` which includes complex nested lists and
+  ellipses.
+
+## [0.3.8] - 2026-01-16
+
+### Fixed
+
+- **Grammar**: Generalize `Record` fields to allow expressions as keys (e.g., `("key") = value`). This supports
+  dynamic keys or quoted strings as associative keys.
+
 ## [0.3.7] - 2026-01-16
 
 ### Fixed
 
-- **Grammar**: Refactored `Expression` hierarchy to ensure logical operators (`from`, `of`, `for`) bind tighter than
-  list separators (`,`). This fixes issues with lists of binary expressions like `(1 from I, 1 from C)`.
+- **Grammar**: Refactored `Expression` hierarchy to ensure logical operators (`from`, `of`, `for`) bind tighter
+  than list separators (`,`). This fixes issues with lists of binary expressions like `(1 from I, 1 from C)`.
 - **Grammar**: Removed `where` from comparison operators to resolve ambiguity with `where` clauses.
-- **Grammar**: Updated `Record` syntax to support `=` assignment for fields (e.g., `{ a = 5 }`) and comma separators
-  between fields.
+- **Grammar**: Updated `Record` syntax to support `=` assignment for fields (e.g., `{ a = 5 }`) and comma
+  separators between fields.
 
 ## [0.3.6] - 2026-01-16
 

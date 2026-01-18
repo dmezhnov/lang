@@ -38,9 +38,14 @@ export type LangKeywordNames =
     | ">"
     | ">="
     | "^"
+    | "and"
+    | "false"
     | "for"
     | "from"
+    | "not"
     | "of"
+    | "or"
+    | "true"
     | "where"
     | "{"
     | "}";
@@ -48,11 +53,11 @@ export type LangKeywordNames =
 export type LangTokenNames = LangTerminalNames | LangKeywordNames;
 
 export interface BinaryExpression extends langium.AstNode {
-    readonly $container: Field | FunctionCall | List;
-    readonly $type: 'BinaryExpression' | 'Element' | 'FunctionCall' | 'MemberAccess' | 'NumberLiteral' | 'Parenthesized' | 'Primary' | 'Record' | 'Reference' | 'StringLiteral';
-    left: Element;
+    readonly $container: Field | FieldComparison | FunctionCall | List;
+    readonly $type: 'BinaryExpression' | 'BooleanLiteral' | 'Element' | 'Ellipsis' | 'FunctionCall' | 'MemberAccess' | 'NumberLiteral' | 'Parenthesized' | 'Primary' | 'Record' | 'Reference' | 'StringLiteral' | 'UnaryExpression';
+    left: UnaryExpression;
     op: Operator;
-    right: Element;
+    right: UnaryExpression;
 }
 
 export const BinaryExpression = {
@@ -66,6 +71,21 @@ export function isBinaryExpression(item: unknown): item is BinaryExpression {
     return reflection.isInstance(item, BinaryExpression.$type);
 }
 
+export interface BooleanLiteral extends langium.AstNode {
+    readonly $container: FunctionCall | MemberAccess;
+    readonly $type: 'BooleanLiteral';
+    value: 'false' | 'true';
+}
+
+export const BooleanLiteral = {
+    $type: 'BooleanLiteral',
+    value: 'value'
+} as const;
+
+export function isBooleanLiteral(item: unknown): item is BooleanLiteral {
+    return reflection.isInstance(item, BooleanLiteral.$type);
+}
+
 export type Comparison = '!=' | '<' | '<=' | '=' | '=>' | '>' | '>=';
 
 export function isComparison(item: unknown): item is Comparison {
@@ -73,7 +93,6 @@ export function isComparison(item: unknown): item is Comparison {
 }
 
 export interface ComparisonRight extends langium.AstNode {
-    readonly $container: Equation;
     readonly $type: 'ComparisonRight';
     op: Comparison;
     right: Expression;
@@ -99,23 +118,28 @@ export function isElement(item: unknown): item is Element {
     return reflection.isInstance(item, Element.$type);
 }
 
+export interface Ellipsis extends langium.AstNode {
+    readonly $container: FunctionCall | MemberAccess;
+    readonly $type: 'Ellipsis';
+}
+
+export const Ellipsis = {
+    $type: 'Ellipsis'
+} as const;
+
+export function isEllipsis(item: unknown): item is Ellipsis {
+    return reflection.isInstance(item, Ellipsis.$type);
+}
+
 export interface Equation extends langium.AstNode {
     readonly $container: File | WhereClause;
     readonly $type: 'Equation';
     left: Expression;
-    op: Comparison;
-    rest: Array<ComparisonRight>;
-    right: Expression;
-    where: WhereClause;
 }
 
 export const Equation = {
     $type: 'Equation',
-    left: 'left',
-    op: 'op',
-    rest: 'rest',
-    right: 'right',
-    where: 'where'
+    left: 'left'
 } as const;
 
 export function isEquation(item: unknown): item is Equation {
@@ -136,13 +160,11 @@ export interface ExprStatement extends langium.AstNode {
     readonly $container: File | WhereClause;
     readonly $type: 'ExprStatement';
     expr: Expression;
-    where: WhereClause;
 }
 
 export const ExprStatement = {
     $type: 'ExprStatement',
-    expr: 'expr',
-    where: 'where'
+    expr: 'expr'
 } as const;
 
 export function isExprStatement(item: unknown): item is ExprStatement {
@@ -152,20 +174,39 @@ export function isExprStatement(item: unknown): item is ExprStatement {
 export interface Field extends langium.AstNode {
     readonly $container: Record;
     readonly $type: 'Field';
-    name: string;
+    key: BinaryExpression;
+    rest: Array<FieldComparison>;
     value?: BinaryExpression;
     where?: WhereClause;
 }
 
 export const Field = {
     $type: 'Field',
-    name: 'name',
+    key: 'key',
+    rest: 'rest',
     value: 'value',
     where: 'where'
 } as const;
 
 export function isField(item: unknown): item is Field {
     return reflection.isInstance(item, Field.$type);
+}
+
+export interface FieldComparison extends langium.AstNode {
+    readonly $container: Field;
+    readonly $type: 'FieldComparison';
+    op: Comparison;
+    right: BinaryExpression;
+}
+
+export const FieldComparison = {
+    $type: 'FieldComparison',
+    op: 'op',
+    right: 'right'
+} as const;
+
+export function isFieldComparison(item: unknown): item is FieldComparison {
+    return reflection.isInstance(item, FieldComparison.$type);
 }
 
 export interface File extends langium.AstNode {
@@ -183,7 +224,6 @@ export function isFile(item: unknown): item is File {
 }
 
 export interface FunctionCall extends langium.AstNode {
-    readonly $container: BinaryExpression;
     readonly $type: 'FunctionCall';
     args: Array<BinaryExpression>;
     receiver: Primary;
@@ -215,7 +255,6 @@ export function isList(item: unknown): item is List {
 }
 
 export interface MemberAccess extends langium.AstNode {
-    readonly $container: BinaryExpression;
     readonly $type: 'MemberAccess';
     member: number | string;
     receiver: Primary;
@@ -232,7 +271,7 @@ export function isMemberAccess(item: unknown): item is MemberAccess {
 }
 
 export interface NumberLiteral extends langium.AstNode {
-    readonly $container: BinaryExpression | FunctionCall | MemberAccess;
+    readonly $container: FunctionCall | MemberAccess;
     readonly $type: 'NumberLiteral';
     value: number;
 }
@@ -246,14 +285,14 @@ export function isNumberLiteral(item: unknown): item is NumberLiteral {
     return reflection.isInstance(item, NumberLiteral.$type);
 }
 
-export type Operator = '*' | '+' | '-' | '/' | '<>' | '^' | 'for' | 'from' | 'of';
+export type Operator = '*' | '+' | '-' | '/' | '<>' | '^' | 'and' | 'for' | 'from' | 'of' | 'or';
 
 export function isOperator(item: unknown): item is Operator {
-    return item === '+' || item === '-' || item === '*' || item === '/' || item === '^' || item === '<>' || item === 'of' || item === 'from' || item === 'for';
+    return item === '+' || item === '-' || item === '*' || item === '/' || item === '^' || item === '<>' || item === 'of' || item === 'from' || item === 'for' || item === 'and' || item === 'or';
 }
 
 export interface Parenthesized extends langium.AstNode {
-    readonly $container: BinaryExpression | FunctionCall | MemberAccess;
+    readonly $container: FunctionCall | MemberAccess;
     readonly $type: 'Parenthesized';
     inner: Array<Expression>;
 }
@@ -267,7 +306,7 @@ export function isParenthesized(item: unknown): item is Parenthesized {
     return reflection.isInstance(item, Parenthesized.$type);
 }
 
-export type Primary = NumberLiteral | Parenthesized | Record | Reference | StringLiteral;
+export type Primary = BooleanLiteral | Ellipsis | NumberLiteral | Parenthesized | Record | Reference | StringLiteral;
 
 export const Primary = {
     $type: 'Primary'
@@ -278,7 +317,7 @@ export function isPrimary(item: unknown): item is Primary {
 }
 
 export interface Record extends langium.AstNode {
-    readonly $container: BinaryExpression | FunctionCall | MemberAccess;
+    readonly $container: FunctionCall | MemberAccess;
     readonly $type: 'Record';
     fields: Array<Field>;
 }
@@ -293,7 +332,7 @@ export function isRecord(item: unknown): item is Record {
 }
 
 export interface Reference extends langium.AstNode {
-    readonly $container: BinaryExpression | FunctionCall | MemberAccess;
+    readonly $container: FunctionCall | MemberAccess;
     readonly $type: 'Reference';
     name: string;
 }
@@ -318,7 +357,7 @@ export function isStatement(item: unknown): item is Statement {
 }
 
 export interface StringLiteral extends langium.AstNode {
-    readonly $container: BinaryExpression | FunctionCall | MemberAccess;
+    readonly $container: FunctionCall | MemberAccess;
     readonly $type: 'StringLiteral';
     value: string;
 }
@@ -332,8 +371,33 @@ export function isStringLiteral(item: unknown): item is StringLiteral {
     return reflection.isInstance(item, StringLiteral.$type);
 }
 
+export interface UnaryExpression extends BinaryExpression {
+    readonly $container: BinaryExpression | UnaryExpression;
+    readonly $type: 'BooleanLiteral' | 'Element' | 'Ellipsis' | 'FunctionCall' | 'MemberAccess' | 'NumberLiteral' | 'Parenthesized' | 'Primary' | 'Record' | 'Reference' | 'StringLiteral' | 'UnaryExpression';
+    op?: UnaryOperator;
+    operand?: UnaryExpression;
+}
+
+export const UnaryExpression = {
+    $type: 'UnaryExpression',
+    left: 'left',
+    op: 'op',
+    operand: 'operand',
+    right: 'right'
+} as const;
+
+export function isUnaryExpression(item: unknown): item is UnaryExpression {
+    return reflection.isInstance(item, UnaryExpression.$type);
+}
+
+export type UnaryOperator = 'not';
+
+export function isUnaryOperator(item: unknown): item is UnaryOperator {
+    return item === 'not';
+}
+
 export interface WhereClause extends langium.AstNode {
-    readonly $container: Equation | ExprStatement | Field;
+    readonly $container: Field;
     readonly $type: 'WhereClause';
     statements: Array<Statement>;
 }
@@ -349,12 +413,15 @@ export function isWhereClause(item: unknown): item is WhereClause {
 
 export type LangAstType = {
     BinaryExpression: BinaryExpression
+    BooleanLiteral: BooleanLiteral
     ComparisonRight: ComparisonRight
     Element: Element
+    Ellipsis: Ellipsis
     Equation: Equation
     ExprStatement: ExprStatement
     Expression: Expression
     Field: Field
+    FieldComparison: FieldComparison
     File: File
     FunctionCall: FunctionCall
     List: List
@@ -366,6 +433,7 @@ export type LangAstType = {
     Reference: Reference
     Statement: Statement
     StringLiteral: StringLiteral
+    UnaryExpression: UnaryExpression
     WhereClause: WhereClause
 }
 
@@ -386,6 +454,15 @@ export class LangAstReflection extends langium.AbstractAstReflection {
             },
             superTypes: []
         },
+        BooleanLiteral: {
+            name: BooleanLiteral.$type,
+            properties: {
+                value: {
+                    name: BooleanLiteral.value
+                }
+            },
+            superTypes: [Primary.$type]
+        },
         ComparisonRight: {
             name: ComparisonRight.$type,
             properties: {
@@ -402,26 +479,19 @@ export class LangAstReflection extends langium.AbstractAstReflection {
             name: Element.$type,
             properties: {
             },
-            superTypes: [BinaryExpression.$type]
+            superTypes: [UnaryExpression.$type]
+        },
+        Ellipsis: {
+            name: Ellipsis.$type,
+            properties: {
+            },
+            superTypes: [Primary.$type]
         },
         Equation: {
             name: Equation.$type,
             properties: {
                 left: {
                     name: Equation.left
-                },
-                op: {
-                    name: Equation.op
-                },
-                rest: {
-                    name: Equation.rest,
-                    defaultValue: []
-                },
-                right: {
-                    name: Equation.right
-                },
-                where: {
-                    name: Equation.where
                 }
             },
             superTypes: [Statement.$type]
@@ -431,9 +501,6 @@ export class LangAstReflection extends langium.AbstractAstReflection {
             properties: {
                 expr: {
                     name: ExprStatement.expr
-                },
-                where: {
-                    name: ExprStatement.where
                 }
             },
             superTypes: [Statement.$type]
@@ -447,14 +514,30 @@ export class LangAstReflection extends langium.AbstractAstReflection {
         Field: {
             name: Field.$type,
             properties: {
-                name: {
-                    name: Field.name
+                key: {
+                    name: Field.key
+                },
+                rest: {
+                    name: Field.rest,
+                    defaultValue: []
                 },
                 value: {
                     name: Field.value
                 },
                 where: {
                     name: Field.where
+                }
+            },
+            superTypes: []
+        },
+        FieldComparison: {
+            name: FieldComparison.$type,
+            properties: {
+                op: {
+                    name: FieldComparison.op
+                },
+                right: {
+                    name: FieldComparison.right
                 }
             },
             superTypes: []
@@ -562,6 +645,24 @@ export class LangAstReflection extends langium.AbstractAstReflection {
                 }
             },
             superTypes: [Primary.$type]
+        },
+        UnaryExpression: {
+            name: UnaryExpression.$type,
+            properties: {
+                left: {
+                    name: UnaryExpression.left
+                },
+                op: {
+                    name: UnaryExpression.op
+                },
+                operand: {
+                    name: UnaryExpression.operand
+                },
+                right: {
+                    name: UnaryExpression.right
+                }
+            },
+            superTypes: [BinaryExpression.$type]
         },
         WhereClause: {
             name: WhereClause.$type,

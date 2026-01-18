@@ -1,4 +1,18 @@
 X = {
     a = 5,
-    b = 6
+    b = 6,
+    ("some") = 8
 }
+
+Y = {1,2, a = 6}
+
+some = {
+    (1 from I) = {
+        (1 from I, 1 from J) = 850 + 350 + 1000 = 2200,
+        (1 from I, 2 from J) = 40,
+        (1 from I, 3 from J) = 60
+    }
+}
+    where
+        I from index
+        J from index

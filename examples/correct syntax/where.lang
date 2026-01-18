@@ -9,3 +9,12 @@ some_3 = a + b
         some of number
         a of number
         b of number
+
+matrix(Tcoords(1), ..., Tcoords(C)) = {
+    coords = Tcoords(1), ..., Tcoords(C)
+    value of number or matrix(TcoordsNext)
+        where
+            TcoordsNext = Tcoords(1), ..., Tcoords(C-1) of coordinate
+                where
+                    C of index = length(coords) # Количество координат
+}
