@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.14] - 2026-01-18
+
+### Fixed
+
+- **Grammar**: Updated `Parenthesized` to accept statements, allowing equations in parentheses (e.g., `(x = 5) and (y = 6)`).
+
 ## [0.3.13] - 2026-01-18
 
 ### Added

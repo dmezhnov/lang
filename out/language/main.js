@@ -33509,7 +33509,7 @@ var LangGrammar = () => loadedLangGrammar ?? (loadedLangGrammar = loadGrammarFro
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@4"
+                    "$ref": "#/rules@1"
                   },
                   "arguments": []
                 }

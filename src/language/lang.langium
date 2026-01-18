@@ -52,7 +52,7 @@ Primary:
     Record;
 
 Parenthesized:
-    '(' (inner+=Expression | NEWLINE)* ')';
+    '(' (inner+=Statement | NEWLINE)* ')';
 
 Record:
     '{' NEWLINE? (fields+=Field (',' | NEWLINE)*)* '}';

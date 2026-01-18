@@ -133,7 +133,7 @@ export function isEllipsis(item: unknown): item is Ellipsis {
 }
 
 export interface Equation extends langium.AstNode {
-    readonly $container: File | WhereClause;
+    readonly $container: File | Parenthesized | WhereClause;
     readonly $type: 'Equation';
     left: Expression;
 }
@@ -158,7 +158,7 @@ export function isExpression(item: unknown): item is Expression {
 }
 
 export interface ExprStatement extends langium.AstNode {
-    readonly $container: File | WhereClause;
+    readonly $container: File | Parenthesized | WhereClause;
     readonly $type: 'ExprStatement';
     expr: Expression;
 }
@@ -241,7 +241,7 @@ export function isFunctionCall(item: unknown): item is FunctionCall {
 }
 
 export interface List extends langium.AstNode {
-    readonly $container: ComparisonRight | Equation | ExprStatement | Parenthesized;
+    readonly $container: ComparisonRight | Equation | ExprStatement;
     readonly $type: 'List';
     elements: Array<BinaryExpression>;
 }
@@ -308,7 +308,7 @@ export function isOperator(item: unknown): item is Operator {
 export interface Parenthesized extends langium.AstNode {
     readonly $container: FunctionCall | MemberAccess;
     readonly $type: 'Parenthesized';
-    inner: Array<Expression>;
+    inner: Array<Statement>;
 }
 
 export const Parenthesized = {

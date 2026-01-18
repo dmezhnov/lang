@@ -16,5 +16,9 @@ matrix(Tcoords(1), ..., Tcoords(C)) = {
         where
             TcoordsNext = Tcoords(1), ..., Tcoords(C-1) of coordinate
                 where
-                    C of index = length(coords) # Количество координат
+                    C of index = length(coords)
 }
+
+some_4 = x + y
+    where
+        (x = 5) and (y = 6)

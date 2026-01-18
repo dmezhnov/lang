@@ -861,7 +861,7 @@ export const LangGrammar = (): Grammar => loadedLangGrammar ?? (loadedLangGramma
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@4"
+                    "$ref": "#/rules@1"
                   },
                   "arguments": []
                 }
