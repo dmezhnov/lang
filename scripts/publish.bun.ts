@@ -154,8 +154,13 @@ export async function main(): Promise<void> {
     await $`bun run scripts/package.bun.ts`.cwd(repoPath);
 
     // 5. Commit bump
-    await $`git add .`.cwd(repoPath);
-    await $`git commit -m "chore: bump version to ${version}"`.cwd(repoPath);
+    const status = await $`git status --porcelain`.cwd(repoPath).text();
+    if (status.trim()) {
+        await $`git add .`.cwd(repoPath);
+        await $`git commit -m "chore: bump version to ${version}"`.cwd(repoPath);
+    } else {
+        console.log('No changes to commit (version likely already bumped). Skipping commit step.');
+    }
 
     // 6. Squash merge to main
     console.log(`Switching to ${TARGET_BRANCH} and squash merging...`);
@@ -180,6 +185,24 @@ export async function main(): Promise<void> {
 
     await $`gh release create v${version} ${vsixPath} --title "v${version}" --notes ${releaseNotes} --target ${TARGET_BRANCH}`.cwd(repoPath);
     console.log(`GitHub Release v${version} created.`);
+
+    // 9.5 Publish to VS Code Marketplace
+    console.log('Publishing to VS Code Marketplace...');
+    try {
+        await $`bun x vsce publish --packagePath ${vsixPath}`.cwd(repoPath);
+        console.log('Successfully published to VS Code Marketplace.');
+    } catch (e) {
+        console.error('Failed to publish to VS Code Marketplace:', e);
+    }
+
+    // 9.6 Publish to OpenVSX
+    console.log('Publishing to OpenVSX...');
+    try {
+        await $`bun x ovsx publish --packagePath ${vsixPath}`.cwd(repoPath);
+        console.log('Successfully published to OpenVSX.');
+    } catch (e) {
+        console.warn('Failed to publish to OpenVSX (optional):', e);
+    }
 
     // 10. Publish Zed extension (placeholder for now)
     console.log('\n📦 Zed Extension:');
