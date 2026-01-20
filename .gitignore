@@ -8,3 +8,9 @@ node_modules
 dist
 out/
 *.log
+
+# Rust build artifacts
+zed-extension/target/
+
+# WASM adapters (temporary build files)
+*.reactor.wasm

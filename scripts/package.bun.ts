@@ -1,21 +1,25 @@
 import { $ } from 'bun';
 import { mkdir } from 'fs/promises';
-import packageJson from '../package.json'; // bun handles json imports
+import { resolve } from 'path';
+import packageJson from '../vscode-extension/package.json'; // Import from extension dir
 
 const version = packageJson.version;
-const releaseDir = `release/${version}`;
+const releaseDir = `release/${version}`; // Root relative
 
 console.log(`Packaging version ${version}...`);
 
 // Ensure release directory exists
 await mkdir(releaseDir, { recursive: true });
 
-// Run vsce package
-// We use --out to specify the output directory directly if vsce supports it,
-// or move it afterwards. vsce package --out <path> specifies the output file path.
-const vsixName = `${packageJson.name}-${version}.vsix`;
-const outputPath = `${releaseDir}/${vsixName}`;
+// Setup packaging: copy icon.png to vscode-extension
+await $`cp icon.png vscode-extension/`;
 
-await $`bun x vsce package --out ${outputPath}`;
+// Run vsce package
+const vsixName = `${packageJson.name}-${version}.vsix`;
+// Resolve absolute path for output because we change cwd
+const outputPath = resolve(`${releaseDir}/${vsixName}`);
+
+// Run vsce inside vscode-extension directory
+await $`bun x vsce package --no-dependencies --out ${outputPath}`.cwd('vscode-extension');
 
 console.log(`VSIX created at ${outputPath}`);

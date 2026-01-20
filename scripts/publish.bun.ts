@@ -1,10 +1,9 @@
 import { resolve as resolvePath } from 'node:path';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 
 const $ = Bun.$;
 
 // Workaround for NixOS/Home Manager read-only SSH config permission errors.
-// We force SSH to ignore the user config file since it's causing "Bad owner or permissions" errors.
 if (!process.env.GIT_SSH_COMMAND) {
     process.env.GIT_SSH_COMMAND = 'ssh -F /dev/null';
 }
@@ -35,17 +34,60 @@ async function promptForVersion(currentVersion: string): Promise<string> {
     throw new Error('No version provided.');
 }
 
-function updatePackageVersion(repoPath: string, version: string) {
-    const pkgPath = resolvePath(repoPath, 'package.json');
-    const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+
+function syncVSCodePackage(rootPkgPath: string, vscodeExtPkgPath: string) {
+    const rootPkg = JSON.parse(readFileSync(rootPkgPath, 'utf-8'));
+    const vscodeExtPkg = JSON.parse(readFileSync(vscodeExtPkgPath, 'utf-8'));
+
+    // Sync metadata from root to vscode-extension
+    vscodeExtPkg.name = rootPkg.name;
+    vscodeExtPkg.displayName = rootPkg.displayName;
+    vscodeExtPkg.publisher = rootPkg.publisher;
+    vscodeExtPkg.description = rootPkg.description;
+    vscodeExtPkg.version = rootPkg.version;
+    vscodeExtPkg.repository = rootPkg.repository;
+    vscodeExtPkg.license = rootPkg.license;
+
+    writeFileSync(vscodeExtPkgPath, JSON.stringify(vscodeExtPkg, null, 4) + '\n');
+    console.log(`✓ Synced metadata to ${vscodeExtPkgPath}`);
+}
+
+function syncZedExtension(rootPkgPath: string, zedTomlPath: string) {
+    if (!existsSync(zedTomlPath)) return;
+
+    const rootPkg = JSON.parse(readFileSync(rootPkgPath, 'utf-8'));
+    let tomlContent = readFileSync(zedTomlPath, 'utf-8');
+
+    // Sync metadata from root to zed-extension/extension.toml
+    tomlContent = tomlContent.replace(/^version = "[\d.]+"$/m, `version = "${rootPkg.version}"`);
+    tomlContent = tomlContent.replace(/^description = ".*"$/m, `description = "${rootPkg.description}"`);
+
+    // Handle repository URL (extract from object if needed)
+    const repoUrl = typeof rootPkg.repository === 'string'
+        ? rootPkg.repository
+        : rootPkg.repository?.url || '';
+    tomlContent = tomlContent.replace(/^repository = ".*"$/m, `repository = "${repoUrl}"`);
+
+    // Update authors array (convert publisher to authors)
+    if (rootPkg.publisher) {
+        tomlContent = tomlContent.replace(/^authors = \[.*\]$/m, `authors = ["${rootPkg.publisher}"]`);
+    }
+
+    writeFileSync(zedTomlPath, tomlContent);
+    console.log(`✓ Synced metadata to ${zedTomlPath}`);
+}
+
+function updatePackageVersion(pkgPath: string, version: string) {
+    const content = readFileSync(pkgPath, 'utf-8');
+    const pkg = JSON.parse(content);
     pkg.version = version;
     writeFileSync(pkgPath, JSON.stringify(pkg, null, 4) + '\n');
-    console.log(`Updated package.json to version ${version}`);
+    console.log(`Updated ${pkgPath} to version ${version}`);
 }
+
 
 function extractReleaseNotes(changelogContent: string, version: string): string {
     const escapedVersion = version.replace(/\./g, '\\.');
-    // Matches "## [0.3.0]" or "## 0.3.0" possibly followed by date
     const headerPattern = new RegExp(`^## \\[?${escapedVersion}\\]?`);
 
     const lines = changelogContent.split('\n');
@@ -56,10 +98,9 @@ function extractReleaseNotes(changelogContent: string, version: string): string 
         const line = lines[i]!;
         if (startIndex === -1) {
             if (headerPattern.test(line)) {
-                startIndex = i + 1; // Start content after the header
+                startIndex = i + 1;
             }
         } else {
-            // If we found the start, look for the next header (starting with ## )
             if (line.startsWith('## ')) {
                 endIndex = i;
                 break;
@@ -71,8 +112,7 @@ function extractReleaseNotes(changelogContent: string, version: string): string 
         throw new Error(`Could not find release notes for version ${version} in CHANGELOG.md`);
     }
 
-    const notes = lines.slice(startIndex, endIndex === -1 ? undefined : endIndex).join('\n').trim();
-    return notes;
+    return lines.slice(startIndex, endIndex === -1 ? undefined : endIndex).join('\n').trim();
 }
 
 export async function main(): Promise<void> {
@@ -81,7 +121,7 @@ export async function main(): Promise<void> {
     // 1. Ensure clean state
     await ensureGitClean(repoPath);
 
-    // Read current version
+    // Read current version from root package.json
     const pkgPath = resolvePath(repoPath, 'package.json');
     const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
     const currentVersion = pkg.version;
@@ -96,22 +136,25 @@ export async function main(): Promise<void> {
     const releaseNotes = extractReleaseNotes(changelogContent, version);
     console.log(`Extracted release notes for ${version}.`);
 
-    // 4. Update package.json and lockfile
-    updatePackageVersion(repoPath, version);
-    await $`bun install`.cwd(repoPath); // Updates bun.lockb
+    // 4. Sync metadata across all package files
+    const rootPkgPath = resolvePath(repoPath, 'package.json');
 
-    // 4. Update package.json and lockfile
-    updatePackageVersion(repoPath, version);
+    // First update root version
+    updatePackageVersion(rootPkgPath, version);
+
+    // Then sync all metadata to extensions
+    syncVSCodePackage(rootPkgPath, resolvePath(repoPath, 'vscode-extension/package.json'));
+    syncZedExtension(rootPkgPath, resolvePath(repoPath, 'zed-extension/extension.toml'));
+
+
     await $`bun install`.cwd(repoPath); // Updates bun.lockb
 
     // 4.5 Build and Package to generate VSIX
     console.log('Building and packaging VSIX...');
-    // We execute the packaging script directly or via bun run
     await $`bun run scripts/package.bun.ts`.cwd(repoPath);
 
-    // 5. Commit bump to current branch (draft)
-    // Stage package.json, lockfile AND the new VSIX in release/
-    await $`git add package.json bun.lock release/`.cwd(repoPath);
+    // 5. Commit bump
+    await $`git add .`.cwd(repoPath);
     await $`git commit -m "chore: bump version to ${version}"`.cwd(repoPath);
 
     // 6. Squash merge to main
@@ -119,7 +162,6 @@ export async function main(): Promise<void> {
     await $`git checkout ${TARGET_BRANCH}`.cwd(repoPath);
     await $`git pull origin ${TARGET_BRANCH}`.cwd(repoPath);
 
-    // Merge draft into main with squash
     await $`git merge --squash ${DRAFT_BRANCH}`.cwd(repoPath);
 
     // 7. Commit to main
@@ -127,24 +169,43 @@ export async function main(): Promise<void> {
     await $`git commit -m ${commitMsg}`.cwd(repoPath);
     console.log(`Committed: ${commitMsg}`);
 
-    // 8. Push to main (required before gh release)
+    // 8. Push to main
     await $`git push origin ${TARGET_BRANCH}`.cwd(repoPath);
     console.log(`Pushed ${TARGET_BRANCH} to origin.`);
 
     // 9. GitHub Release
     console.log('Creating GitHub Release...');
-    const pkgName = pkg.name; // "lang-language"
+    const pkgName = pkg.name;
     const vsixPath = `release/${version}/${pkgName}-${version}.vsix`;
 
-    // Using --target to ensure it tags the commit we just pushed to main
-    // Pass vsixPath to attach the file
     await $`gh release create v${version} ${vsixPath} --title "v${version}" --notes ${releaseNotes} --target ${TARGET_BRANCH}`.cwd(repoPath);
     console.log(`GitHub Release v${version} created.`);
 
-    // Fetch the new tag locally
+    // 10. Publish Zed extension (placeholder for now)
+    console.log('\n📦 Zed Extension:');
+    console.log('⚠️  Zed extension submission to registry is not yet automated.');
+    console.log('   To publish manually, visit: https://github.com/zed-industries/extensions');
+    console.log(`   Zed branch has been updated at: https://github.com/${pkg.repository?.url?.match(/github\.com[:/](.+?)(\.git)?$/)?.[1]}/tree/zed`);
+    console.log('');
+
+    // Sync zed-extension to the 'zed' branch for Zed extensions registry.
+    // This allows the Zed registry to submodule a branch where extension.toml is at the root.
+    console.log('Syncing zed-extension to branch \'zed\'...');
+    try {
+        // Force push the subdir to the 'zed' branch
+        await $`git subtree split --prefix zed-extension -b zed`.cwd(repoPath);
+        await $`git push origin zed:zed --force`.cwd(repoPath);
+        // Clean up the temporary local branch split
+        await $`git branch -D zed`.cwd(repoPath);
+    } catch (e) {
+        console.error('Failed to sync Zed branch:', e);
+        console.log('You may need to run: git subtree push --prefix zed-extension origin zed');
+    }
+
+    // Fetch tags
     await $`git pull origin ${TARGET_BRANCH}`.cwd(repoPath);
 
-    // 10. Sync draft branch
+    // 11. Sync draft branch
     console.log(`Resetting ${DRAFT_BRANCH} to match ${TARGET_BRANCH}...`);
     await $`git checkout ${DRAFT_BRANCH}`.cwd(repoPath);
     await $`git reset --hard ${TARGET_BRANCH}`.cwd(repoPath);

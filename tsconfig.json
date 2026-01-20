@@ -4,13 +4,13 @@
         "module": "ESNext",
         "moduleResolution": "bundler",
         "lib": ["ESNext"],
-        "outDir": "out",
-        "rootDir": "src",
+        "outDir": "vscode-extension/out",
+        "rootDir": "vscode-extension/src",
         "strict": true,
         "sourceMap": true,
         "esModuleInterop": true,
         "skipLibCheck": true
     },
-    "include": ["src"],
+    "include": ["vscode-extension/src"],
     "exclude": ["node_modules"]
 }

@@ -1,0 +1,60 @@
+{
+    "name": "lang-language",
+    "displayName": "Lang language",
+    "publisher": "dmezhnov",
+    "description": "Syntax highlighting and basic structural validation for the Lang language.",
+    "version": "0.4.4",
+    "icon": "icon.png",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dmezhnov/lang"
+    },
+    "main": "out/extension/main.js",
+    "bin": {
+        "lang-language-server": "./out/language/main.js"
+    },
+    "engines": {
+        "vscode": "^1.104.0"
+    },
+    "scripts": {
+        "langium:generate": "langium generate"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "keywords": [
+        "language",
+        "syntax",
+        "highlighting",
+        "lang"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "lang",
+                "aliases": [
+                    "Lang",
+                    "lang"
+                ],
+                "extensions": [
+                    ".lang"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "lang",
+                "scopeName": "source.lang",
+                "path": "./syntaxes/lang.tmLanguage.json"
+            }
+        ]
+    },
+    "devDependencies": {
+        "@types/vscode": "1.104.0",
+        "@vscode/vsce": "^3.7.1",
+        "vscode-languageclient": "^9.0.1",
+        "vscode-languageserver": "^9.0.1"
+    }
+}

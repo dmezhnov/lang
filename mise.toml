@@ -1,7 +1,10 @@
 [tasks.build]
+description = "Build all extensions (VS Code + Zed)"
 run = [
+  "mise sh-run bun run scripts/sync-metadata.bun.ts",
   "mise sh-run bun run build",
   "mise sh-run bun run scripts/package.bun.ts",
+  "mise build:zed",
 ]
 
 [tasks.test]
@@ -33,11 +36,19 @@ run = [
 [tasks.save]
 run = ["mise sh-run bun run scripts/save.bun.ts"]
 
+[tasks."build:zed"]
+description = "Build Zed extension WASM to release folder"
+run = ["mise sh-run bun run scripts/build-zed.bun.ts"]
+
 [tasks.install]
 run = ["mise sh-run mise install"]
 
 [tasks.preinstall]
 run = ["mise sh-run bun run scripts/preinstall.bun.ts"]
+
+[tasks.watch]
+description = "Watch for changes and rebuild"
+run = ["mise sh-run bun run scripts/build.ts --watch"]
 
 [tasks.postinstall]
 run = [

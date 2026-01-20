@@ -23,4 +23,13 @@ lint:
         - linters: [ALL]
           paths:
               - out/**
+              - release/**
               - src/language/generated/**
+        - linters: [markdownlint]
+          paths:
+              - vscode-extension/CHANGELOG.md
+              - vscode-extension/README.md
+              - CHANGELOG.md
+              - README.md
+              - zed-extension/README.md
+              - release/**

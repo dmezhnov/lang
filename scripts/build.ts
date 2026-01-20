@@ -20,7 +20,7 @@ const esbuildProblemMatcherPlugin = {
             console.log('[watch] build finished');
 
             // Make language server executable
-            const serverPath = 'out/language/main.js';
+            const serverPath = 'vscode-extension/out/language/main.js';
             try {
                 if (fs.existsSync(serverPath)) {
                     let content = fs.readFileSync(serverPath, 'utf8');
@@ -40,8 +40,8 @@ const esbuildProblemMatcherPlugin = {
 async function main() {
     const ctx = await esbuild.context({
         entryPoints: [
-            'src/extension/main.ts',
-            'src/language/main.ts'
+            'vscode-extension/src/extension/main.ts',
+            'vscode-extension/src/language/main.ts'
         ],
         bundle: true,
         format: 'cjs',
@@ -49,7 +49,7 @@ async function main() {
         sourcemap: !isProduction,
         sourcesContent: false,
         platform: 'node',
-        outdir: 'out',
+        outdir: 'vscode-extension/out',
         external: ['vscode'],
         logLevel: 'silent',
         plugins: [

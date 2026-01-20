@@ -1,14 +1,5 @@
 # Changelog
 
-## [0.4.4] - 2026-01-20
-
-### Added
-
-- **Zed Support**: Full support for Zed Editor with automated WASM builds and asset packaging.
-- **Documentation**: Standardized README, LICENSE, and Icons across all extensions.
-- **Build System**: Unified `mise build` command for building both VS Code and Zed extensions.
-- **Metadata Sync**: Automatic synchronization of version and description from root `package.json`.
-
 ## [0.4.3] - 2026-01-18
 
 ### Changed

@@ -1,10 +1,17 @@
 {
   description = "Dev environment for the Lang VS Code extension";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+  };
 
   outputs =
-    { self, nixpkgs }:
+    {
+      self,
+      nixpkgs,
+      rust-overlay,
+    }:
     let
       supportedSystems = [
         "x86_64-linux"
@@ -26,9 +33,19 @@
       devShells = forEachSystem (
         system:
         let
+          overlays = [ (import rust-overlay) ];
           pkgs = import nixpkgs {
-            inherit system;
+            inherit system overlays;
             config.allowUnfree = true;
+          };
+
+          # Declarative toolchain with WASM target
+          rustToolchain = pkgs.rust-bin.stable."1.77.0".default.override {
+            extensions = [
+              "rust-src"
+              "rust-std"
+            ];
+            targets = [ "wasm32-wasi" ];
           };
         in
         {
@@ -36,6 +53,7 @@
             packages = [
               pkgs.trunk-io
               pkgs.libxcrypt
+              rustToolchain
             ];
 
             shellHook = ''
