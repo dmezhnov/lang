@@ -183,8 +183,31 @@ export async function main(): Promise<void> {
     const pkgName = pkg.name;
     const vsixPath = `release/${version}/${pkgName}-${version}.vsix`;
 
-    await $`gh release create v${version} ${vsixPath} --title "v${version}" --notes ${releaseNotes} --target ${TARGET_BRANCH}`.cwd(repoPath);
-    console.log(`GitHub Release v${version} created.`);
+    try {
+        await $`gh release create v${version} ${vsixPath} --title "v${version}" --notes ${releaseNotes} --target ${TARGET_BRANCH}`.cwd(repoPath);
+        console.log(`GitHub Release v${version} created.`);
+    } catch (e) {
+        console.warn('⚠️  Failed to create GitHub Release (it might already exist):', e);
+        console.log('Continuing to publish steps...');
+    }
+
+    // 9.5 Publish to VS Code Marketplace
+    console.log('Publishing to VS Code Marketplace...');
+    try {
+        await $`bun x vsce publish --packagePath ${vsixPath}`.cwd(repoPath);
+        console.log('Successfully published to VS Code Marketplace.');
+    } catch (e) {
+        console.error('Failed to publish to VS Code Marketplace:', e);
+    }
+
+    // 9.6 Publish to OpenVSX
+    console.log('Publishing to OpenVSX...');
+    try {
+        await $`bun x ovsx publish --packagePath ${vsixPath}`.cwd(repoPath);
+        console.log('Successfully published to OpenVSX.');
+    } catch (e) {
+        console.warn('Failed to publish to OpenVSX (optional):', e);
+    }
 
     // 9.5 Publish to VS Code Marketplace
     console.log('Publishing to VS Code Marketplace...');
