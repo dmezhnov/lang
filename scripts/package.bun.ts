@@ -11,8 +11,10 @@ console.log(`Packaging version ${version}...`);
 // Ensure release directory exists
 await mkdir(releaseDir, { recursive: true });
 
-// Setup packaging: copy icon.png to vscode-extension
+// Setup packaging: copy assets to vscode-extension
 await $`cp icon.png vscode-extension/`;
+await $`cp LICENSE vscode-extension/LICENSE.txt`; // VS Marketplace prefers LICENSE.txt
+await $`cp CHANGELOG.md vscode-extension/`;
 
 // Run vsce package
 const vsixName = `${packageJson.name}-${version}.vsix`;

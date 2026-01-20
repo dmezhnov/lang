@@ -81,6 +81,7 @@ not_found_auto_install = true
 task_run_auto_install = true
 lockfile = true
 all_compile = false
+idiomatic_version_file_enable_tools = ["rust"]
 
 [settings.status]
 missing_tools = "always"

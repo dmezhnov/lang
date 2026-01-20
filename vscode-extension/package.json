@@ -3,7 +3,7 @@
     "displayName": "Lang language",
     "publisher": "dmezhnov",
     "description": "Syntax highlighting and basic structural validation for the Lang language.",
-    "version": "0.4.4",
+    "version": "0.4.5",
     "icon": "icon.png",
     "license": "MIT",
     "repository": {
