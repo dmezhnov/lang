@@ -54,6 +54,7 @@
               pkgs.trunk-io
               pkgs.libxcrypt
               rustToolchain
+              pkgs.graphite-cli
             ];
 
             shellHook = ''
