@@ -238,6 +238,9 @@ export async function main(): Promise<void> {
     // This allows the Zed registry to submodule a branch where extension.toml is at the root.
     console.log('Syncing zed-extension to branch \'zed\'...');
     try {
+        // Ensure local zed branch doesn't exist to avoid ancestry errors
+        try { await $`git branch -D zed`.cwd(repoPath).quiet(); } catch {}
+
         // Force push the subdir to the 'zed' branch
         await $`git subtree split --prefix zed-extension -b zed`.cwd(repoPath);
         await $`git push origin zed:zed --force`.cwd(repoPath);
