@@ -58,6 +58,7 @@
             ];
 
             shellHook = ''
+              # shell
               # Ensure TLS-aware tools (including Trunk hermetic downloads) see the system CA bundle.
               export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
               export NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt

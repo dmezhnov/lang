@@ -258,5 +258,9 @@
     "bruno.defaultCollectionLocation": "./bruno",
     "peacock.color": "#5a5889",
     "nixEnvSelector.useFlakes": true,
-    "commentTranslate.targetLanguage": "ru"
+    "commentTranslate.targetLanguage": "ru",
+    "nix-embedded-languages.include": {
+        "conf": "source.ini",
+        "ini": "source.ini"
+    }
 }
