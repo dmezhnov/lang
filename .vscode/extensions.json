@@ -8,6 +8,7 @@
         "gruntfuggly.todo-tree",
         "arrterian.nix-env-selector",
         "langium.langium-vscode",
-        "dmezhnov.lang-language"
+        "dmezhnov.lang-language",
+        "coopmoney.nix-embedded-languages"
     ]
 }
