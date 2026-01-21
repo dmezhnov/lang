@@ -87,7 +87,7 @@ preinstall = "mise sh-run bun run scripts/preinstall.bun.ts"
 postinstall = "mise sh-run bun run scripts/postinstall.bun.ts"
 
 [env]
-RENOVATE_CONFIG_FILE="./.trunk/configs/renovate.json"
+RENOVATE_CONFIG_FILE = "./.trunk/configs/renovate.json"
 
 IS_NIX_OS = '''
     {%- set os_name = os() | lower -%}

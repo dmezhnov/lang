@@ -1,3 +1,37 @@
 {
-    "extends": ["config:recommended"]
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:recommended",
+        ":semanticCommits",
+        ":dependencyDashboard",
+        ":enablePreCommit",
+        "helpers:pinGitHubActionDigests"
+    ],
+    "labels": ["dependencies"],
+    "timezone": "UTC",
+    "schedule": ["before 5am"],
+    "rangeStrategy": "pin",
+    "packageRules": [
+        {
+            "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+            "automerge": true,
+            "automergeType": "branch"
+        },
+        {
+            "groupName": "all non-major dependencies",
+            "groupSlug": "all-minor-patch",
+            "matchUpdateTypes": ["minor", "patch"],
+            "matchPackagePatterns": ["*"]
+        }
+    ],
+    "lockFileMaintenance": {
+        "enabled": true,
+        "schedule": ["before 5am"]
+    },
+    "nix": {
+        "enabled": true
+    },
+    "asdf": {
+        "enabled": true
+    }
 }
