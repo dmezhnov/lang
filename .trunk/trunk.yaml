@@ -15,6 +15,7 @@ runtimes:
 
 lint:
     enabled:
+        - cspell@9.6.0
         - renovate@42.86.1
         - taplo@0.10.0
         - eslint@9.39.1

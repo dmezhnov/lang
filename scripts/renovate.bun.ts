@@ -1,5 +1,5 @@
-
 import { existsSync } from 'node:fs';
+import { readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 // Find the trunk-installed renovate binary
@@ -7,24 +7,28 @@ import path from 'node:path';
 const cacheDir = path.join(process.env.HOME || '', '.cache/trunk/tools/renovate');
 
 async function findRenovateBin(): Promise<string | null> {
-    if (!existsSync(cacheDir)) return null;
+    if (!existsSync(cacheDir)) {
+        console.error(`Cache dir not found: ${cacheDir}`);
+        return null;
+    }
 
     // Find the version directory (e.g. 42.86.1-4a9f...)
-    // We'll just take the first one found or look for the one in use
-    const entries = await Array.fromAsync(new Bun.Glob('*').scan(cacheDir));
+    const entries = await readdir(cacheDir);
 
-    // entries might be like ['42.86.1...']
-    // Sort to get latest if multiple?
-    entries.sort();
+    // Sort reverse to prioritize what looks like latest versions
+    entries.sort().reverse();
+    console.log(`Found candidate directories in trunk cache: ${entries.join(', ')}`);
 
-    if (entries.length === 0) return null;
+    for (const entry of entries) {
+        const versionDir = path.join(cacheDir, entry);
+        const binPath = path.join(versionDir, 'node_modules/.bin/renovate');
 
-    const versionDir = path.join(cacheDir, entries[entries.length - 1]);
-    const binPath = path.join(versionDir, 'node_modules/.bin/renovate');
-
-    if (existsSync(binPath)) {
-        return binPath;
+        if (existsSync(binPath)) {
+            console.log(`Found valid binary at: ${binPath}`);
+            return binPath;
+        }
     }
+
     return null;
 }
 
@@ -45,8 +49,7 @@ const args = [
     '--platform=local',
     '--dry-run=full',
     '--schedule=null',
-    '--require-config=optional',
-    process.cwd()
+    '--require-config=optional'
 ];
 
 const proc = Bun.spawn([bin, ...args], {

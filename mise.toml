@@ -18,21 +18,15 @@ description = "Run Renovate locally in dry-run mode"
 run = ["mise sh-run bun run scripts/renovate.bun.ts"]
 
 [tasks.lint]
-run = [
-  "mise trunk -- check --show-existing",
-]
+run = ["mise trunk -- check --show-existing"]
 
 [tasks.format]
 description = "Run trunk inside the effective environment"
-run = [
-  "mise trunk -- fmt",
-]
+run = ["mise trunk -- fmt"]
 
 [tasks.trunk]
 description = "Run trunk inside the effective environment"
-run = [
-  "mise sh-run bun run scripts/trunk.bun.ts",
-]
+run = ["mise sh-run bun run scripts/trunk.bun.ts"]
 
 [tasks.save]
 run = ["mise sh-run bun run scripts/save.bun.ts"]
