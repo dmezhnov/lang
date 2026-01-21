@@ -49,7 +49,8 @@ const args = [
     '--platform=local',
     '--dry-run=full',
     '--schedule=null',
-    '--require-config=optional'
+    '--require-config=optional',
+    '--onboarding=false'
 ];
 
 const proc = Bun.spawn([bin, ...args], {
