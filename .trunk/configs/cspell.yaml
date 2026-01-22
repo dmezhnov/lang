@@ -3,18 +3,9 @@ version: "0.2"
 # leading to inconsistent results.
 suggestionsTimeout: 5000 # ms
 import:
-  - "@cspell/prompt-dict-fonts/cspell-ext.json"
-  - "@cspell/dict-rust/cspell-ext.json"
-  - "@cspell/dict-software-terms/cspell-ext.json"
-dictionaries:
-  - fonts
-  - rust
-  - softwareTerms
-  - typescript
-  - node
-  - html
-  - css
-  - bash
+  - "../../node_modules/@cspell/dict-fonts/cspell-ext.json"
+  - "../../node_modules/@cspell/dict-rust/cspell-ext.json"
+  - "../../node_modules/@cspell/dict-software-terms/cspell-ext.json"
 words:
   - appsscript
   - arrterian
