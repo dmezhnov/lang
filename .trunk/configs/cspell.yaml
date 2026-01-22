@@ -2,3 +2,43 @@ version: "0.2"
 # Suggestions can sometimes take longer on CI machines,
 # leading to inconsistent results.
 suggestionsTimeout: 5000 # ms
+import:
+  - "@cspell/prompt-dict-fonts/cspell-ext.json"
+  - "@cspell/dict-rust/cspell-ext.json"
+  - "@cspell/dict-software-terms/cspell-ext.json"
+dictionaries:
+  - fonts
+  - rust
+  - softwareTerms
+  - typescript
+  - node
+  - html
+  - css
+  - bash
+words:
+  - appsscript
+  - arrterian
+  - atlascode
+  - bunfig
+  - claspignore
+  - coopmoney
+  - dmezhnov
+  - elif
+  - endfor
+  - gruntfuggly
+  - hverlin
+  - langium
+  - libcrypt
+  - libxcrypt
+  - nixos
+  - nixpkgs
+  - oxalica
+  - pkgs
+  - pyproject
+  - renovaterc
+  - shellformat
+  - styl
+  - stylintrc
+  - tombi
+  - trunkio
+  - wasi
