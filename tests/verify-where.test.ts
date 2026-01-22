@@ -10,27 +10,27 @@ const parse = parseHelper(services);
 
 describe('Where Syntax Verification', () => {
 
-    test('parsers examples/syntax/correct syntax/where.lang (Should Pass)', async () => {
-        const path = resolve(__dirname, '../examples/syntax/correct syntax/where.lang');
+    test('parsers examples/syntax/correct/where.lang (Should Pass)', async () => {
+        const path = resolve(__dirname, '../examples/syntax/correct/where.lang');
         const content = readFileSync(path, 'utf-8');
         const result = await parse(content);
 
         if (result.parseResult.parserErrors.length > 0) {
-            console.log('Parser Errors (correct syntax/where.lang):', JSON.stringify(result.parseResult.parserErrors, null, 2));
+            console.log('Parser Errors (correct/where.lang):', JSON.stringify(result.parseResult.parserErrors, null, 2));
         }
         expect(result.parseResult.parserErrors.length).toBe(0);
     });
 
-    test('parsers examples/syntax/error syntax/where.lang (Should Fail)', async () => {
-        const path = resolve(__dirname, '../examples/syntax/error syntax/where.lang');
+    test('parsers examples/syntax/error/where.lang (Should Fail)', async () => {
+        const path = resolve(__dirname, '../examples/syntax/error/where.lang');
         const content = readFileSync(path, 'utf-8');
         const result = await parse(content);
 
         // Detailed log to see WHAT failed if it unexpectedly passes
         if (result.parseResult.parserErrors.length === 0) {
-            console.log('Unexpected success for error syntax/where.lang');
+            console.log('Unexpected success for error/where.lang');
         } else {
-             console.log('Expected Parser Errors (error syntax/where.lang):', result.parseResult.parserErrors.length, 'errors found.');
+             console.log('Expected Parser Errors (error/where.lang):', result.parseResult.parserErrors.length, 'errors found.');
         }
 
         expect(result.parseResult.parserErrors.length).toBeGreaterThan(0);

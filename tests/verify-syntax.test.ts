@@ -14,9 +14,9 @@ const __dirname = dirname(__filename);
 const services = createLangServices(EmptyFileSystem).Lang;
 const parse = parseHelper(services);
 
-describe('Correct Syntax Example Verification', () => {
-    test('parsers examples/syntax/correct syntax/lang.lang', async () => {
-        const path = resolve(__dirname, '../examples/syntax/correct syntax/lang.lang');
+describe('correct Example Verification', () => {
+    test('parsers examples/syntax/correct/lang.lang', async () => {
+        const path = resolve(__dirname, '../examples/syntax/correct/lang.lang');
         const content = readFileSync(path, 'utf-8');
         const result = await parse(content);
 
@@ -27,8 +27,8 @@ describe('Correct Syntax Example Verification', () => {
         expect(result.parseResult.parserErrors.length).toBe(0);
     });
 
-    test('parsers examples/syntax/correct syntax/ident.lang', async () => {
-        const path = resolve(__dirname, '../examples/syntax/correct syntax/ident.lang');
+    test('parsers examples/syntax/correct/ident.lang', async () => {
+        const path = resolve(__dirname, '../examples/syntax/correct/ident.lang');
         const content = readFileSync(path, 'utf-8');
         const result = await parse(content);
 

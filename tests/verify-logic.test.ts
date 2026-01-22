@@ -11,8 +11,8 @@ const parse = parseHelper(services);
 
 describe('Logic Syntax Verification', () => {
 
-    test('parsers examples/syntax/correct syntax/logic.lang', async () => {
-        const path = resolve(import.meta.dir, '../examples/syntax/correct syntax/logic.lang');
+    test('parsers examples/syntax/correct/logic.lang', async () => {
+        const path = resolve(import.meta.dir, '../examples/syntax/correct/logic.lang');
         const content = readFileSync(path, 'utf-8');
         const result = await parse(content);
 

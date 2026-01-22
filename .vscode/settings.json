@@ -199,6 +199,7 @@
     "stylusSupremacy.tabStopChar": "    ",
     "task.allowAutomaticTasks": "on",
     "yaml.schemas": {
+        "file:///c%3A/Users/dmitr/.cursor/extensions/atlassian.atlascode-3.8.10-universal/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml",
         "https://docs.renovatebot.com/renovate-schema.json": "**/renovate.json*,**.renovaterc",
         "https://json.schemastore.org/pre-commit-config.json": "**/.github/hooks/.pre-commit-config.{yml,yaml}",
         "https://raw.githubusercontent.com/megalinter/megalinter/main/megalinter/descriptors/schemas/megalinter-configuration.jsonschema.json": "**/.mega-linter.yml",
@@ -206,7 +207,8 @@
         "https://www.schemastore.org/appsscript.json": "**/appsscript.json",
         "https://www.schemastore.org/bunfig.json": "**/bunfig.toml",
         "https://www.schemastore.org/clasp.json": "**.clasp.json",
-        "https://www.schemastore.org/github-workflow.json": "**/.github/workflows/**.{yml,yaml}"
+        "https://www.schemastore.org/github-workflow.json": "**/.github/workflows/**.{yml,yaml}",
+        "https://static.trunk.io/pub/trunk-yaml-schema.json": "file:///home/dmezhnov/programming/lang/.trunk/trunk.yaml"
     },
     "path-intellisense.mappings": {
         "/": "${workspaceFolder}/"
