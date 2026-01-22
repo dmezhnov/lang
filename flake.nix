@@ -53,6 +53,7 @@
             packages = [
               pkgs.trunk-io
               pkgs.libxcrypt
+              pkgs.nixpkgs-fmt
               rustToolchain
               pkgs.graphite-cli
             ];

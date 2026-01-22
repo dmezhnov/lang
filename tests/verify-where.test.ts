@@ -30,7 +30,7 @@ describe('Where Syntax Verification', () => {
         if (result.parseResult.parserErrors.length === 0) {
             console.log('Unexpected success for error/where.lang');
         } else {
-             console.log('Expected Parser Errors (error/where.lang):', result.parseResult.parserErrors.length, 'errors found.');
+            console.log('Expected Parser Errors (error/where.lang):', result.parseResult.parserErrors.length, 'errors found.');
         }
 
         expect(result.parseResult.parserErrors.length).toBeGreaterThan(0);

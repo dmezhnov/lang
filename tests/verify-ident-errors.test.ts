@@ -20,7 +20,7 @@ describe('Ident error Verification', () => {
             console.log('Unexpected success for error/ident.lang');
             console.log('Statements:', JSON.stringify(result.parseResult.value.statements, null, 2));
         } else {
-             console.log('Expected Parser Errors (error/ident.lang):', result.parseResult.parserErrors.length, 'errors found.');
+            console.log('Expected Parser Errors (error/ident.lang):', result.parseResult.parserErrors.length, 'errors found.');
         }
 
         expect(result.parseResult.parserErrors.length).toBeGreaterThan(0);
