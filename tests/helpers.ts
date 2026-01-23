@@ -12,7 +12,7 @@ export type Grammar = {
 };
 
 export async function loadGrammar(): Promise<Grammar> {
-    const grammarPath = resolve('syntaxes', 'lang.tmLanguage.json');
+    const grammarPath = resolve('vscode-extension/syntaxes', 'lang.tmLanguage.json');
     const raw = await readFile(grammarPath, 'utf8');
     return JSON.parse(raw) as Grammar;
 }

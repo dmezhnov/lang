@@ -19,7 +19,7 @@ type LanguageConfiguration = {
 };
 
 async function loadLanguageConfiguration(): Promise<LanguageConfiguration> {
-    const configPath = resolve('language-configuration.json');
+    const configPath = resolve('vscode-extension/language-configuration.json');
     const raw = await readFile(configPath, 'utf8');
     return JSON.parse(raw) as LanguageConfiguration;
 }
@@ -70,5 +70,3 @@ describe('language-configuration.json', () => {
         );
     });
 });
-
-

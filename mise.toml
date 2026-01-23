@@ -39,7 +39,7 @@ run = ["mise sh-run bun run scripts/build-zed.bun.ts"]
 description = "Install dependencies and build artifacts"
 run = ["mise sh-run mise install"]
 
-[tasks.preinstall]
+[tasks._preinstall]
 description = "Run preinstall script"
 run = ["mise sh-run bun run scripts/preinstall.bun.ts"]
 
@@ -47,7 +47,7 @@ run = ["mise sh-run bun run scripts/preinstall.bun.ts"]
 description = "Watch for changes and rebuild"
 run = ["mise sh-run bun run scripts/build.ts --watch"]
 
-[tasks.postinstall]
+[tasks._postinstall]
 run = [
   # Ensure JS dependencies and build artifacts are up to date.
   "mise sh-run bun install",

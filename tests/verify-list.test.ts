@@ -1,7 +1,7 @@
 
 import { describe, test, expect } from 'bun:test';
 import { parseHelper } from 'langium/test';
-import { createLangServices } from '../src/language/lang-module.js';
+import { createLangServices } from '../vscode-extension/src/language/lang-module.js';
 import { EmptyFileSystem } from 'langium';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';

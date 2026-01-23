@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeAll } from 'bun:test';
-import { createLangServices } from '../src/language/lang-module.js';
+import { createLangServices } from '../vscode-extension/src/language/lang-module.js';
 import { EmptyFileSystem } from 'langium';
 import { URI } from 'vscode-uri';
 

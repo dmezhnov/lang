@@ -1,8 +1,8 @@
 import { describe, test, expect } from 'bun:test';
 import { parseHelper } from 'langium/test';
-import { createLangServices } from '../src/language/lang-module.js';
+import { createLangServices } from '../vscode-extension/src/language/lang-module.js';
 import { EmptyFileSystem } from 'langium';
-import type { File } from '../src/language/generated/ast.js';
+import type { File } from '../vscode-extension/src/language/generated/ast.js';
 
 const services = createLangServices(EmptyFileSystem).Lang;
 const parse = parseHelper<File>(services);

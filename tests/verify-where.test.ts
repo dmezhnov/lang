@@ -1,9 +1,12 @@
 import { describe, test, expect } from 'bun:test';
 import { parseHelper } from 'langium/test';
-import { createLangServices } from '../src/language/lang-module.js';
+import { createLangServices } from '../vscode-extension/src/language/lang-module.js';
 import { EmptyFileSystem } from 'langium';
 import { readFileSync } from 'fs';
-import { resolve } from 'path';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const services = createLangServices(EmptyFileSystem).Lang;
 const parse = parseHelper(services);
