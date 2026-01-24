@@ -3,6 +3,7 @@ node_modules
 !release/**/*.vsix
 **.env
 **.env.*
+!local.env
 
 .vscode-test
 dist
